@@ -1,0 +1,19 @@
+Turn on >> 0 -@ DIO
+Wait >> 1000 ms
+Turn on >> 1 -@ DIO
+Wait >> 1000 ms
+Turn on >> 2 -@ DIO
+Wait >> 1000 ms
+Turn on >> 3 -@ DIO
+Wait >> 1000 ms
+Turn on >> 4 -@ DIO
+Wait >> 1000 ms
+Turn on >> 5 -@ DIO
+Wait >> 1000 ms
+Turn on >> 6 -@ DIO
+Wait >> 1000 ms
+Turn on >> 7 -@ DIO
+Wait >> 1000 ms
+reset all >> -@ DIO
+Sweep >> Start: 0V;Stop: 10V;Step: 0.1V;Interval: 100ms -@ measure¡¢
+reset all >> -@ DIO
