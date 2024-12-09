@@ -4,6 +4,6 @@
 
 Deps:
 
- - JKI TCP Server
- - NEVSTOP Programming Palette
- - Communicable State Machine(CSM)
+ - JKI TCP Server - JKI
+ - Communicable State Machine(CSM) - NEVSTOP
+ - Global Stop - NEVSTOP
