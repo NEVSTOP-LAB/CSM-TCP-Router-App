@@ -1,6 +1,13 @@
-![image](https://github.com/NEVSTOP-LAB/CSM-Remote-Call-App/assets/8196752/b4e9ca97-3171-4793-b8ab-b4fb69098724)
+![image](.doc/CSM-TCP-Router.drawio.png)
 
-![image](https://github.com/NEVSTOP-LAB/CSM-Remote-Call-App/assets/8196752/ac438a36-2dc3-4dd4-aad2-d44caf842008)
+**CSM-TCP-Router Server**
+
+![CSM-TCP-Router Server BD](.doc/CSM-TCP-Router%20Sever%20BD.png)
+
+**CSM-TCP-Router Client**
+
+![CSM-TCP-Client-Console FP](.doc/CSM-TCP-Router%20Client%20Console%20FP.png)
+
 
 Deps:
 
