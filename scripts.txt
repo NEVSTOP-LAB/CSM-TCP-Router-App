@@ -15,5 +15,5 @@ Wait >> 1000 ms
 Turn on >> 7 -@ DIO
 Wait >> 1000 ms
 reset all >> -@ DIO
-Sweep >> Start: 0V;Stop: 10V;Step: 0.1V;Interval: 100ms -@ measure¡¢
+Sweep >> Start: 0V;Stop: 10V;Step: 0.1V;Interval: 100ms -@ measure
 reset all >> -@ DIO
