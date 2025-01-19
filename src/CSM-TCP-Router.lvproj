@@ -11,13 +11,13 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
-		<Item Name="Client" Type="Folder" URL="../src/Client">
+		<Item Name="Client" Type="Folder" URL="../Client">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
-		<Item Name="CSM_Modules" Type="Folder" URL="../src/CSM_Modules">
+		<Item Name="CSM_Modules" Type="Folder" URL="../CSM_Modules">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
-		<Item Name="Server" Type="Folder" URL="../src/Server">
+		<Item Name="Server" Type="Folder" URL="../Server">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
 		<Item Name="csm-app.ini" Type="Document" URL="../csm-app.ini"/>
@@ -154,22 +154,22 @@
 				<Property Name="Bld_excludeInlineSubVIs" Type="Bool">true</Property>
 				<Property Name="Bld_excludeLibraryItems" Type="Bool">true</Property>
 				<Property Name="Bld_excludePolymorphicVIs" Type="Bool">true</Property>
-				<Property Name="Bld_localDestDir" Type="Path">../_build/PC</Property>
+				<Property Name="Bld_localDestDir" Type="Path">../_Build/PC</Property>
 				<Property Name="Bld_localDestDirType" Type="Str">relativeToProject</Property>
 				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
 				<Property Name="Bld_previewCacheID" Type="Str">{3A907983-FA2B-4A7C-9433-F96A748C309E}</Property>
 				<Property Name="Bld_version.build" Type="Int">10</Property>
 				<Property Name="Bld_version.major" Type="Int">1</Property>
 				<Property Name="Destination[0].destName" Type="Str">Client.exe</Property>
-				<Property Name="Destination[0].path" Type="Path">../_build/PC/Client.exe</Property>
+				<Property Name="Destination[0].path" Type="Path">../_Build/PC/Client.exe</Property>
 				<Property Name="Destination[0].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
 				<Property Name="Destination[0].type" Type="Str">App</Property>
 				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
-				<Property Name="Destination[1].path" Type="Path">../_build/PC/data</Property>
+				<Property Name="Destination[1].path" Type="Path">../_Build/PC/data</Property>
 				<Property Name="Destination[1].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{8B5F9942-6AFB-4BAD-BD07-2E7E9AC45CC4}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{F7A5A582-5BDE-4E17-B1F9-48DB4D83CB57}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Client/Client.vi</Property>
@@ -195,22 +195,22 @@
 				<Property Name="Bld_excludeInlineSubVIs" Type="Bool">true</Property>
 				<Property Name="Bld_excludeLibraryItems" Type="Bool">true</Property>
 				<Property Name="Bld_excludePolymorphicVIs" Type="Bool">true</Property>
-				<Property Name="Bld_localDestDir" Type="Path">../_build/PC</Property>
+				<Property Name="Bld_localDestDir" Type="Path">../_Build/PC</Property>
 				<Property Name="Bld_localDestDirType" Type="Str">relativeToProject</Property>
 				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
 				<Property Name="Bld_previewCacheID" Type="Str">{A916FCA7-CB59-42EA-83BF-E2797FCA83AB}</Property>
 				<Property Name="Bld_version.build" Type="Int">20</Property>
 				<Property Name="Bld_version.major" Type="Int">1</Property>
 				<Property Name="Destination[0].destName" Type="Str">Server.exe</Property>
-				<Property Name="Destination[0].path" Type="Path">../_build/PC/Server.exe</Property>
+				<Property Name="Destination[0].path" Type="Path">../_Build/PC/Server.exe</Property>
 				<Property Name="Destination[0].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
 				<Property Name="Destination[0].type" Type="Str">App</Property>
 				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
-				<Property Name="Destination[1].path" Type="Path">../_build/PC</Property>
+				<Property Name="Destination[1].path" Type="Path">../_Build/PC</Property>
 				<Property Name="Destination[1].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{8B5F9942-6AFB-4BAD-BD07-2E7E9AC45CC4}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{F7A5A582-5BDE-4E17-B1F9-48DB4D83CB57}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Server/CSM-TCP-Router(Server).vi</Property>
@@ -308,10 +308,10 @@ AddOutputFilter chunkFilter
 		<Property Name="target.WebServer.ViAccess" Type="Str">+*</Property>
 		<Property Name="target.webservices.SecurityAPIKey" Type="Str">PqVr/ifkAQh+lVrdPIykXlFvg12GhhQFR8H9cUhphgg=:pTe9HRlQuMfJxAG6QCGq7UvoUpJzAzWGKy5SbZ+roSU=</Property>
 		<Property Name="target.webservices.ValidTimestampWindow" Type="Int">15</Property>
-		<Item Name="CSM_Modules" Type="Folder" URL="../src/CSM_Modules">
+		<Item Name="CSM_Modules" Type="Folder" URL="../CSM_Modules">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
-		<Item Name="Server" Type="Folder" URL="../src/Server">
+		<Item Name="Server" Type="Folder" URL="../Server">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
 		<Item Name="CSM-TCP-Router.lvcsm" Type="Document" URL="../CSM-TCP-Router.lvcsm"/>

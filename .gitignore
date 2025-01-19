@@ -1,3 +1,4 @@
-/_Build/*
+/src/_Build/*
 *.aliases
 *.lvlps
+/vip/*.vip
