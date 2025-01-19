@@ -28,6 +28,7 @@
 				<Item Name="API String Arguments Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/API-String-Arugments-Support/API String Arguments Support.lvlib"/>
 				<Item Name="Build Error Cluster__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/error/error.llb/Build Error Cluster__ogtk.vi"/>
 				<Item Name="Communicable State Machine.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/Communicable State Machine.lvlib"/>
+				<Item Name="CSM-Helper API with lvcsm Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/API with lvcsm Support/CSM-Helper API with lvcsm Support.lvlib"/>
 				<Item Name="CSM-Helper Utility.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/CSM-Helper Utility.lvlib"/>
 				<Item Name="CSM-Helper.lvclass" Type="LVClass" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/CSM-Helper.lvclass"/>
 				<Item Name="csmHelper-CaseStructure.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/CaseStructure/csmHelper-CaseStructure.lvlib"/>
@@ -322,6 +323,7 @@ AddOutputFilter chunkFilter
 				<Item Name="API String Arguments Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/API-String-Arugments-Support/API String Arguments Support.lvlib"/>
 				<Item Name="Build Error Cluster__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/error/error.llb/Build Error Cluster__ogtk.vi"/>
 				<Item Name="Communicable State Machine.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/Communicable State Machine.lvlib"/>
+				<Item Name="CSM-Helper API with lvcsm Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/API with lvcsm Support/CSM-Helper API with lvcsm Support.lvlib"/>
 				<Item Name="CSM-Helper Utility.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/CSM-Helper Utility.lvlib"/>
 				<Item Name="CSM-Helper.lvclass" Type="LVClass" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/CSM-Helper.lvclass"/>
 				<Item Name="csmHelper-CaseStructure.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/CaseStructure/csmHelper-CaseStructure.lvlib"/>

@@ -98,3 +98,7 @@ Item 21 = "Sweep"
 Item 22 = "Measure"
 Item 23 = "DoSth: DoA"
 Item 24 = "DoSth: DoB"
+
+[CSM Debug Console]
+Response Timeout(s) = 30
+History Length = 50
