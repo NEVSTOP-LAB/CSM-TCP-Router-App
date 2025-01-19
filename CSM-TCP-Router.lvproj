@@ -11,13 +11,13 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
-		<Item Name="Client" Type="Folder" URL="../Client">
+		<Item Name="Client" Type="Folder" URL="../src/Client">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
-		<Item Name="CSM_Modules" Type="Folder" URL="../CSM_Modules">
+		<Item Name="CSM_Modules" Type="Folder" URL="../src/CSM_Modules">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
-		<Item Name="Server" Type="Folder" URL="../Server">
+		<Item Name="Server" Type="Folder" URL="../src/Server">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
 		<Item Name="csm-app.ini" Type="Document" URL="../csm-app.ini"/>
@@ -170,7 +170,7 @@
 				<Property Name="Destination[1].path" Type="Path">../_build/PC/data</Property>
 				<Property Name="Destination[1].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{48CFFAE0-C0EA-4334-A808-0D9259B39FFE}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{14639734-CB65-476E-B8A4-FE33F2E8FA2C}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Client/Client.vi</Property>
@@ -310,10 +310,10 @@ AddOutputFilter chunkFilter
 		<Property Name="target.WebServer.ViAccess" Type="Str">+*</Property>
 		<Property Name="target.webservices.SecurityAPIKey" Type="Str">PqVr/ifkAQh+lVrdPIykXlFvg12GhhQFR8H9cUhphgg=:pTe9HRlQuMfJxAG6QCGq7UvoUpJzAzWGKy5SbZ+roSU=</Property>
 		<Property Name="target.webservices.ValidTimestampWindow" Type="Int">15</Property>
-		<Item Name="CSM_Modules" Type="Folder" URL="../CSM_Modules">
+		<Item Name="CSM_Modules" Type="Folder" URL="../src/CSM_Modules">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
-		<Item Name="Server" Type="Folder" URL="../Server">
+		<Item Name="Server" Type="Folder" URL="../src/Server">
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
 		<Item Name="CSM-TCP-Router.lvcsm" Type="Document" URL="../CSM-TCP-Router.lvcsm"/>
@@ -425,7 +425,7 @@ AddOutputFilter chunkFilter
 				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
 				<Property Name="Bld_previewCacheID" Type="Str">{038BB82D-815A-43A9-B677-8A0662710E2F}</Property>
 				<Property Name="Bld_targetDestDir" Type="Path">/c/ni-rt/startup</Property>
-				<Property Name="Bld_version.build" Type="Int">2</Property>
+				<Property Name="Bld_version.build" Type="Int">3</Property>
 				<Property Name="Bld_version.major" Type="Int">1</Property>
 				<Property Name="Destination[0].destName" Type="Str">startup.rtexe</Property>
 				<Property Name="Destination[0].path" Type="Path">/c/ni-rt/startup/startup.rtexe</Property>
@@ -436,7 +436,7 @@ AddOutputFilter chunkFilter
 				<Property Name="Destination[1].path" Type="Path">/c/ni-rt/startup</Property>
 				<Property Name="Destination[1].path.type" Type="Str">&lt;none&gt;</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{CE526F23-955A-4CB6-9267-72256F332659}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{B40576F1-AD00-416B-82B1-748407E6E56F}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/RT PXI Target/Server/CSM-TCP-Router(Server).vi</Property>
