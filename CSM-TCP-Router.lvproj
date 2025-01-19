@@ -149,7 +149,6 @@
 				<Property Name="App_INI_GUID" Type="Str">{21C4E170-765E-499C-9C8F-D876026AFFBE}</Property>
 				<Property Name="App_serverConfig.httpPort" Type="Int">8002</Property>
 				<Property Name="App_serverType" Type="Int">0</Property>
-				<Property Name="Bld_autoIncrement" Type="Bool">true</Property>
 				<Property Name="Bld_buildCacheID" Type="Str">{93A7E0BF-4F62-4B03-8793-D8003265B7FB}</Property>
 				<Property Name="Bld_buildSpecName" Type="Str">Client</Property>
 				<Property Name="Bld_excludeInlineSubVIs" Type="Bool">true</Property>
@@ -170,7 +169,7 @@
 				<Property Name="Destination[1].path" Type="Path">../_build/PC/data</Property>
 				<Property Name="Destination[1].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{14639734-CB65-476E-B8A4-FE33F2E8FA2C}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{8B5F9942-6AFB-4BAD-BD07-2E7E9AC45CC4}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Client/Client.vi</Property>
@@ -191,7 +190,6 @@
 				<Property Name="App_INI_itemID" Type="Ref">/My Computer/csm-app.ini</Property>
 				<Property Name="App_serverConfig.httpPort" Type="Int">8002</Property>
 				<Property Name="App_serverType" Type="Int">0</Property>
-				<Property Name="Bld_autoIncrement" Type="Bool">true</Property>
 				<Property Name="Bld_buildCacheID" Type="Str">{33A88D54-BD07-4E91-A063-1B2C87AB06B2}</Property>
 				<Property Name="Bld_buildSpecName" Type="Str">Server</Property>
 				<Property Name="Bld_excludeInlineSubVIs" Type="Bool">true</Property>
@@ -212,7 +210,7 @@
 				<Property Name="Destination[1].path" Type="Path">../_build/PC</Property>
 				<Property Name="Destination[1].path.type" Type="Str">relativeToProject</Property>
 				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{90D8740D-4597-4654-94DA-A76284DFD2B4}</Property>
+				<Property Name="Source[0].itemID" Type="Str">{8B5F9942-6AFB-4BAD-BD07-2E7E9AC45CC4}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
 				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Server/CSM-TCP-Router(Server).vi</Property>
