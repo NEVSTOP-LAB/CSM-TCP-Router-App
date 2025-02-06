@@ -1,4 +1,4 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-02-06 12:50:04" Creator="liyao" Comments="" ID="6a6bf834fba88d95c807f8f4a363cd4d">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-02-06 13:36:46" Creator="liyao" Comments="" ID="863cc99ddea0a72055bc719753a09264">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
     <Library_Version>2025.2.0.2</Library_Version>
@@ -47,7 +47,9 @@ How to test it:
       <Copyright/>
       <Packager>NEVSTOP</Packager>
       <URL>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</URL>
-      <Release_Notes/>
+      <Release_Notes>[update] update connection information
+[update] update server/client VI icon
+[fix] type "bye", client will exit, as the connection will be closed from server side.</Release_Notes>
     </Description>
     <Destinations>
       <Toolkit_VIs>
