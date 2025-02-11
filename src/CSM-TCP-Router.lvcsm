@@ -2,8 +2,10 @@
 Item 0 = "Channels"
 Item 1 = "read"
 Item 2 = "read all"
+Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
 
 [CSMAPI.HAL-DIO.vi]
+Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
 Item 0 = "Turn On"
 Item 1 = "Turn Off"
 Item 2 = "Check"
@@ -13,6 +15,7 @@ Item 4 = "Reset All"
 [CSMAPI.MAL-TEST.vi]
 Item 0 = "Sweep"
 Item 1 = "Measure"
+Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
 
 [CSMStates.HAL-AI.vi]
 Item 0 = "Idle"
@@ -41,8 +44,10 @@ Item 22 = "read"
 Item 23 = "read all"
 Item 24 = "DoSth: DoA"
 Item 25 = "DoSth: DoB"
+Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
 
 [CSMStates.HAL-DIO.vi]
+Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
 Item 0 = "Idle"
 Item 1 = "CSM Documentation"
 Item 2 = "Error Handler"
@@ -98,7 +103,20 @@ Item 21 = "Sweep"
 Item 22 = "Measure"
 Item 23 = "DoSth: DoA"
 Item 24 = "DoSth: DoB"
+Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
 
 [CSM Debug Console]
-Response Timeout(s) = 30
-History Length = 50
+Response Timeout(s) = 30    
+History Length = 50    
+
+[CSMModule.AI]
+VIName = "HAL-AI.vi"
+
+[CSMModule.DIO]
+VIName = "HAL-DIO.vi"
+
+[CSMModule.DIO2]
+VIName = "HAL-DIO.vi"
+
+[CSMModule.Measure]
+VIName = "MAL-TEST.vi"
