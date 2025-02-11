@@ -1,5 +1,7 @@
 # CSM-TCP-Router
 
+[English](./README.md) | [中文](./README(zh-cn).md)
+
 Application Example to show how to setup a TCP Server and Client using CSM and JKI TCP Server.
 
 ![image](.doc/CSM-TCP-Router.drawio.png)
