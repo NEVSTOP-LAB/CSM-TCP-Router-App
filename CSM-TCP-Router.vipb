@@ -1,7 +1,7 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-01-27 15:16:25" Creator="liyao" Comments="" ID="3a2592b0a2150ede397b8a2a75869d4a">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-02-11 09:49:26" Creator="liyao" Comments="" ID="237cec2d7525e8cb881c802cbf48e8f0">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
-    <Library_Version>2025.1.27.2</Library_Version>
+    <Library_Version>2025.2.0.2</Library_Version>
     <Auto_Increment_Version>false</Auto_Increment_Version>
     <Library_Source_Folder>src</Library_Source_Folder>
     <Library_Output_Folder>vip</Library_Output_Folder>
