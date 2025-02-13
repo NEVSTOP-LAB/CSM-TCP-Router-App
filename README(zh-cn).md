@@ -4,6 +4,9 @@
 
 应用示例展示了如何使用 CSM 和 JKI TCP Server 设置 TCP 服务器和客户端。
 
+功能：
+
+
 ![image](.doc/CSM-TCP-Router.drawio.png)
 
 **CSM-TCP-Router 服务器**
