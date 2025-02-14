@@ -108,6 +108,13 @@ Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
 [CSM Debug Console]
 Response Timeout(s) = 30    
 History Length = 50    
+History 0 = "API: Start JKI TCP Server -@ CSM TCP Router"
+History 1 = "API: Stop JKI TCP Server -@ CSM TCP Router"
+History 2 = "API: Get Connection Details -@ CSM TCP Router"
+History 3 = "API: Get Connection Number -@ CSM TCP Router"
+History 4 = "API: Get Connection Number ->| CSM TCP Router"
+History 5 = "API: Get Time Running -@ CSM TCP Router"
+History 6 = "API: Get Connection Details ->| CSM TCP Router"
 
 [CSMModule.AI]
 VIName = "HAL-AI.vi"
@@ -120,3 +127,18 @@ VIName = "HAL-DIO.vi"
 
 [CSMModule.Measure]
 VIName = "MAL-TEST.vi"
+
+[CSMModule.CSM TCP Router]
+VIName = "CSM Router Module.vi"
+
+[CSMAPI.CSM Router Module.vi]
+Path = "<AppDir>/Server/_support/CSM Router Module.vi"
+Item 0 = "API: Start JKI TCP Server"
+Item 1 = "API: Disconnect All Client"
+Item 2 = "API: Get Time Running"
+Item 3 = "API: Get Connection Number"
+Item 4 = "API: Get Connection Details"
+Item 5 = "API: Stop JKI TCP Server"
+
+[CSMModule..CSM TCP Router]
+VIName = "CSM Router Module.vi"
