@@ -31,18 +31,19 @@
 				<Item Name="CSM-Helper API with lvcsm Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/API with lvcsm Support/CSM-Helper API with lvcsm Support.lvlib"/>
 				<Item Name="CSM-Helper Utility.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/CSM-Helper Utility.lvlib"/>
 				<Item Name="CSM-Helper.lvclass" Type="LVClass" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/CSM-Helper.lvclass"/>
-				<Item Name="csmHelper-CaseStructure.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/CaseStructure/csmHelper-CaseStructure.lvlib"/>
-				<Item Name="csmHelper-Diagram.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Diagram/csmHelper-Diagram.lvlib"/>
-				<Item Name="csmHelper-PairedTunnels.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/PairedTunnels/csmHelper-PairedTunnels.lvlib"/>
-				<Item Name="csmHelper-Relationship.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Relationship/csmHelper-Relationship.lvlib"/>
-				<Item Name="csmHelper-SubVI.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/SubVI/csmHelper-SubVI.lvlib"/>
-				<Item Name="csmHelper-Terminals.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Terminals/csmHelper-Terminals.lvlib"/>
+				<Item Name="csmHelper-CaseStructure.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/CaseStructure.llb/csmHelper-CaseStructure.lvlib"/>
+				<Item Name="csmHelper-Diagram.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Diagram.llb/csmHelper-Diagram.lvlib"/>
+				<Item Name="csmHelper-GObject.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/GObject.llb/csmHelper-GObject.lvlib"/>
+				<Item Name="csmHelper-PairedTunnels.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/PairedTunnels.llb/csmHelper-PairedTunnels.lvlib"/>
+				<Item Name="csmHelper-Relationship.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Relationship.llb/csmHelper-Relationship.lvlib"/>
+				<Item Name="csmHelper-SubVI.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/SubVI.llb/csmHelper-SubVI.lvlib"/>
+				<Item Name="csmHelper-Terminals.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Terminals.llb/csmHelper-Terminals.lvlib"/>
+				<Item Name="csmHelper-Wire.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Wire.llb/csmHelper-Wire.lvlib"/>
 				<Item Name="GSTOP.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/GlobalStop/GSTOP.lvlib"/>
 				<Item Name="INI-Static-Variable-Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/INI-Static-Variable-Support/INI-Static-Variable-Support.lvlib"/>
 				<Item Name="LabVIEW-Config.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/INI-Static-Variable-Support/LabVIEW-Config/LabVIEW-Config.lvlib"/>
 				<Item Name="lvcsm File Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/lvcsmFile/lvcsm File Support.lvlib"/>
 				<Item Name="Tick Count (ms)__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/time/time.llb/Tick Count (ms)__ogtk.vi"/>
-				<Item Name="Wait (ms)__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/time/time.llb/Wait (ms)__ogtk.vi"/>
 			</Item>
 			<Item Name="vi.lib" Type="Folder">
 				<Item Name="8.6CompatibleGlobalVar.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/config.llb/8.6CompatibleGlobalVar.vi"/>
@@ -97,6 +98,7 @@
 				<Item Name="Longest Line Length in Pixels.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Longest Line Length in Pixels.vi"/>
 				<Item Name="LVBoundsTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVBoundsTypeDef.ctl"/>
 				<Item Name="LVDateTimeRec.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVDateTimeRec.ctl"/>
+				<Item Name="LVDeltaXY32Cluster.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVDeltaXY32Cluster.ctl"/>
 				<Item Name="LVPointTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVPointTypeDef.ctl"/>
 				<Item Name="LVPositionTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVPositionTypeDef.ctl"/>
 				<Item Name="LVRectTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVRectTypeDef.ctl"/>
@@ -121,6 +123,7 @@
 				<Item Name="Set String Value.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Set String Value.vi"/>
 				<Item Name="Simple Error Handler.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Simple Error Handler.vi"/>
 				<Item Name="Space Constant.vi" Type="VI" URL="/&lt;vilib&gt;/dlg_ctls.llb/Space Constant.vi"/>
+				<Item Name="Stall Data Flow.vim" Type="VI" URL="/&lt;vilib&gt;/Utility/Stall Data Flow.vim"/>
 				<Item Name="subFile Dialog.vi" Type="VI" URL="/&lt;vilib&gt;/express/express input/FileDialogBlock.llb/subFile Dialog.vi"/>
 				<Item Name="Synchronize Data Flow.vim" Type="VI" URL="/&lt;vilib&gt;/Utility/Synchronize Data Flow.vim"/>
 				<Item Name="TagReturnType.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/TagReturnType.ctl"/>
@@ -172,7 +175,7 @@
 				<Property Name="Source[0].itemID" Type="Str">{F7A5A582-5BDE-4E17-B1F9-48DB4D83CB57}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
-				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Client/Client.vi</Property>
+				<Property Name="Source[1].itemID" Type="Ref"></Property>
 				<Property Name="Source[1].sourceInclusion" Type="Str">TopLevel</Property>
 				<Property Name="Source[1].type" Type="Str">VI</Property>
 				<Property Name="SourceCount" Type="Int">2</Property>
@@ -213,7 +216,7 @@
 				<Property Name="Source[0].itemID" Type="Str">{F7A5A582-5BDE-4E17-B1F9-48DB4D83CB57}</Property>
 				<Property Name="Source[0].type" Type="Str">Container</Property>
 				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
-				<Property Name="Source[1].itemID" Type="Ref">/My Computer/Server/CSM-TCP-Router(Server).vi</Property>
+				<Property Name="Source[1].itemID" Type="Ref"></Property>
 				<Property Name="Source[1].sourceInclusion" Type="Str">TopLevel</Property>
 				<Property Name="Source[1].type" Type="Str">VI</Property>
 				<Property Name="Source[2].destinationIndex" Type="Int">0</Property>
@@ -231,15 +234,16 @@
 			</Item>
 		</Item>
 	</Item>
-	<Item Name="RT PXI Target" Type="RT PXI Chassis">
-		<Property Name="alias.name" Type="Str">RT PXI Target</Property>
-		<Property Name="alias.value" Type="Str">10.144.36.41</Property>
-		<Property Name="CCSymbols" Type="Str">TARGET_TYPE,RT;OS,PharLap;CPU,x86;</Property>
+	<Item Name="NI-cRIO-9068" Type="RT CompactRIO">
+		<Property Name="alias.name" Type="Str">NI-cRIO-9068</Property>
+		<Property Name="alias.value" Type="Str">10.144.45.18</Property>
+		<Property Name="CCSymbols" Type="Str">TARGET_TYPE,RT;OS,Linux;CPU,ARM;DeviceCode,76D6;</Property>
+		<Property Name="crio.ControllerPID" Type="Str">76D6</Property>
 		<Property Name="host.ResponsivenessCheckEnabled" Type="Bool">true</Property>
 		<Property Name="host.ResponsivenessCheckPingDelay" Type="UInt">5000</Property>
 		<Property Name="host.ResponsivenessCheckPingTimeout" Type="UInt">1000</Property>
-		<Property Name="host.TargetCPUID" Type="UInt">3</Property>
-		<Property Name="host.TargetOSID" Type="UInt">15</Property>
+		<Property Name="host.TargetCPUID" Type="UInt">8</Property>
+		<Property Name="host.TargetOSID" Type="UInt">8</Property>
 		<Property Name="target.cleanupVisa" Type="Bool">false</Property>
 		<Property Name="target.FPProtocolGlobals_ControlTimeLimit" Type="Int">300</Property>
 		<Property Name="target.getDefault-&gt;WebServer.Port" Type="Int">80</Property>
@@ -258,7 +262,7 @@
 		<Property Name="target.RTTarget.EnableFileSharing" Type="Bool">true</Property>
 		<Property Name="target.RTTarget.IPAccess" Type="Str">+*</Property>
 		<Property Name="target.RTTarget.LaunchAppAtBoot" Type="Bool">false</Property>
-		<Property Name="target.RTTarget.VIPath" Type="Path">/c/ni-rt/startup</Property>
+		<Property Name="target.RTTarget.VIPath" Type="Path">/home/lvuser/natinst/bin</Property>
 		<Property Name="target.server.app.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="target.server.control.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="target.server.tcp.access" Type="Str">+*</Property>
@@ -324,17 +328,18 @@ AddOutputFilter chunkFilter
 				<Item Name="CSM-Helper API with lvcsm Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/API with lvcsm Support/CSM-Helper API with lvcsm Support.lvlib"/>
 				<Item Name="CSM-Helper Utility.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/CSM-Helper Utility.lvlib"/>
 				<Item Name="CSM-Helper.lvclass" Type="LVClass" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/CSM-Helper.lvclass"/>
-				<Item Name="csmHelper-CaseStructure.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/CaseStructure/csmHelper-CaseStructure.lvlib"/>
-				<Item Name="csmHelper-Diagram.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Diagram/csmHelper-Diagram.lvlib"/>
-				<Item Name="csmHelper-PairedTunnels.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/PairedTunnels/csmHelper-PairedTunnels.lvlib"/>
-				<Item Name="csmHelper-Relationship.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Relationship/csmHelper-Relationship.lvlib"/>
-				<Item Name="csmHelper-SubVI.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/SubVI/csmHelper-SubVI.lvlib"/>
-				<Item Name="csmHelper-Terminals.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Terminals/csmHelper-Terminals.lvlib"/>
+				<Item Name="csmHelper-CaseStructure.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/CaseStructure.llb/csmHelper-CaseStructure.lvlib"/>
+				<Item Name="csmHelper-Diagram.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Diagram.llb/csmHelper-Diagram.lvlib"/>
+				<Item Name="csmHelper-GObject.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/GObject.llb/csmHelper-GObject.lvlib"/>
+				<Item Name="csmHelper-PairedTunnels.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/PairedTunnels.llb/csmHelper-PairedTunnels.lvlib"/>
+				<Item Name="csmHelper-Relationship.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Relationship.llb/csmHelper-Relationship.lvlib"/>
+				<Item Name="csmHelper-SubVI.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/SubVI.llb/csmHelper-SubVI.lvlib"/>
+				<Item Name="csmHelper-Terminals.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Terminals.llb/csmHelper-Terminals.lvlib"/>
+				<Item Name="csmHelper-Wire.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/Utility/_Support/Wire.llb/csmHelper-Wire.lvlib"/>
 				<Item Name="INI-Static-Variable-Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/INI-Static-Variable-Support/INI-Static-Variable-Support.lvlib"/>
 				<Item Name="LabVIEW-Config.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/INI-Static-Variable-Support/LabVIEW-Config/LabVIEW-Config.lvlib"/>
 				<Item Name="lvcsm File Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/_csmHelper/lvcsmFile/lvcsm File Support.lvlib"/>
 				<Item Name="Tick Count (ms)__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/time/time.llb/Tick Count (ms)__ogtk.vi"/>
-				<Item Name="Wait (ms)__ogtk.vi" Type="VI" URL="/&lt;userlib&gt;/_OpenG.lib/time/time.llb/Wait (ms)__ogtk.vi"/>
 			</Item>
 			<Item Name="vi.lib" Type="Folder">
 				<Item Name="8.6CompatibleGlobalVar.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/config.llb/8.6CompatibleGlobalVar.vi"/>
@@ -370,6 +375,7 @@ AddOutputFilter chunkFilter
 				<Item Name="JKI TCP Server.lvclass" Type="LVClass" URL="/&lt;vilib&gt;/addons/_JKI.lib/_JKI_lib_TCP_Server.llb/JKI TCP Server.lvclass"/>
 				<Item Name="LVBoundsTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVBoundsTypeDef.ctl"/>
 				<Item Name="LVDateTimeRec.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVDateTimeRec.ctl"/>
+				<Item Name="LVDeltaXY32Cluster.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVDeltaXY32Cluster.ctl"/>
 				<Item Name="LVPointTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVPointTypeDef.ctl"/>
 				<Item Name="LVPositionTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVPositionTypeDef.ctl"/>
 				<Item Name="LVRectTypeDef.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/miscctls.llb/LVRectTypeDef.ctl"/>
@@ -389,6 +395,7 @@ AddOutputFilter chunkFilter
 				<Item Name="Semaphore RefNum" Type="VI" URL="/&lt;vilib&gt;/Utility/semaphor.llb/Semaphore RefNum"/>
 				<Item Name="Semaphore Refnum Core.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/semaphor.llb/Semaphore Refnum Core.ctl"/>
 				<Item Name="Space Constant.vi" Type="VI" URL="/&lt;vilib&gt;/dlg_ctls.llb/Space Constant.vi"/>
+				<Item Name="Stall Data Flow.vim" Type="VI" URL="/&lt;vilib&gt;/Utility/Stall Data Flow.vim"/>
 				<Item Name="Synchronize Data Flow.vim" Type="VI" URL="/&lt;vilib&gt;/Utility/Synchronize Data Flow.vim"/>
 				<Item Name="Timestamp to ISO8601 Date.vi" Type="VI" URL="/&lt;vilib&gt;/LabVIEW Open Source Project/Epoch Date &amp; Time/formatter.iso8601/Timestamp to ISO8601 Date.vi"/>
 				<Item Name="Timestamp to ISO8601 Day.vi" Type="VI" URL="/&lt;vilib&gt;/LabVIEW Open Source Project/Epoch Date &amp; Time/formatter.iso8601/Timestamp to ISO8601 Day.vi"/>
@@ -405,54 +412,6 @@ AddOutputFilter chunkFilter
 				<Item Name="whitespace.ctl" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/whitespace.ctl"/>
 			</Item>
 		</Item>
-		<Item Name="Build Specifications" Type="Build">
-			<Item Name="Server" Type="{69A947D5-514E-4E75-818E-69657C0547D8}">
-				<Property Name="App_copyErrors" Type="Bool">true</Property>
-				<Property Name="App_INI_aliasGUID" Type="Str">{EA0251F0-A448-403C-A246-4A907D4EB333}</Property>
-				<Property Name="App_INI_GUID" Type="Str">{F1EE95FA-4C24-4270-9C0C-06F9F8C4F8D5}</Property>
-				<Property Name="App_serverConfig.httpPort" Type="Int">8002</Property>
-				<Property Name="App_serverType" Type="Int">0</Property>
-				<Property Name="Bld_autoIncrement" Type="Bool">true</Property>
-				<Property Name="Bld_buildCacheID" Type="Str">{A422469F-7D6E-4219-9399-AB08AB6260EA}</Property>
-				<Property Name="Bld_buildSpecName" Type="Str">Server</Property>
-				<Property Name="Bld_excludeInlineSubVIs" Type="Bool">true</Property>
-				<Property Name="Bld_excludeLibraryItems" Type="Bool">true</Property>
-				<Property Name="Bld_excludePolymorphicVIs" Type="Bool">true</Property>
-				<Property Name="Bld_localDestDir" Type="Path">../_Build/RT</Property>
-				<Property Name="Bld_localDestDirType" Type="Str">relativeToProject</Property>
-				<Property Name="Bld_modifyLibraryFile" Type="Bool">true</Property>
-				<Property Name="Bld_previewCacheID" Type="Str">{038BB82D-815A-43A9-B677-8A0662710E2F}</Property>
-				<Property Name="Bld_targetDestDir" Type="Path">/c/ni-rt/startup</Property>
-				<Property Name="Bld_version.build" Type="Int">3</Property>
-				<Property Name="Bld_version.major" Type="Int">1</Property>
-				<Property Name="Destination[0].destName" Type="Str">startup.rtexe</Property>
-				<Property Name="Destination[0].path" Type="Path">/c/ni-rt/startup/startup.rtexe</Property>
-				<Property Name="Destination[0].path.type" Type="Str">&lt;none&gt;</Property>
-				<Property Name="Destination[0].preserveHierarchy" Type="Bool">true</Property>
-				<Property Name="Destination[0].type" Type="Str">App</Property>
-				<Property Name="Destination[1].destName" Type="Str">Support Directory</Property>
-				<Property Name="Destination[1].path" Type="Path">/c/ni-rt/startup</Property>
-				<Property Name="Destination[1].path.type" Type="Str">&lt;none&gt;</Property>
-				<Property Name="DestinationCount" Type="Int">2</Property>
-				<Property Name="Source[0].itemID" Type="Str">{B40576F1-AD00-416B-82B1-748407E6E56F}</Property>
-				<Property Name="Source[0].type" Type="Str">Container</Property>
-				<Property Name="Source[1].destinationIndex" Type="Int">0</Property>
-				<Property Name="Source[1].itemID" Type="Ref">/RT PXI Target/Server/CSM-TCP-Router(Server).vi</Property>
-				<Property Name="Source[1].sourceInclusion" Type="Str">TopLevel</Property>
-				<Property Name="Source[1].type" Type="Str">VI</Property>
-				<Property Name="Source[2].destinationIndex" Type="Int">0</Property>
-				<Property Name="Source[2].itemID" Type="Ref">/RT PXI Target/CSM-TCP-Router.lvcsm</Property>
-				<Property Name="Source[2].newName" Type="Str">Server.lvcsm</Property>
-				<Property Name="Source[2].sourceInclusion" Type="Str">Include</Property>
-				<Property Name="SourceCount" Type="Int">3</Property>
-				<Property Name="TgtF_fileDescription" Type="Str">Server</Property>
-				<Property Name="TgtF_internalName" Type="Str">Server</Property>
-				<Property Name="TgtF_legalCopyright" Type="Str">Copyright ?2025 </Property>
-				<Property Name="TgtF_productName" Type="Str">Server</Property>
-				<Property Name="TgtF_targetfileGUID" Type="Str">{309CFF2A-698F-4C3F-A807-E7C8A3DAA997}</Property>
-				<Property Name="TgtF_targetfileName" Type="Str">startup.rtexe</Property>
-				<Property Name="TgtF_versionIndependent" Type="Bool">true</Property>
-			</Item>
-		</Item>
+		<Item Name="Build Specifications" Type="Build"/>
 	</Item>
 </Project>
