@@ -1,24 +1,8 @@
-[CSMAPI.HAL-AI.vi]
+[CSMModule.AI]
+VIName = "HAL-AI.vi"
 Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
-Item 0 = "Channels"
-Item 1 = "read"
-Item 2 = "read all"
-
-[CSMAPI.HAL-DIO.vi]
-Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
-Item 0 = "Turn On"
-Item 1 = "Turn Off"
-Item 2 = "Check"
-Item 3 = "Check All"
-Item 4 = "Reset All"
-
-[CSMAPI.MAL-TEST.vi]
-Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
-Item 0 = "Sweep"
-Item 1 = "Measure"
 
 [CSMStates.HAL-AI.vi]
-Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
 Item 0 = "Idle"
 Item 1 = "CSM Documentation"
 Item 2 = "Error Handler"
@@ -46,8 +30,19 @@ Item 23 = "read all"
 Item 24 = "DoSth: DoA"
 Item 25 = "DoSth: DoB"
 
-[CSMStates.HAL-DIO.vi]
+[CSMAPI.HAL-AI.vi]
+Item 0 = "Channels"
+Item 1 = "read"
+Item 2 = "read all"
+
+[CSMDoc.HAL-AI.vi]
+doc = "AI Module with 4 Channels.%0AAPI:%0A1. Channels %2F%2F List all Channels %0A2. Read %3E%3E ChannelName%3BNum %2F%2FRead num of points from Channel specified.%0A3.read all %3E%3E Num %2F%2F Read num of points from all channels."
+
+[CSMModule.DIO]
+VIName = "HAL-DIO.vi"
 Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
+
+[CSMStates.HAL-DIO.vi]
 Item 0 = "Idle"
 Item 1 = "CSM Documentation"
 Item 2 = "Error Handler"
@@ -77,8 +72,25 @@ Item 25 = "Reset All"
 Item 26 = "DoSth: DoA"
 Item 27 = "DoSth: DoB"
 
-[CSMStates.MAL-TEST.vi]
+[CSMAPI.HAL-DIO.vi]
+Item 0 = "Turn On"
+Item 1 = "Turn Off"
+Item 2 = "Check"
+Item 3 = "Check All"
+Item 4 = "Reset All"
+
+[CSMDoc.HAL-DIO.vi]
+doc = "DIO Module with 8 Channels.%0AAPI:%0A1. TurnOn %3E%3E ChannelIndex %2F%2FSet Channel to ON.%0A2. TurnOff %3E%3E ChannelIndex %2F%2FSet Channel to OFF.%0A3. Check %3E%3E ChannelIndex %2F%2FCheck current status of Channel.%0A4. CheckAll %2F%2FCheck status of all channels%0A5. ResetAll %2F%2FReset All channels"
+
+[CSMModule.DIO2]
+VIName = "HAL-DIO.vi"
+Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
+
+[CSMModule.Measure]
+VIName = "MAL-TEST.vi"
 Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
+
+[CSMStates.MAL-TEST.vi]
 Item 0 = "Idle"
 Item 1 = "CSM Documentation"
 Item 2 = "Error Handler"
@@ -105,46 +117,9 @@ Item 22 = "Measure"
 Item 23 = "DoSth: DoA"
 Item 24 = "DoSth: DoB"
 
-[CSM Debug Console]
-Response Timeout(s) = 30
-History Length = 50
-History 0 = "API: Start JKI TCP Server -@ CSM TCP Router"
-History 1 = "API: Stop JKI TCP Server -@ CSM TCP Router"
-History 2 = "API: Get Connection Details -@ CSM TCP Router"
-History 3 = "API: Get Connection Number -@ CSM TCP Router"
-History 4 = "API: Get Connection Number ->| CSM TCP Router"
-History 5 = "API: Get Time Running -@ CSM TCP Router"
-History 6 = "API: Get Connection Details ->| CSM TCP Router"
-
-[CSMModule.AI]
-VIName = "HAL-AI.vi"
-
-[CSMModule.DIO]
-VIName = "HAL-DIO.vi"
-
-[CSMModule.DIO2]
-VIName = "HAL-DIO.vi"
-
-[CSMModule.Measure]
-VIName = "MAL-TEST.vi"
-
-[CSMModule.CSM TCP Router]
-VIName = "CSM Router Module.vi"
-
-[CSMAPI.CSM Router Module.vi]
-Path = "<AppDir>/Server/_support/CSM Router Module.vi"
-Item 0 = "API: Start JKI TCP Server"
-Item 1 = "API: Disconnect All Client"
-Item 2 = "API: Get Time Running"
-Item 3 = "API: Get Connection Number"
-Item 4 = "API: Get Connection Details"
-Item 5 = "API: Stop JKI TCP Server"
-
-[CSMDoc.HAL-AI.vi]
-doc = "AI Module with 4 Channels.%0AAPI:%0A1. Channels %2F%2F List all Channels %0A2. Read %3E%3E ChannelName%3BNum %2F%2FRead num of points from Channel specified.%0A3.read all %3E%3E Num %2F%2F Read num of points from all channels."
-
-[CSMDoc.HAL-DIO.vi]
-doc = "DIO Module with 8 Channels.%0AAPI:%0A1. TurnOn %3E%3E ChannelIndex %2F%2FSet Channel to ON.%0A2. TurnOff %3E%3E ChannelIndex %2F%2FSet Channel to OFF.%0A3. Check %3E%3E ChannelIndex %2F%2FCheck current status of Channel.%0A4. CheckAll %2F%2FCheck status of all channels%0A5. ResetAll %2F%2FReset All channels"
+[CSMAPI.MAL-TEST.vi]
+Item 0 = "Sweep"
+Item 1 = "Measure"
 
 [CSMDoc.MAL-TEST.vi]
 doc = "Measurement Module.%0AAPI: %0A1. Sweep %3E%3E Start%3BStop%3BStep%3BInterval %2F%2F sweep current with specified parameters.%0A2. Measure %2F%2F Return voltage and current at the same time."
