@@ -1,4 +1,4 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-02-13 11:09:15" Creator="liyao" Comments="" ID="5b9ce7589ab42f4a81209695e3e6a4fd">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-02-28 15:22:55" Creator="liyao" Comments="" ID="87a1501566075aebed5513952fe62c41">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
     <Library_Version>2025.2.0.2</Library_Version>
@@ -18,9 +18,9 @@
   <Advanced_Settings>
     <Package_Dependencies>
       <Additional_External_Dependencies>jki_lib_tcp_server &gt;=5.0.0.8</Additional_External_Dependencies>
-      <Additional_External_Dependencies>nevstop_lib_communicable_state_machine &gt;=2025.1.27.141432</Additional_External_Dependencies>
+      <Additional_External_Dependencies>nevstop_lib_communicable_state_machine &gt;=2025.2.28.95859</Additional_External_Dependencies>
       <Additional_External_Dependencies>nevstop_lib_csm_api_string_arguments_support &gt;=2025.1.27.145038</Additional_External_Dependencies>
-      <Additional_External_Dependencies>nevstop_lib_csm_ini_static_variable_support &gt;=2025.1.27.143156</Additional_External_Dependencies>
+      <Additional_External_Dependencies>nevstop_lib_csm_ini_static_variable_support &gt;=2025.2.28.100053</Additional_External_Dependencies>
       <Additional_External_Dependencies>nevstop_lib_csm_massdata_parameter_support &gt;=2024.12.31.84154</Additional_External_Dependencies>
       <Additional_External_Dependencies>nevstop_lib_globalstop &gt;=2022.12.12.102654</Additional_External_Dependencies>
       <Additional_External_Dependencies>oglib_error &gt;=4.2.0.23</Additional_External_Dependencies>
@@ -37,13 +37,41 @@
     <VI_Package_Configuration_File>CSM-TCP-Router.vipc</VI_Package_Configuration_File>
     <Description>
       <One_Line_Description_Summary>Application Example to show how to setup a TCP Server and Client using CSM and JKI TCP Server.</One_Line_Description_Summary>
-      <Description>Application Example to show how to setup a TCP Server and Client using CSM and JKI TCP Server.
+      <Description>This repository demonstrates how to create a reusable TCP communication layer (CSM-TCP-Router) to turn a local program into a TCP server for remote control. This example showcases the advantages of the CSM framework's invisible bus.
 
-How to test it: 
+## Features
 
-1. Open Project in &lt;LabVIEW&gt;/examples\NEVSTOP\Communicable State Machine(CSM)\CSM TCP Router Application
-2. Run Server VI: CSM-TCP-Router(Server).vi
-3. Run Client Console VI: Client.vi and try it.</Description>
+- All CSM messages that can be sent locally can be transmitted to the local program via TCP connection using CSM synchronous and asynchronous message formats.
+- Based on the JKI-TCP-Server library, it supports multiple TCP clients connecting simultaneously.
+- [client] Provides a standard TCP client that can connect to the server to verify remote connections and message sending.
+
+&gt; [!IMPORTANT]
+&gt; `TCP Packet Format:` | Data Length (4 bytes) | CSM Command String (plain text) |
+
+&gt; [!NOTE]
+&gt; Example: Suppose there is a CSM module named DAQmx locally with an interface "API: Start Sampling".
+&gt; Locally, we can send messages to this module to control the start and stop of sampling:
+&gt;
+&gt; - API: Start Sampling -@ DAQmx // Synchronous message
+&gt; - API: Start Sampling -&gt; DAQmx // Asynchronous message
+&gt; - API: Start Sampling -&gt;| DAQmx // Asynchronous message without return
+&gt;
+&gt; Now, by sending the same text message via TCP connection, remote control can be achieved.
+
+&gt; [!WARNING]
+&gt; Currently, CSM-TCP-Router only supports synchronous messages (-@) and asynchronous messages without return (-&gt;|). Asynchronous messages (-&gt;) will be treated as asynchronous messages without return.
+
+## Usage
+
+1. Install this tool and dependencies via VIPM
+2. Open the example project CSM-TCP-Router.lvproj in the CSM examples
+3. Start the CSM-TCP-Router(Server).vi in the code project
+4. Start Client.vi, enter the server's IP address and port number, and click connect
+5. Enter commands and click send to see the returned messages in the console
+6. View the history of executed messages in the log interface of the Server program
+7. Enter `Bye` in Client.vi to disconnect
+8. Close the Server program
+</Description>
       <Copyright/>
       <Packager>NEVSTOP</Packager>
       <URL>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</URL>
@@ -189,6 +217,7 @@ How to test it:
       <close_labview_before_install>false</close_labview_before_install>
       <restart_labview_after_install>false</restart_labview_after_install>
       <skip_mass_compile_after_install>false</skip_mass_compile_after_install>
+      <install_into_global_environment>false</install_into_global_environment>
     </LabVIEW>
     <VI_Docs>
       <Edit_VI_Description>true</Edit_VI_Description>
