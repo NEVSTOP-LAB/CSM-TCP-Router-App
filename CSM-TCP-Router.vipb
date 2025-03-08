@@ -1,7 +1,7 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-02-28 15:22:55" Creator="liyao" Comments="" ID="87a1501566075aebed5513952fe62c41">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-03-08 20:40:28" Creator="liyao" Comments="" ID="04d8c63c7b49c1de0c1e831b119398a8">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
-    <Library_Version>2025.2.0.2</Library_Version>
+    <Library_Version>2025.3.0.2</Library_Version>
     <Auto_Increment_Version>false</Auto_Increment_Version>
     <Library_Source_Folder>src</Library_Source_Folder>
     <Library_Output_Folder>vip</Library_Output_Folder>
@@ -75,11 +75,7 @@
       <Copyright/>
       <Packager>NEVSTOP</Packager>
       <URL>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</URL>
-      <Release_Notes>[add] add IP address/Port input dialog for client.
-[update] update connection information
-[update] update server/client VI icon
-[fix] type "bye", client will exit, as the connection will be closed from server side.
-[fix] minor fix. #5</Release_Notes>
+      <Release_Notes/>
     </Description>
     <Destinations>
       <Toolkit_VIs>
@@ -217,7 +213,6 @@
       <close_labview_before_install>false</close_labview_before_install>
       <restart_labview_after_install>false</restart_labview_after_install>
       <skip_mass_compile_after_install>false</skip_mass_compile_after_install>
-      <install_into_global_environment>false</install_into_global_environment>
     </LabVIEW>
     <VI_Docs>
       <Edit_VI_Description>true</Edit_VI_Description>
