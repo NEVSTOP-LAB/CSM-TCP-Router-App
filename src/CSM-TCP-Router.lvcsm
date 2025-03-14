@@ -123,3 +123,81 @@ Item 24 = "DoSth: DoB"
 [CSM Debug Console]
 Response Timeout(s) = 30
 History Length = 50
+
+[CSMModule.CSM TCP Router]
+VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
+
+[CSMVI.CSM-TCP-Router.lvlib:CSM-TCP-Router.vi]
+Path = "<AppDir>/Server/_support/Module/CSM-TCP-Router.vi"
+
+[CSMStates.CSM-TCP-Router.lvlib:CSM-TCP-Router.vi]
+Item 0 = "Idle"
+Item 1 = "CSM Documentation"
+Item 2 = "VI Reference"
+Item 3 = "Error Handler"
+Item 4 = "Critical Error"
+Item 5 = "Target Timeout Error"
+Item 6 = "Target Error"
+Item 7 = "Async Response"
+Item 8 = "Response"
+Item 9 = "Async Message Posted"
+Item 10 = "Initialize Core Data"
+Item 11 = "Exit"
+Item 12 = "Data: Initialize"
+Item 13 = "Data: Get Configuration"
+Item 14 = "Data: Get Internal Data"
+Item 15 = "Data: Set Configuration"
+Item 16 = "Data: Update Indicators"
+Item 17 = "Data: Cleanup"
+Item 18 = "Macro: Initialize"
+Item 19 = "Macro: Exit"
+Item 20 = "API: Start JKI TCP Server"
+Item 21 = "API: Disconnect All Client"
+Item 22 = "API: Get Time Running"
+Item 23 = "API: Get Connection Number"
+Item 24 = "API: Get Connection Details"
+Item 25 = "API: Stop JKI TCP Server"
+
+[CSMModule.CSM TCP Router.71000005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMVI.CSM-TCP-Router.lvlib:Connection Handler Worker.vi]
+Path = "<AppDir>/Server/_support/Module/_support/Connection Handler Worker.vi"
+
+[CSMStates.CSM-TCP-Router.lvlib:Connection Handler Worker.vi]
+Item 0 = "Idle"
+Item 1 = "CSM Documentation"
+Item 2 = "VI Reference"
+Item 3 = "Error Handler"
+Item 4 = "Critical Error"
+Item 5 = "Target Timeout Error"
+Item 6 = "Target Error"
+Item 7 = "Async Response"
+Item 8 = "Response"
+Item 9 = "Async Message Posted"
+Item 10 = "Initialize Core Data"
+Item 11 = "Exit"
+Item 12 = "Data: Initialize"
+Item 13 = "Data: Get Configuration"
+Item 14 = "Data: Get Internal Data"
+Item 15 = "Data: Set Configuration"
+Item 16 = "Data: Update Indicators"
+Item 17 = "Data: Cleanup"
+Item 18 = "Macro: Initialize"
+Item 19 = "Macro: Exit"
+Item 20 = "API: API1"
+Item 21 = "API: API2"
+Item 22 = "Action: Action1"
+Item 23 = "Action: Action2"
+
+[CSMModule.CSM TCP Router.F4C00005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMModule.CSM TCP Router.F5000005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMModule.CSM TCP Router.F5300005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMModule.CSM TCP Router.F5700005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
