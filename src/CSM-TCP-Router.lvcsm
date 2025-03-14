@@ -115,10 +115,14 @@ Item 17 = "Data: Update Indicators"
 Item 18 = "Data: Cleanup"
 Item 19 = "Macro: Initialize"
 Item 20 = "Macro: Exit"
-Item 21 = "Sweep"
-Item 22 = "Measure"
-Item 23 = "DoSth: DoA"
-Item 24 = "DoSth: DoB"
+Item 21 = "Generate Status"
+Item 22 = "start loop"
+Item 23 = "stop loop"
+Item 24 = "Sweep"
+Item 25 = "Measure"
+Item 26 = "action: start loop"
+Item 27 = "action: loop check"
+Item 28 = "action: end loop"
 
 [CSM Debug Console]
 Response Timeout(s) = 30
@@ -201,3 +205,12 @@ VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
 
 [CSMModule.CSM TCP Router.F5700005]
 VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMDoc.HAL-AI.vi]
+doc = "AI Module with 4 Channels.%0AAPI:%0A1. Channels %2F%2F List all Channels %0A2. Read %3E%3E ChannelName%3BNum %2F%2FRead num of points from Channel specified.%0A3.read all %3E%3E Num %2F%2F Read num of points from all channels."
+
+[CSMDoc.HAL-DIO.vi]
+doc = "DIO Module with 8 Channels.%0AAPI:%0A1. TurnOn %3E%3E ChannelIndex %2F%2FSet Channel to ON.%0A2. TurnOff %3E%3E ChannelIndex %2F%2FSet Channel to OFF.%0A3. Check %3E%3E ChannelIndex %2F%2FCheck current status of Channel.%0A4. CheckAll %2F%2FCheck status of all channels%0A5. ResetAll %2F%2FReset All channels"
+
+[CSMDoc.MAL-TEST.vi]
+doc = "Measurement Module.%0AAPI: %0A1. Sweep %3E%3E Start%3BStop%3BStep%3BInterval %2F%2F sweep current with specified parameters.%0A2. Measure %2F%2F Return voltage and current at the same time."
