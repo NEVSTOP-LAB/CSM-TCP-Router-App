@@ -30,7 +30,7 @@ This field defines the type of the data packet and is an enumerated value. The s
 - Asynchronous Response Packet (`async-resp`) - `0x04`
 - Subscription Status Packet (`status`) - `0x05`
 
-For detailed communication protocol definitions, see [Protocol Design](/Protocol%20Design.v0.(en).md).
+For detailed communication protocol definitions, see [Protocol Design](Protocol.v0.(en).md).
 
 ## Supported Command Sets
 

@@ -30,7 +30,7 @@ CSM-TCP-Router 中 TCP 数据包格式定义如下：
 - 异步响应数据包(async-resp) - `0x04`
 - 订阅返回数据包(status) - `0x05`
 
-详细的通讯协议定义, 见 [协议设计](/Protocol%20Design.v0.(zh-cn).md)
+详细的通讯协议定义, 见 [协议设计](Protocol.v0.(zh-cn).md)
 
 ## 指令集
 
