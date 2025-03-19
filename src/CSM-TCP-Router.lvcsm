@@ -191,8 +191,7 @@ Item 18 = "Macro: Initialize"
 Item 19 = "Macro: Exit"
 Item 20 = "API: API1"
 Item 21 = "API: API2"
-Item 22 = "Action: Action1"
-Item 23 = "Action: Action2"
+Item 22 = "Action: Send Sync Message"
 
 [CSMModule.CSM TCP Router.F4C00005]
 VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
