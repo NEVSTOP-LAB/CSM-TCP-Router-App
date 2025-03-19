@@ -125,8 +125,8 @@ Item 27 = "action: loop check"
 Item 28 = "action: end loop"
 
 [CSM Debug Console]
-Response Timeout(s) = 30
-History Length = 50
+Response Timeout(s) = 30    
+History Length = 50    
 
 [CSMModule.CSM TCP Router]
 VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
@@ -214,3 +214,6 @@ doc = "DIO Module with 8 Channels.%0AAPI:%0A1. TurnOn %3E%3E ChannelIndex %2F%2F
 
 [CSMDoc.MAL-TEST.vi]
 doc = "Measurement Module.%0AAPI: %0A1. Sweep %3E%3E Start%3BStop%3BStep%3BInterval %2F%2F sweep current with specified parameters.%0A2. Measure %2F%2F Return voltage and current at the same time."
+
+[CSMModule.Measure2]
+VIName = "MAL-TEST.vi"

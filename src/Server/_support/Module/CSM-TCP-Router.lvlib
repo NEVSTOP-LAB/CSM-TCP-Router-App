@@ -5,11 +5,11 @@
 	<Property Name="NI.Lib.Version" Type="Str">1.0.0.0</Property>
 	<Item Name="Support" Type="Folder">
 		<Item Name="Connection Handler Worker.vi" Type="VI" URL="../_support/Connection Handler Worker.vi"/>
+		<Item Name="pack tcp packet.vi" Type="VI" URL="../_support/pack tcp packet.vi"/>
+		<Item Name="unpack tcp packet.vi" Type="VI" URL="../_support/unpack tcp packet.vi"/>
 	</Item>
 	<Item Name="Typedef" Type="Folder">
 		<Item Name="tcp-msg type.ctl" Type="VI" URL="../typedef/tcp-msg type.ctl"/>
 	</Item>
 	<Item Name="CSM-TCP-Router.vi" Type="VI" URL="../CSM-TCP-Router.vi"/>
-	<Item Name="Pack.vi" Type="VI" URL="../_support/Pack.vi"/>
-	<Item Name="unpack.vi" Type="VI" URL="../_support/unpack.vi"/>
 </Library>
