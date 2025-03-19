@@ -62,24 +62,30 @@ The content of a command packet is a command in the CSM local command format. It
 > [!NOTE]
 > Example: Suppose there is a CSM module named `DAQmx` in the local program with an interface `API: Start Sampling`. You can send the following messages to control data acquisition:
 >
-> - `API: Start Sampling -@ DAQmx` // Synchronous message
-> - `API: Start Sampling -> DAQmx` // Asynchronous message
-> - `API: Start Sampling ->| DAQmx` // Asynchronous message without return
+> ``` c++
+> API: Start Sampling -@ DAQmx // Synchronous message
+> API: Start Sampling -> DAQmx // Asynchronous message
+> API: Start Sampling ->| DAQmx // Asynchronous message without return
+> ```
 >
 > These messages can also be sent over a TCP connection to achieve remote control.
 
 > [!NOTE]
 > Example: Suppose there is a CSM module `A` that continuously sends a monitoring status called `Status`. Another module `B` can subscribe to this status:
 >
-> - `status@a >> api@b -><register>` // Subscribe to status
-> - `status@a >> api@b -><unregister>` // Unsubscribe from status
+> ``` c++
+> status@a >> api@b -><register> // Subscribe to status
+> status@a >> api@b -><unregister> // Unsubscribe from status
+> ```
 >
 > Similarly, these messages can be sent over a TCP connection to manage subscriptions remotely.
 >
 > If the subscriber (`api@b`) is omitted, it indicates that the client connected to the TCP router is subscribing to the status:
 >
-> - `status@a -><register>` // Client subscribes to module A's status
-> - `status@a >> api@b -><unregister>` // Client unsubscribes from module A's status
+> ``` c++
+> status@a -><register> // Client subscribes to module A's status
+> status@a >> api@b -><unregister> // Client unsubscribes from module A's status
+> ```
 >
 > When module `A` sends a `Status`, the client will automatically receive a `status` packet.
 
