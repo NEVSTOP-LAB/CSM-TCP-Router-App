@@ -12,21 +12,25 @@ This repository demonstrates how to create a reusable TCP communication layer (C
 - Based on the JKI-TCP-Server library, it supports multiple TCP clients connecting simultaneously.
 - [client] Provides a standard TCP client that can connect to the server to verify remote connections and message sending.
 
-> [!IMPORTANT]
-> `TCP Packet Format:` | Data Length (4 bytes) | CSM Command String (plain text) |
+## Protocol
 
-> [!NOTE]
-> Example: Suppose there is a CSM module named DAQmx locally with an interface "API: Start Sampling".
-> Locally, we can send messages to this module to control the start and stop of sampling:
->
-> - API: Start Sampling -@ DAQmx // Synchronous message
-> - API: Start Sampling -> DAQmx // Asynchronous message
-> - API: Start Sampling ->| DAQmx // Asynchronous message without return
->
-> Now, by sending the same text message via TCP connection, remote control can be achieved.
+The TCP packet format used in the CSM-TCP-Router is defined as follows:
 
-> [!WARNING]
-> Currently, CSM-TCP-Router only supports synchronous messages (-@) and asynchronous messages without return (->|). Asynchronous messages (->) will be treated as asynchronous messages without return.
+```
+| Data Length (4B) | Version (1B) | TYPE (1B) | FLAG1 (1B) | FLAG2 (1B) |      Text Data          |
+╰───────────────────────────────── Header ──────────────────────────────╯╰─── Data Length Range ──╯
+```
+
+This field defines the type of the data packet and is an enumerated value. The supported packet types are:
+
+- Information Packet (`info`) - `0x00`
+- Error Packet (`error`) - `0x01`
+- Command Packet (`cmd`) - `0x02`
+- Synchronous Response Packet (`resp`) - `0x03`
+- Asynchronous Response Packet (`async-resp`) - `0x04`
+- Subscription Status Packet (`status`) - `0x05`
+
+For detailed communication protocol definitions, see [Protocol Design](/Protocol%20Design.v0.(en).md).
 
 ## Supported Command Sets
 

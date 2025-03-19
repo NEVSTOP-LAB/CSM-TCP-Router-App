@@ -125,8 +125,8 @@ Item 27 = "action: loop check"
 Item 28 = "action: end loop"
 
 [CSM Debug Console]
-Response Timeout(s) = 30    
-History Length = 50    
+Response Timeout(s) = 30
+History Length = 50
 
 [CSMModule.CSM TCP Router]
 VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
