@@ -2,9 +2,9 @@
 
 The TCP packet format used in the CSM-TCP-Router is defined as follows:
 
-```
+``` txt
 | Data Length (4B) | Version (1B) | TYPE (1B) | FLAG1 (1B) | FLAG2 (1B) |      Text Data          |
-╰───────────────────────────────── Header ──────────────────────────────╯╰─── Data Length Range ──╯
+╰─────────────────────── Header (8B)      ──────────────────────────────╯╰─── Data Length Range ──╯
 ```
 
 ## Header Fields
