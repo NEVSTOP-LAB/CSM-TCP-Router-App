@@ -1,4 +1,4 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-03-14 23:22:27" Creator="liyao" Comments="" ID="6c3183605ec9657f19dc71ffd9ca30b3">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-03-26 22:57:17" Creator="liyao" Comments="" ID="d445ff5669eab75606fa3bc7f2771d1e">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
     <Library_Version>2025.3.0.2</Library_Version>
@@ -18,9 +18,9 @@
   <Advanced_Settings>
     <Package_Dependencies>
       <Additional_External_Dependencies>jki_lib_tcp_server &gt;=5.0.0.8</Additional_External_Dependencies>
-      <Additional_External_Dependencies>nevstop_lib_communicable_state_machine &gt;=2025.2.28.95859</Additional_External_Dependencies>
-      <Additional_External_Dependencies>nevstop_lib_csm_api_string_arguments_support &gt;=2025.1.27.145038</Additional_External_Dependencies>
-      <Additional_External_Dependencies>nevstop_lib_csm_ini_static_variable_support &gt;=2025.2.28.100053</Additional_External_Dependencies>
+      <Additional_External_Dependencies>nevstop_lib_communicable_state_machine &gt;=2025.3.24.114002</Additional_External_Dependencies>
+      <Additional_External_Dependencies>nevstop_lib_csm_api_string_arguments_support &gt;=2025.3.14.155345</Additional_External_Dependencies>
+      <Additional_External_Dependencies>nevstop_lib_csm_ini_static_variable_support &gt;=2025.3.23.221959</Additional_External_Dependencies>
       <Additional_External_Dependencies>nevstop_lib_csm_massdata_parameter_support &gt;=2024.12.31.84154</Additional_External_Dependencies>
       <Additional_External_Dependencies>oglib_error &gt;=4.2.0.23</Additional_External_Dependencies>
       <Additional_External_Dependencies>oglib_time &gt;=4.0.1.3</Additional_External_Dependencies>
@@ -213,6 +213,7 @@
       <close_labview_before_install>false</close_labview_before_install>
       <restart_labview_after_install>false</restart_labview_after_install>
       <skip_mass_compile_after_install>false</skip_mass_compile_after_install>
+      <install_into_global_environment>false</install_into_global_environment>
     </LabVIEW>
     <VI_Docs>
       <Edit_VI_Description>true</Edit_VI_Description>
