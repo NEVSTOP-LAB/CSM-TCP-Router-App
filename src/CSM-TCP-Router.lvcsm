@@ -1,6 +1,13 @@
 [CSMModule.AI]
 VIName = "HAL-AI.vi"
+
+[CSMVI.HAL-AI.vi]
 Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
+
+[CSMAPI.HAL-AI.vi]
+Item 0 = "Channels"
+Item 1 = "read"
+Item 2 = "read all"
 
 [CSMStates.HAL-AI.vi]
 Item 0 = "Idle"
@@ -30,17 +37,18 @@ Item 23 = "read all"
 Item 24 = "DoSth: DoA"
 Item 25 = "DoSth: DoB"
 
-[CSMAPI.HAL-AI.vi]
-Item 0 = "Channels"
-Item 1 = "read"
-Item 2 = "read all"
-
-[CSMDoc.HAL-AI.vi]
-doc = "AI Module with 4 Channels.%0AAPI:%0A1. Channels %2F%2F List all Channels %0A2. Read %3E%3E ChannelName%3BNum %2F%2FRead num of points from Channel specified.%0A3.read all %3E%3E Num %2F%2F Read num of points from all channels."
-
 [CSMModule.DIO]
 VIName = "HAL-DIO.vi"
+
+[CSMVI.HAL-DIO.vi]
 Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
+
+[CSMAPI.HAL-DIO.vi]
+Item 0 = "Turn On"
+Item 1 = "Turn Off"
+Item 2 = "Check"
+Item 3 = "Check All"
+Item 4 = "Reset All"
 
 [CSMStates.HAL-DIO.vi]
 Item 0 = "Idle"
@@ -72,23 +80,18 @@ Item 25 = "Reset All"
 Item 26 = "DoSth: DoA"
 Item 27 = "DoSth: DoB"
 
-[CSMAPI.HAL-DIO.vi]
-Item 0 = "Turn On"
-Item 1 = "Turn Off"
-Item 2 = "Check"
-Item 3 = "Check All"
-Item 4 = "Reset All"
-
-[CSMDoc.HAL-DIO.vi]
-doc = "DIO Module with 8 Channels.%0AAPI:%0A1. TurnOn %3E%3E ChannelIndex %2F%2FSet Channel to ON.%0A2. TurnOff %3E%3E ChannelIndex %2F%2FSet Channel to OFF.%0A3. Check %3E%3E ChannelIndex %2F%2FCheck current status of Channel.%0A4. CheckAll %2F%2FCheck status of all channels%0A5. ResetAll %2F%2FReset All channels"
-
 [CSMModule.DIO2]
 VIName = "HAL-DIO.vi"
-Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
 
 [CSMModule.Measure]
 VIName = "MAL-TEST.vi"
+
+[CSMVI.MAL-TEST.vi]
 Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
+
+[CSMAPI.MAL-TEST.vi]
+Item 0 = "Sweep"
+Item 1 = "Measure"
 
 [CSMStates.MAL-TEST.vi]
 Item 0 = "Idle"
@@ -112,14 +115,104 @@ Item 17 = "Data: Update Indicators"
 Item 18 = "Data: Cleanup"
 Item 19 = "Macro: Initialize"
 Item 20 = "Macro: Exit"
-Item 21 = "Sweep"
-Item 22 = "Measure"
-Item 23 = "DoSth: DoA"
-Item 24 = "DoSth: DoB"
+Item 21 = "Generate Status"
+Item 22 = "start loop"
+Item 23 = "stop loop"
+Item 24 = "Sweep"
+Item 25 = "Measure"
+Item 26 = "action: start loop"
+Item 27 = "action: loop check"
+Item 28 = "action: end loop"
 
-[CSMAPI.MAL-TEST.vi]
-Item 0 = "Sweep"
-Item 1 = "Measure"
+[CSM Debug Console]
+Response Timeout(s) = 30
+History Length = 50
+
+[CSMModule.CSM TCP Router]
+VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
+
+[CSMVI.CSM-TCP-Router.lvlib:CSM-TCP-Router.vi]
+Path = "<AppDir>/Server/_support/Module/CSM-TCP-Router.vi"
+
+[CSMStates.CSM-TCP-Router.lvlib:CSM-TCP-Router.vi]
+Item 0 = "Idle"
+Item 1 = "CSM Documentation"
+Item 2 = "VI Reference"
+Item 3 = "Error Handler"
+Item 4 = "Critical Error"
+Item 5 = "Target Timeout Error"
+Item 6 = "Target Error"
+Item 7 = "Async Response"
+Item 8 = "Response"
+Item 9 = "Async Message Posted"
+Item 10 = "Initialize Core Data"
+Item 11 = "Exit"
+Item 12 = "Data: Initialize"
+Item 13 = "Data: Get Configuration"
+Item 14 = "Data: Get Internal Data"
+Item 15 = "Data: Set Configuration"
+Item 16 = "Data: Update Indicators"
+Item 17 = "Data: Cleanup"
+Item 18 = "Macro: Initialize"
+Item 19 = "Macro: Exit"
+Item 20 = "API: Start JKI TCP Server"
+Item 21 = "API: Disconnect All Client"
+Item 22 = "API: Get Time Running"
+Item 23 = "API: Get Connection Number"
+Item 24 = "API: Get Connection Details"
+Item 25 = "API: Stop JKI TCP Server"
+
+[CSMModule.CSM TCP Router.71000005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMVI.CSM-TCP-Router.lvlib:Connection Handler Worker.vi]
+Path = "<AppDir>/Server/_support/Module/_support/Connection Handler Worker.vi"
+
+[CSMStates.CSM-TCP-Router.lvlib:Connection Handler Worker.vi]
+Item 0 = "Idle"
+Item 1 = "CSM Documentation"
+Item 2 = "VI Reference"
+Item 3 = "Error Handler"
+Item 4 = "Critical Error"
+Item 5 = "Target Timeout Error"
+Item 6 = "Target Error"
+Item 7 = "Async Response"
+Item 8 = "Response"
+Item 9 = "Async Message Posted"
+Item 10 = "Initialize Core Data"
+Item 11 = "Exit"
+Item 12 = "Data: Initialize"
+Item 13 = "Data: Get Configuration"
+Item 14 = "Data: Get Internal Data"
+Item 15 = "Data: Set Configuration"
+Item 16 = "Data: Update Indicators"
+Item 17 = "Data: Cleanup"
+Item 18 = "Macro: Initialize"
+Item 19 = "Macro: Exit"
+Item 20 = "API: API1"
+Item 21 = "API: API2"
+Item 22 = "Action: Send Sync Message"
+
+[CSMModule.CSM TCP Router.F4C00005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMModule.CSM TCP Router.F5000005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMModule.CSM TCP Router.F5300005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMModule.CSM TCP Router.F5700005]
+VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
+
+[CSMDoc.HAL-AI.vi]
+doc = "AI Module with 4 Channels.%0AAPI:%0A1. Channels %2F%2F List all Channels %0A2. Read %3E%3E ChannelName%3BNum %2F%2FRead num of points from Channel specified.%0A3.read all %3E%3E Num %2F%2F Read num of points from all channels."
+
+[CSMDoc.HAL-DIO.vi]
+doc = "DIO Module with 8 Channels.%0AAPI:%0A1. TurnOn %3E%3E ChannelIndex %2F%2FSet Channel to ON.%0A2. TurnOff %3E%3E ChannelIndex %2F%2FSet Channel to OFF.%0A3. Check %3E%3E ChannelIndex %2F%2FCheck current status of Channel.%0A4. CheckAll %2F%2FCheck status of all channels%0A5. ResetAll %2F%2FReset All channels"
 
 [CSMDoc.MAL-TEST.vi]
 doc = "Measurement Module.%0AAPI: %0A1. Sweep %3E%3E Start%3BStop%3BStep%3BInterval %2F%2F sweep current with specified parameters.%0A2. Measure %2F%2F Return voltage and current at the same time."
+
+[CSMModule.Measure2]
+VIName = "MAL-TEST.vi"

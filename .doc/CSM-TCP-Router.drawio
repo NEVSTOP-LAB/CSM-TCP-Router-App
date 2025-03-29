@@ -1,86 +1,86 @@
-<mxfile host="Electron" modified="2025-02-28T07:26:44.008Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.2.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="cyMs0HYJES8RfmmC9SH7" version="24.2.5" type="device">
-  <diagram name="Page-1" id="BROWTK-tv3HINJJnRvhU">
-    <mxGraphModel dx="2924" dy="1204" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-3" value="Server Appication&lt;br&gt;as&lt;div&gt;TCP Server&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;align=right;fontSize=24;fillColor=#f5f5f5;fontColor=#67AB9F;strokeColor=#666666;" parent="1" vertex="1">
-          <mxGeometry x="-40" y="1060" width="710" height="260" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-8" value="Server Application" style="rounded=1;whiteSpace=wrap;html=1;fontSize=32;horizontal=0;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="250" y="70" width="570" height="630" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-6" value="&lt;font style=&quot;font-size: 32px;&quot;&gt;CSM Module System&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=27;" parent="1" vertex="1">
-          <mxGeometry x="320" y="120" width="450" height="340" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-1" value="AI (CSM Module1)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="370" y="190" width="170" height="110" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-2" value="DIO1 (CSM Module2)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="370" y="310" width="170" height="110" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-3" value="DIO1 (CSM Module3)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="550" y="190" width="170" height="110" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-4" value="Measure (CSM Module4)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="550" y="310" width="170" height="110" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-7" value="CSM TCP Router&amp;nbsp;&lt;br style=&quot;font-size: 32px;&quot;&gt;(based on JKI TCP Server)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=32;" parent="1" vertex="1">
-          <mxGeometry x="320" y="560" width="450" height="100" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-9" value="Client Application" style="rounded=1;whiteSpace=wrap;html=1;horizontal=0;verticalAlign=bottom;fontSize=32;" parent="1" vertex="1">
-          <mxGeometry x="-330" y="80" width="470" height="620" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-11" value="&lt;h1 style=&quot;border-color: var(--border-color); text-align: left; background-color: rgb(251, 251, 251);&quot;&gt;Server&amp;nbsp;&amp;nbsp;CSM Command&lt;/h1&gt;" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="bSppNkpc9tK16JuNjW37-7" target="bSppNkpc9tK16JuNjW37-6" edge="1">
-          <mxGeometry y="25" width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="500" y="540" as="sourcePoint" />
-            <mxPoint x="545" y="490" as="targetPoint" />
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-14" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=-0.002;entryY=0.84;entryDx=0;entryDy=0;entryPerimeter=0;endWidth=55;endSize=19.44;" parent="1" target="bSppNkpc9tK16JuNjW37-8" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="140" y="599" as="sourcePoint" />
-            <mxPoint x="190" y="590" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-15" value="&lt;h1&gt;Server Build-in Command&lt;/h1&gt;&lt;div&gt;&lt;/div&gt;CSM TCP Router 定义的指令，用于管理和显示帮助&lt;ul&gt;&lt;li&gt;List: 列出所有的 CSM 模块&lt;/li&gt;&lt;li&gt;List API: 列出CSM 模块的参数&lt;/li&gt;&lt;li&gt;Help: 显示CSM模块的帮助(VI Description)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="-300" y="300" width="340" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-16" value="&lt;h1&gt;Server&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;/span&gt;CSM Command&lt;/h1&gt;&lt;div&gt;由 CSM 模块定义的指令&lt;/div&gt;&lt;p&gt;CSM 的所有消息，都被转发到 CSM Modules 中执行，因此支持的消息种类，由Server 中的CSM Module System 中的CSM模块决定&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="-300" y="490" width="340" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="bSppNkpc9tK16JuNjW37-17" value="&lt;h1&gt;Client-Def Command&lt;/h1&gt;&lt;div&gt;Client 定义的本地指令，和server无关&lt;/div&gt;&lt;p&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Switch: 切换发送的CSM模块，节省键入CSM模块名称&lt;/li&gt;&lt;li&gt;Script: 导入执行 scipt 文本&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="-300" y="110" width="340" height="160" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-1" value="TCP Layer( Reusable)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=24;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#67AB9F;" parent="1" vertex="1">
-          <mxGeometry x="-10" y="1090" width="460" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-2" value="&lt;span style=&quot;font-size: 24px;&quot;&gt;Code Based CSM Framework&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 24px;&quot;&gt;（Based on the Requirements)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#67AB9F;" parent="1" vertex="1">
-          <mxGeometry x="-10" y="1160" width="460" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=4;dashed=1;strokeColor=#97D077;" parent="1" source="_VD7dqKGONi1E9zeLE5r-4" target="_VD7dqKGONi1E9zeLE5r-1" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-4" value="TCP Client" style="outlineConnect=0;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;shape=mxgraph.aws3.management_console;fillColor=#D2D3D3;gradientColor=none;labelPosition=center;fontColor=#67AB9F;" parent="1" vertex="1">
-          <mxGeometry x="50" y="790" width="100" height="100" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=4;dashed=1;strokeColor=#97D077;" parent="1" source="_VD7dqKGONi1E9zeLE5r-5" target="_VD7dqKGONi1E9zeLE5r-1" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-5" value="TCP Client" style="outlineConnect=0;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;shape=mxgraph.aws3.management_console;fillColor=#D2D3D3;gradientColor=none;labelPosition=center;fontColor=#67AB9F;" parent="1" vertex="1">
-          <mxGeometry x="170" y="790" width="100" height="100" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=4;dashed=1;strokeColor=#97D077;" parent="1" source="_VD7dqKGONi1E9zeLE5r-6" target="_VD7dqKGONi1E9zeLE5r-1" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-6" value="TCP Client" style="outlineConnect=0;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;shape=mxgraph.aws3.management_console;fillColor=#D2D3D3;gradientColor=none;labelPosition=center;fontColor=#67AB9F;" parent="1" vertex="1">
-          <mxGeometry x="290" y="790" width="100" height="100" as="geometry" />
-        </mxCell>
-        <mxCell id="_VD7dqKGONi1E9zeLE5r-14" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;TCP Command&lt;/h1&gt;&lt;p&gt;&lt;/p&gt;&lt;ol style=&quot;font-size: 15px;&quot;&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;| Length(4 Bytes) | CSM Command(Text) |&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;All CSM command from your code is supported&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;System command provided by TCP Layer is supported&lt;br&gt;list/help/list api ...&lt;/font&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;/p&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;fontColor=#67AB9F;" parent="1" vertex="1">
-          <mxGeometry x="370" y="910" width="430" height="120" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
+<mxfile host="65bd71144e">
+    <diagram name="Page-1" id="BROWTK-tv3HINJJnRvhU">
+        <mxGraphModel dx="2430" dy="930" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-3" value="Server Appication" style="rounded=1;whiteSpace=wrap;html=1;align=right;fontSize=24;fillColor=#f5f5f5;fontColor=#67AB9F;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="-40" y="1060" width="710" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-8" value="Server Application" style="rounded=1;whiteSpace=wrap;html=1;fontSize=32;horizontal=0;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="250" y="70" width="570" height="630" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-6" value="&lt;font style=&quot;font-size: 32px;&quot;&gt;CSM Module System&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=27;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="120" width="450" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-1" value="AI (CSM Module1)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="190" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-2" value="DIO1 (CSM Module2)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="310" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-3" value="DIO1 (CSM Module3)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="190" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-4" value="Measure (CSM Module4)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="310" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-7" value="CSM TCP Router&amp;nbsp;&lt;br style=&quot;font-size: 32px;&quot;&gt;(based on JKI TCP Server)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=32;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="560" width="450" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-9" value="Client Application" style="rounded=1;whiteSpace=wrap;html=1;horizontal=0;verticalAlign=bottom;fontSize=32;" parent="1" vertex="1">
+                    <mxGeometry x="-330" y="80" width="470" height="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-11" value="&lt;h1 style=&quot;border-color: var(--border-color); text-align: left; background-color: rgb(251, 251, 251);&quot;&gt;Server&amp;nbsp;&amp;nbsp;CSM Command&lt;/h1&gt;" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="bSppNkpc9tK16JuNjW37-7" target="bSppNkpc9tK16JuNjW37-6" edge="1">
+                    <mxGeometry y="25" width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="500" y="540" as="sourcePoint"/>
+                        <mxPoint x="545" y="490" as="targetPoint"/>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-14" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=-0.002;entryY=0.84;entryDx=0;entryDy=0;entryPerimeter=0;endWidth=55;endSize=19.44;" parent="1" target="bSppNkpc9tK16JuNjW37-8" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="140" y="599" as="sourcePoint"/>
+                        <mxPoint x="190" y="590" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-15" value="&lt;h1&gt;Server Build-in Command&lt;/h1&gt;&lt;div&gt;&lt;/div&gt;CSM TCP Router 定义的指令，用于管理和显示帮助&lt;ul&gt;&lt;li&gt;List: 列出所有的 CSM 模块&lt;/li&gt;&lt;li&gt;List API: 列出CSM 模块的参数&lt;/li&gt;&lt;li&gt;Help: 显示CSM模块的帮助(VI Description)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-300" y="300" width="340" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-16" value="&lt;h1&gt;Server&lt;span style=&quot;background-color: initial; font-size: 12px; font-weight: normal;&quot;&gt;&amp;nbsp;&amp;nbsp;&lt;/span&gt;CSM Command&lt;/h1&gt;&lt;div&gt;由 CSM 模块定义的指令&lt;/div&gt;&lt;p&gt;CSM 的所有消息，都被转发到 CSM Modules 中执行，因此支持的消息种类，由Server 中的CSM Module System 中的CSM模块决定&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-300" y="490" width="340" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="bSppNkpc9tK16JuNjW37-17" value="&lt;h1&gt;Client-Def Command&lt;/h1&gt;&lt;div&gt;Client 定义的本地指令，和server无关&lt;/div&gt;&lt;p&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Switch: 切换发送的CSM模块，节省键入CSM模块名称&lt;/li&gt;&lt;li&gt;Script: 导入执行 scipt 文本&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-300" y="110" width="340" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-1" value="TCP Layer( Reusable)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=24;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#67AB9F;" parent="1" vertex="1">
+                    <mxGeometry x="-10" y="1090" width="460" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-2" value="&lt;span style=&quot;font-size: 24px;&quot;&gt;Code Based CSM Framework&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 24px;&quot;&gt;（Based on the Requirements)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#67AB9F;" parent="1" vertex="1">
+                    <mxGeometry x="-10" y="1160" width="460" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=4;dashed=1;strokeColor=#97D077;" parent="1" source="_VD7dqKGONi1E9zeLE5r-4" target="_VD7dqKGONi1E9zeLE5r-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-4" value="TCP Client" style="outlineConnect=0;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;shape=mxgraph.aws3.management_console;fillColor=#D2D3D3;gradientColor=none;labelPosition=center;fontColor=#67AB9F;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="790" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=4;dashed=1;strokeColor=#97D077;" parent="1" source="_VD7dqKGONi1E9zeLE5r-5" target="_VD7dqKGONi1E9zeLE5r-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-5" value="TCP Client" style="outlineConnect=0;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;shape=mxgraph.aws3.management_console;fillColor=#D2D3D3;gradientColor=none;labelPosition=center;fontColor=#67AB9F;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="790" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=4;dashed=1;strokeColor=#97D077;" parent="1" source="_VD7dqKGONi1E9zeLE5r-6" target="_VD7dqKGONi1E9zeLE5r-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-6" value="TCP Client" style="outlineConnect=0;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;shape=mxgraph.aws3.management_console;fillColor=#D2D3D3;gradientColor=none;labelPosition=center;fontColor=#67AB9F;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="790" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="_VD7dqKGONi1E9zeLE5r-14" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;TCP Command&lt;/h1&gt;&lt;ol style=&quot;font-size: 15px;&quot;&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;All CSM command from your code is supported&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;System command provided by TCP Layer is supported&lt;br&gt;list/help/list api ...&lt;/font&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;/p&gt;&lt;p style=&quot;font-size: 15px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;fontColor=#67AB9F;" parent="1" vertex="1">
+                    <mxGeometry x="370" y="910" width="430" height="120" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
