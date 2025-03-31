@@ -6,6 +6,7 @@
 	<Item Name="Support" Type="Folder">
 		<Item Name="Connection Handler Worker.vi" Type="VI" URL="../_support/Connection Handler Worker.vi"/>
 		<Item Name="pack tcp packet.vi" Type="VI" URL="../_support/pack tcp packet.vi"/>
+		<Item Name="Read CSM Doc.vi" Type="VI" URL="../_support/Read CSM Doc.vi"/>
 		<Item Name="unpack tcp packet.vi" Type="VI" URL="../_support/unpack tcp packet.vi"/>
 	</Item>
 	<Item Name="Typedef" Type="Folder">

@@ -1,4 +1,4 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-03-31 09:47:04" Creator="liyao" Comments="" ID="4445bd8f0232a65cc733ac91e917afe0">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2025-03-31 14:33:53" Creator="liyao" Comments="" ID="fc7343cf223f5a8c54c6a571f1e5a61c">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
     <Library_Version>2025.4.0.2</Library_Version>
@@ -80,7 +80,7 @@
       <Toolkit_VIs>
         <LLB>false</LLB>
         <Preserve_Hierarchy>true</Preserve_Hierarchy>
-        <Path>&lt;user.lib&gt;\_NEVSTOP\CSM-TCP-Router</Path>
+        <Path>&lt;user.lib&gt;\_NEVSTOP\Communicable State Machine(CSM)\addons</Path>
       </Toolkit_VIs>
       <Examples>
         <LLB>false</LLB>
@@ -140,6 +140,12 @@
       <Destination_Overrides>
         <Path>.</Path>
         <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>_addons</Path>
+        <Destination>0</Destination>
         <Additional_Destination>false</Additional_Destination>
         <Additional_Destination_Index>0</Additional_Destination_Index>
       </Destination_Overrides>
