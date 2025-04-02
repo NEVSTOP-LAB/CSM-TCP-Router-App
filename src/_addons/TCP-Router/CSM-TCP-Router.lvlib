@@ -10,9 +10,13 @@
 	</Item>
 	<Item Name="Support" Type="Folder">
 		<Item Name="Connection Handler Worker.vi" Type="VI" URL="../_support/Connection Handler Worker.vi"/>
+		<Item Name="Error If Module Not Exist.vi" Type="VI" URL="../_support/Error If Module Not Exist.vi"/>
 		<Item Name="pack tcp packet.vi" Type="VI" URL="../_support/pack tcp packet.vi"/>
 		<Item Name="Read CSM Doc.vi" Type="VI" URL="../_support/Read CSM Doc.vi"/>
 		<Item Name="TCP Safe Read.vi" Type="VI" URL="../_support/TCP Safe Read.vi"/>
+		<Item Name="TCP Send Command Respone.vi" Type="VI" URL="../_support/TCP Send Command Respone.vi"/>
+		<Item Name="TCP Send Info.vi" Type="VI" URL="../_support/TCP Send Info.vi"/>
+		<Item Name="TCP Send Response.vi" Type="VI" URL="../_support/TCP Send Response.vi"/>
 		<Item Name="unpack tcp packet.vi" Type="VI" URL="../_support/unpack tcp packet.vi"/>
 	</Item>
 	<Item Name="Typedef" Type="Folder">

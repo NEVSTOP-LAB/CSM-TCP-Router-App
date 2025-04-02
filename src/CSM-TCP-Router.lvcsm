@@ -2,7 +2,7 @@
 VIName = "HAL-AI.vi"
 
 [CSMVI.HAL-AI.vi]
-Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
+Path = "<AppDir>/Server/CSM_Modules/HAL-AI.vi"
 
 [CSMAPI.HAL-AI.vi]
 Item 0 = "Channels"
@@ -125,8 +125,8 @@ Item 27 = "action: loop check"
 Item 28 = "action: end loop"
 
 [CSM Debug Console]
-Response Timeout(s) = 30    
-History Length = 50    
+Response Timeout(s) = 30
+History Length = 50
 
 [CSMModule.CSM TCP Router]
 VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
