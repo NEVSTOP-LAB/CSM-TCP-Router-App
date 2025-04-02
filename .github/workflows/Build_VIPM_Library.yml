@@ -29,10 +29,10 @@ jobs:
 
       # Get env variables
       # https://github.com/marketplace/actions/github-environment-variables-action
-      - uses: FranzDiebold/github-env-vars-action@v2
+      - uses: FranzDiebold/github-env-vars-action@v2.8.0
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: vipm-InstallPackage
         uses: NEVSTOP-LAB/vipm-InstallPackage@main

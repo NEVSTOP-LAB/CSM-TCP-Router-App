@@ -2,7 +2,7 @@
 VIName = "HAL-AI.vi"
 
 [CSMVI.HAL-AI.vi]
-Path = "<AppDir>/CSM_Modules/HAL-AI.vi"
+Path = "<AppDir>/Server/CSM_Modules/HAL-AI.vi"
 
 [CSMAPI.HAL-AI.vi]
 Item 0 = "Channels"
