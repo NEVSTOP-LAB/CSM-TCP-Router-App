@@ -41,7 +41,7 @@ Item 25 = "DoSth: DoB"
 VIName = "HAL-DIO.vi"
 
 [CSMVI.HAL-DIO.vi]
-Path = "<AppDir>/CSM_Modules/HAL-DIO.vi"
+Path = "<AppDir>/Server/CSM_Modules/HAL-DIO.vi"
 
 [CSMAPI.HAL-DIO.vi]
 Item 0 = "Turn On"
@@ -87,7 +87,7 @@ VIName = "HAL-DIO.vi"
 VIName = "MAL-TEST.vi"
 
 [CSMVI.MAL-TEST.vi]
-Path = "<AppDir>/CSM_Modules/MAL-TEST.vi"
+Path = "<AppDir>/Server/CSM_Modules/MAL-TEST.vi"
 
 [CSMAPI.MAL-TEST.vi]
 Item 0 = "Sweep"
@@ -132,7 +132,7 @@ History Length = 50
 VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
 
 [CSMVI.CSM-TCP-Router.lvlib:CSM-TCP-Router.vi]
-Path = "<AppDir>/Server/_support/Module/CSM-TCP-Router.vi"
+Path = "<AppDir>/_addons/TCP-Router/CSM-TCP-Router.vi"
 
 [CSMStates.CSM-TCP-Router.lvlib:CSM-TCP-Router.vi]
 Item 0 = "Idle"
@@ -166,7 +166,7 @@ Item 25 = "API: Stop JKI TCP Server"
 VIName = "CSM-TCP-Router.lvlib:Connection Handler Worker.vi"
 
 [CSMVI.CSM-TCP-Router.lvlib:Connection Handler Worker.vi]
-Path = "<AppDir>/Server/_support/Module/_support/Connection Handler Worker.vi"
+Path = "<AppDir>/_addons/TCP-Router/_support/Connection Handler Worker.vi"
 
 [CSMStates.CSM-TCP-Router.lvlib:Connection Handler Worker.vi]
 Item 0 = "Idle"
