@@ -33,9 +33,10 @@ Item 19 = "Macro: Initialize"
 Item 20 = "Macro: Exit"
 Item 21 = "Channels"
 Item 22 = "read"
-Item 23 = "read all"
-Item 24 = "DoSth: DoA"
-Item 25 = "DoSth: DoB"
+Item 23 = "read(massdata)"
+Item 24 = "read all"
+Item 25 = "DoSth: DoA"
+Item 26 = "DoSth: DoB"
 
 [CSMModule.DIO]
 VIName = "HAL-DIO.vi"
@@ -125,8 +126,8 @@ Item 27 = "action: loop check"
 Item 28 = "action: end loop"
 
 [CSM Debug Console]
-Response Timeout(s) = 30
-History Length = 50
+Response Timeout(s) = 30    
+History Length = 50    
 
 [CSMModule.CSM TCP Router]
 VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
