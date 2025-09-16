@@ -15,7 +15,8 @@ on:
       - '**.svg'
       - '**.json'
       - '**.yml'
-  
+      - 'SDK/**/*'
+
   pull_request:
     branches:
       - main
@@ -29,6 +30,7 @@ on:
       - '**.svg'
       - '**.json'
       - '**.yml'
+      - 'SDK/**/*'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
