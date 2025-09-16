@@ -61,21 +61,27 @@ class TcpRouterClient:
             if self.recv_thread:
                 self.recv_thread.join(timeout=2)
 
-    def send_message(self, message, packet_type=PacketType.CMD, flag1=0, flag2=0):
+    def send_message(self, message, packet_type, flag1=0, flag2=0):
         """发送消息到服务器"""
         if not self.connected:
             print("未连接到服务器")
             return False
 
         try:
+            # 确保消息为字节类型
+            if isinstance(message, str):
+                message_bytes = message.encode()  # 使用系统默认编码
+            else:
+                message_bytes = message
+            
             # 计算数据长度
-            data_len = len(message.encode('utf-8'))
+            data_len = len(message_bytes)
             # 构建数据包
             header = struct.pack('!IBBBB', data_len, 0x01, packet_type.value, flag1, flag2)
             # 发送数据包
             with self.lock:
                 self.socket.sendall(header)
-                self.socket.sendall(message.encode('utf-8'))
+                self.socket.sendall(message_bytes)
             return True
         except Exception as e:
             print(f"发送消息失败: {e}")
@@ -84,7 +90,7 @@ class TcpRouterClient:
 
     def send_message_and_wait_for_reply(self, message, timeout=5):
         """发送消息并等待回复"""
-        if not self.send_message(message):
+        if not self.send_message(message, PacketType.CMD):
             return None
 
         try:
@@ -96,11 +102,11 @@ class TcpRouterClient:
 
     def post_message(self, message):
         """发送异步消息"""
-        return self.send_message(message)
+        return self.send_message(message, PacketType.CMD)
 
     def post_no_rep_message(self, message):
         """发送无返回异步消息"""
-        return self.send_message(message)
+        return self.send_message(message, PacketType.CMD)
 
     def ping(self, timeout=2):
         """Ping服务器"""
@@ -114,7 +120,7 @@ class TcpRouterClient:
     def register_status_change(self, status_name, module_name, callback=None):
         """注册状态变化通知"""
         cmd = f"{status_name}@{module_name} -><register>"
-        success = self.send_message(cmd)
+        success = self.send_message(cmd, PacketType.CMD)
         if success and callback:
             with self.lock:
                 self.status_callbacks[(status_name, module_name)] = callback
@@ -123,7 +129,7 @@ class TcpRouterClient:
     def unregister_status_change(self, status_name, module_name):
         """取消注册状态变化通知"""
         cmd = f"{status_name}@{module_name} -><unregister>"
-        success = self.send_message(cmd)
+        success = self.send_message(cmd, PacketType.CMD)
         if success:
             with self.lock:
                 key = (status_name, module_name)
@@ -153,8 +159,8 @@ class TcpRouterClient:
                 # 解析包头
                 data_len, version, packet_type, flag1, flag2 = struct.unpack('!IBBBB', header)
 
-                # 接收数据
-                data = self._receive_all(data_len).decode('utf-8')
+                # 接收数据（保持字节类型）
+                data = self._receive_all(data_len)
 
                 # 处理不同类型的数据包
                 if packet_type == PacketType.RESP.value:
