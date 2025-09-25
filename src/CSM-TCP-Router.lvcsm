@@ -128,6 +128,9 @@ Item 28 = "action: end loop"
 [CSM Debug Console]
 Response Timeout(s) = 30    
 History Length = 50    
+Periodic Enable = TRUE
+Periodic threashold(#/s) = 0.500000
+Periodic Check Peroid(s) = 3.000000
 
 [CSMModule.CSM TCP Router]
 VIName = "CSM-TCP-Router.lvlib:CSM-TCP-Router.vi"
