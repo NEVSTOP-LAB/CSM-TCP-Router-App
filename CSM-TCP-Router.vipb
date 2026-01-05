@@ -1,7 +1,7 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2026-01-05 18:54:06" Creator="liyao" Comments="" ID="69943fa24ce5bd82894c0136a25f465d">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2026-01-05 21:17:11" Creator="liyao" Comments="" ID="de41dbd48ac7de9a079fa8f6dfcc8189">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
-    <Library_Version>2025.12.0.3</Library_Version>
+    <Library_Version>2025.12.0.5</Library_Version>
     <Auto_Increment_Version>false</Auto_Increment_Version>
     <Library_Source_Folder>src</Library_Source_Folder>
     <Library_Output_Folder>vip</Library_Output_Folder>
@@ -165,6 +165,42 @@
         <Path>_tool</Path>
         <Destination>0</Destination>
         <Additional_Destination>true</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>ClientAPI Example</Path>
+        <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>Server</Path>
+        <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>csm-app.ini</Path>
+        <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>CSM-TCP-Router-Example.lvcsm</Path>
+        <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>CSM-TCP-Router-Example.lvproj</Path>
+        <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
+        <Additional_Destination_Index>0</Additional_Destination_Index>
+      </Destination_Overrides>
+      <Destination_Overrides>
+        <Path>scripts.txt</Path>
+        <Destination>1</Destination>
+        <Additional_Destination>false</Additional_Destination>
         <Additional_Destination_Index>0</Additional_Destination_Index>
       </Destination_Overrides>
       <Password_Overrides>

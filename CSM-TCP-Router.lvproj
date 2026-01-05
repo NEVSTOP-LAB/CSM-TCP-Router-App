@@ -25,6 +25,7 @@
 			<Property Name="NI.DISK" Type="Bool">true</Property>
 		</Item>
 		<Item Name="csm-app.ini" Type="Document" URL="../src/csm-app.ini"/>
+		<Item Name="CSM-TCP-Router.vipb" Type="Document" URL="../CSM-TCP-Router.vipb"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="user.lib" Type="Folder">
 				<Item Name="API String Arguments Support.lvlib" Type="Library" URL="/&lt;userlib&gt;/_NEVSTOP/Communicable State Machine(CSM)/addons/API-String-Arugments-Support/API String Arguments Support.lvlib"/>
