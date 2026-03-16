@@ -25,10 +25,10 @@ CSM-TCP-Router 中 TCP 数据包格式定义如下：
 - 错误数据包(error) - `0x01`
 - 指令数据包(cmd) - `0x02`
 - 指令响应数据包(cmd-resp) - `0x03`
-- 同步响应数据包(resp) - `[待确认]`
-- 异步响应数据包(async-resp) - `0x04`
-- 订阅普通广播返回数据包(status) - `0x05`
-- 订阅中断广播返回数据包(interrupt) - `0x06`
+- 同步响应数据包(resp) - `0x04`
+- 异步响应数据包(async-resp) - `0x05`
+- 订阅普通广播返回数据包(status) - `0x06`
+- 订阅中断广播返回数据包(interrupt) - `0x07`
 
 ### FLAG1类型(1字节)
 
@@ -97,14 +97,16 @@ error 数据包的数据内容为错误信息内容，为纯文本格式，文�
 
 ### 指令响应数据包(cmd-resp)
 
-所有的指令数据包(cmd)在被服务端接收并处理后，都会有一个握手返回：
+除同步消息(-@)外，其他指令数据包(cmd)在被服务端接收并处理后，都会有一个握手返回：
 
 - **正常情况**：返回 `cmd-resp` 数据包，表示指令已被接受并触发执行。
 - **错误情况**：返回 `error` 数据包，表示指令执行出现错误。
 
 > [!NOTE]
 > `cmd-resp` 是对指令的握手确认，表示指令已被接受并开始执行，不包含业务响应数据。
-> 业务响应数据由 `resp` 或 `async-resp` 数据包返回。
+> 业务响应数据由 `async-resp` 数据包返回。
+>
+> 同步消息(-@)没有 `cmd-resp` 握手，执行完成后直接返回 `resp` 或 `error`。
 >
 
 ### 同步响应数据包(resp)
@@ -125,7 +127,7 @@ Client 订阅了CSM模块的状态，当状态发生时，client 会自动收到
 
 ### 同步消息流程 (`-@`)
 
-客户端发送同步指令后，**必须等待**服务端依次返回 `cmd-resp`（握手确认）和 `resp`（同步业务响应数据）后，才算完成一次完整交互。若指令执行出错，则仅返回 `error` 数据包。
+客户端发送同步指令后，**必须等待**服务端返回 `resp`（同步业务响应数据）后，才算完成一次完整交互。同步消息没有 `cmd-resp` 握手包。若指令执行出错，则返回 `error` 数据包。
 
 ```mermaid
 sequenceDiagram
@@ -134,7 +136,6 @@ sequenceDiagram
 
     C->>S: cmd (同步消息 -@)
     alt 指令执行成功
-        S-->>C: cmd-resp (指令已接受)
         S-->>C: resp (同步响应数据)
     else 指令执行失败
         S-->>C: error (错误信息)
@@ -143,7 +144,7 @@ sequenceDiagram
 
 ### 异步消息流程 (`->`)
 
-客户端发送异步指令后，服务端立即返回 `cmd-resp` 握手确认。客户端**无需等待**业务响应，可继续发送其他指令。业务处理完成后，服务端异步返回 `async-resp` 数据包。若指令执行出错，则仅返回 `error` 数据包。
+客户端发送异步指令后，服务端立即返回 `cmd-resp` 握手确认。客户端**无需等待**业务响应，可继续发送其他指令。业务处理完成后，服务端异步返回 `async-resp` 数据包；若处理出错，则返回 `error` 数据包（不再返回 `async-resp`）。
 
 ```mermaid
 sequenceDiagram
@@ -151,11 +152,11 @@ sequenceDiagram
     participant S as TCP-Router Server
 
     C->>S: cmd (异步消息 ->)
-    alt 指令执行成功
-        S-->>C: cmd-resp (指令已接受)
-        Note over S: 异步处理中...
+    S-->>C: cmd-resp (指令已接受)
+    Note over S: 异步处理中...
+    alt 执行成功
         S-->>C: async-resp (异步响应数据)
-    else 指令执行失败
+    else 执行出错
         S-->>C: error (错误信息)
     end
 ```
@@ -179,7 +180,13 @@ sequenceDiagram
 
 ### 订阅/注销流程 (`<register>` / `<unregister>`)
 
-客户端发送订阅或注销指令后，服务端返回 `cmd-resp` 握手确认。订阅成功后，每当被订阅模块发出状态，客户端会持续收到 `status` 数据包，直到取消订阅。
+客户端发送订阅或注销指令后，服务端返回 `cmd-resp` 握手确认。订阅成功后，每当被订阅模块发出状态，客户端会持续收到 `status` 数据包（普通广播）或 `interrupt` 数据包（中断广播），直到取消订阅。
+
+> [!NOTE]
+> `status` 和 `interrupt` 两种订阅广播类型均受支持：
+> - `status`（`0x06`）：普通广播，订阅模块的常规状态变化
+> - `interrupt`（`0x07`）：中断广播，订阅模块触发的中断事件
+>
 
 ```mermaid
 sequenceDiagram
@@ -191,10 +198,10 @@ sequenceDiagram
     alt 订阅成功
         S-->>C: cmd-resp (订阅已接受)
         Note over M,S: 模块状态变化时...
-        M->>S: 状态广播
+        M->>S: 普通状态广播
         S-->>C: status (状态数据)
-        M->>S: 状态广播
-        S-->>C: status (状态数据)
+        M->>S: 中断广播
+        S-->>C: interrupt (中断数据)
     else 订阅失败
         S-->>C: error (错误信息)
     end
