@@ -44,6 +44,22 @@ FLAG2用于描述数据包的属性, 保留字段。
 
 info 数据包的数据内容为提示信息内容，纯文本格式。
 
+服务端会在以下两种情况下向客户端发送 `info` 数据包：
+
+- **连接时**：客户端成功连接到服务器后，服务端发送欢迎 `info` 数据包：
+
+  ```
+  Welcome to the CSM TCP Router Server
+  API: "list", "list api", "list states", "help"
+  type "bye" to close connection from Server side.
+  ```
+
+- **断开连接时**：当连接从服务端侧关闭时，服务端发送告别 `info` 数据包：
+
+  ```
+  Good bye.
+  ```
+
 ### 错误数据包(error)
 
 error 数据包的数据内容为错误信息内容，为纯文本格式，文本格式定为 CSM Error 格式。

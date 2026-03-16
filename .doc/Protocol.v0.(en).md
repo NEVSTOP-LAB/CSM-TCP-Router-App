@@ -42,6 +42,22 @@ Similar to FLAG1, this field is reserved for future use to describe additional a
 
 The content of an information packet is plain text containing informational data.
 
+The server sends an `info` packet to the client in two specific situations:
+
+- **On Connection**: When a client successfully connects to the server, the server sends a welcome `info` packet:
+
+  ```
+  Welcome to the CSM TCP Router Server
+  API: "list", "list api", "list states", "help"
+  type "bye" to close connection from Server side.
+  ```
+
+- **On Disconnection**: When the connection is closed from the server side, the server sends a goodbye `info` packet:
+
+  ```
+  Good bye.
+  ```
+
 ### Error Packet (`error`)
 
 The content of an error packet is plain text describing an error, formatted as per the CSM Error format.

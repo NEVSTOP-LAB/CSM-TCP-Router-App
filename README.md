@@ -23,7 +23,7 @@ The TCP packet format used in the CSM-TCP-Router is defined as follows:
 
 This field defines the type of the data packet and is an enumerated value. The supported packet types are:
 
-- Information Packet (`info`) - `0x00`
+- Information Packet (`info`) - `0x00`: Sent by the server when a client connects (welcome message) and when the connection is closed (goodbye message)
 - Error Packet (`error`) - `0x01`
 - Command Packet (`cmd`) - `0x02`
 - Synchronous Response Packet (`resp`) - `0x03`
