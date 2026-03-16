@@ -104,7 +104,7 @@ error 数据包的数据内容为错误信息内容，为纯文本格式，文�
 
 > [!NOTE]
 > `cmd-resp` 是对指令的握手确认，表示指令已被接受并开始执行，不包含业务响应数据。
-> 业务响应数据由 `async-resp` 数据包返回。
+> 业务响应数据由 `resp` 或 `async-resp` 数据包返回。
 >
 > 同步消息(-@)没有 `cmd-resp` 握手，执行完成后直接返回 `resp` 或 `error`。
 >
@@ -127,7 +127,7 @@ Client 订阅了CSM模块的状态，当状态发生时，client 会自动收到
 
 ### 同步消息流程 (`-@`)
 
-客户端发送同步指令后，**必须等待**服务端返回 `resp`（同步业务响应数据）后，才算完成一次完整交互。同步消息没有 `cmd-resp` 握手包。若指令执行出错，则返回 `error` 数据包。
+客户端发送同步指令后，**必须等待**服务端返回响应：要么收到 `resp`（同步业务响应数据），要么收到 `error`（错误信息）。同步消息没有 `cmd-resp` 握手包。
 
 ```mermaid
 sequenceDiagram
@@ -144,7 +144,7 @@ sequenceDiagram
 
 ### 异步消息流程 (`->`)
 
-客户端发送异步指令后，服务端立即返回 `cmd-resp` 握手确认。客户端**无需等待**业务响应，可继续发送其他指令。业务处理完成后，服务端异步返回 `async-resp` 数据包；若处理出错，则返回 `error` 数据包（不再返回 `async-resp`）。
+客户端发送异步指令后，服务端首先返回确认包：要么是 `cmd-resp`（指令已接受），要么是 `error`（指令被拒绝）。若收到 `cmd-resp`，客户端**无需等待**业务响应，可继续发送其他指令；服务端异步处理完毕后，返回 `async-resp` 数据包。
 
 ```mermaid
 sequenceDiagram
@@ -152,11 +152,11 @@ sequenceDiagram
     participant S as TCP-Router Server
 
     C->>S: cmd (异步消息 ->)
-    S-->>C: cmd-resp (指令已接受)
-    Note over S: 异步处理中...
-    alt 执行成功
+    alt 指令接受
+        S-->>C: cmd-resp (指令已接受)
+        Note over S: 异步处理中...
         S-->>C: async-resp (异步响应数据)
-    else 执行出错
+    else 指令被拒绝
         S-->>C: error (错误信息)
     end
 ```
