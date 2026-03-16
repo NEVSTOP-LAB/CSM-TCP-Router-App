@@ -26,9 +26,11 @@ This field defines the type of the data packet and is an enumerated value. The s
 - Information Packet (`info`) - `0x00`: Sent by the server when a client connects (welcome message) and when the connection is closed (goodbye message)
 - Error Packet (`error`) - `0x01`
 - Command Packet (`cmd`) - `0x02`
-- Synchronous Response Packet (`resp`) - `0x03`
-- Asynchronous Response Packet (`async-resp`) - `0x04`
-- Subscription Status Packet (`status`) - `0x05`
+- Command Response Packet (`cmd-resp`) - `0x03`
+- Synchronous Response Packet (`resp`) - `0x04`
+- Asynchronous Response Packet (`async-resp`) - `0x05`
+- Subscription Normal Broadcast Packet (`status`) - `0x06`
+- Subscription Interrupt Broadcast Packet (`interrupt`) - `0x07`
 
 For detailed communication protocol definitions, see [Protocol Design](.doc/Protocol.v0.(en).md).
 
