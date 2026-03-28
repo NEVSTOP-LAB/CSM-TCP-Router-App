@@ -1,7 +1,7 @@
-<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2026-01-26 15:46:53" Creator="liyao" Comments="" ID="9be59efe978fc03e0dca4e48f00eb858">
+<VI_Package_Builder_Settings Version="2020.1" Created_Date="2023-09-27 14:21:53" Modified_Date="2026-03-16 16:40:38" Creator="liyao" Comments="" ID="d7994e1d8355f1a11a3780dc872b3bc2">
   <Library_General_Settings>
     <Package_File_Name>NEVSTOP_lib_CSM_TCP_Router_Example</Package_File_Name>
-    <Library_Version>2025.12.0.5</Library_Version>
+    <Library_Version>2026.1.0.5</Library_Version>
     <Auto_Increment_Version>false</Auto_Increment_Version>
     <Library_Source_Folder>src</Library_Source_Folder>
     <Library_Output_Folder>vip</Library_Output_Folder>
@@ -74,7 +74,7 @@
       <Copyright/>
       <Packager>NEVSTOP</Packager>
       <URL>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</URL>
-      <Release_Notes/>
+      <Release_Notes>[add] #23 Export "Net Address" for bind server to network adapter.</Release_Notes>
     </Description>
     <Destinations>
       <Toolkit_VIs>

@@ -24,9 +24,11 @@ CSM-TCP-Router 中 TCP 数据包格式定义如下：
 - 信息数据包(info) - `0x00`
 - 错误数据包(error) - `0x01`
 - 指令数据包(cmd) - `0x02`
-- 同步响应数据包(resp) - `0x03`
-- 异步响应数据包(async-resp) - `0x04`
-- 订阅返回数据包(status) - `0x05`
+- 指令响应数据包(cmd-resp) - `0x03`
+- 同步响应数据包(resp) - `0x04`
+- 异步响应数据包(async-resp) - `0x05`
+- 订阅普通广播返回数据包(status) - `0x06`
+- 订阅中断广播返回数据包(interrupt) - `0x07`
 
 ### FLAG1类型(1字节)
 
@@ -41,6 +43,22 @@ FLAG2用于描述数据包的属性, 保留字段。
 ### 信息数据包(info)
 
 info 数据包的数据内容为提示信息内容，纯文本格式。
+
+服务端会在以下两种情况下向客户端发送 `info` 数据包：
+
+- **连接时**：客户端成功连接到服务器后，服务端发送欢迎 `info` 数据包：
+
+  ```
+  Welcome to the CSM TCP Router Server
+  API: "list", "list api", "list states", "help"
+  type "bye" to close connection from Server side.
+  ```
+
+- **断开连接时**：当连接从服务端侧关闭时，服务端发送告别 `info` 数据包：
+
+  ```
+  Good bye.
+  ```
 
 ### 错误数据包(error)
 
@@ -93,16 +111,121 @@ error 数据包的数据内容为错误信息内容，为纯文本格式，文�
 > 当 A 模块发出 Status 后，client 将自动收到 `status` 数据包
 >
 
+### 指令响应数据包(cmd-resp)
+
+除同步消息(-@)外，其他指令数据包(cmd)在被服务端接收并处理后，都会有一个握手返回：
+
+- **正常情况**：返回 `cmd-resp` 数据包，表示指令已被接受并触发执行。
+- **错误情况**：返回 `error` 数据包，表示指令未被接受或执行出现错误（如目标模块不存在、执行失败等）。
+
+> [!NOTE]
+> `cmd-resp` 是对指令的握手确认，表示指令已被接受并开始执行，不包含业务响应数据。
+> 业务响应数据由 `resp` 或 `async-resp` 数据包返回。
+>
+> 同步消息(-@)没有 `cmd-resp` 握手，执行完成后直接返回 `resp` 或 `error`。
+>
+
 ### 同步响应数据包(resp)
 
 当执行完毕同步消息指令后，tcp-router 将 response 返回给 client.
 
 ### 异步响应数据包(async-resp)
 
-当执行完毕同步消息指令后，tcp-router 将 response 返回给 client. 格式为："`Response数据` <- `异步消息原文`"
+当执行完毕异步消息指令后，tcp-router 将 response 返回给 client. 格式为："`Response数据` <- `异步消息原文`"
 
 ### 订阅返回数据包(status)
 
 Client 订阅了CSM模块的状态，当状态发生时，client 会自动收到此数据包。
 
 数据包格式为 "状态名 >> `状态数据` <- 发送模块"
+
+## 通信流程
+
+### 同步消息流程 (`-@`)
+
+客户端发送同步指令后，**必须等待**服务端返回响应：要么收到 `resp`（同步业务响应数据），要么收到 `error`（错误信息）。同步消息没有 `cmd-resp` 握手包。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as TCP-Router Server
+
+    C->>S: cmd (同步消息 -@)
+    alt 指令执行成功
+        S-->>C: resp (同步响应数据)
+    else 指令执行失败
+        S-->>C: error (错误信息)
+    end
+```
+
+### 异步消息流程 (`->`)
+
+客户端发送异步指令后，服务端首先返回确认包：要么是 `cmd-resp`（指令已接受），要么是 `error`（指令未被接受或执行出现错误）。若收到 `cmd-resp`，客户端**无需等待**业务响应，可继续发送其他指令；服务端异步处理完毕后，返回 `async-resp` 数据包。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as TCP-Router Server
+
+    C->>S: cmd (异步消息 ->)
+    alt 指令已接受
+        S-->>C: cmd-resp (指令已接受)
+        Note over S: 异步处理中...
+        S-->>C: async-resp (异步响应数据)
+    else 未被接受或执行出错
+        S-->>C: error (错误信息)
+    end
+```
+
+### 异步无返回消息流程 (`->|`)
+
+客户端发送异步无返回指令后，服务端首先返回确认包：要么是 `cmd-resp`（指令已接受），要么是 `error`（指令未被接受或执行出现错误）。指令被接受后，业务处理完成后**不会**返回业务响应数据包。
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as TCP-Router Server
+
+    C->>S: cmd (异步无返回消息 ->|)
+    alt 指令已接受
+        S-->>C: cmd-resp (指令已接受)
+    else 未被接受或执行出错
+        S-->>C: error (错误信息)
+    end
+```
+
+### 订阅/注销流程 (`<register>` / `<unregister>`)
+
+客户端发送订阅或注销指令后，服务端返回 `cmd-resp` 握手确认。订阅成功后，每当被订阅模块发出状态，客户端会持续收到 `status` 数据包（普通广播）或 `interrupt` 数据包（中断广播），直到取消订阅。
+
+> [!NOTE]
+> `status` 和 `interrupt` 两种订阅广播类型均受支持：
+> - `status`（`0x06`）：普通广播，订阅模块的常规状态变化
+> - `interrupt`（`0x07`）：中断广播，订阅模块触发的中断事件
+>
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as TCP-Router Server
+    participant M as CSM 模块
+
+    C->>S: cmd (<register> 订阅)
+    alt 订阅成功
+        S-->>C: cmd-resp (订阅已接受)
+        Note over M,S: 模块状态变化时...
+        M->>S: 普通状态广播
+        S-->>C: status (状态数据)
+        M->>S: 中断广播
+        S-->>C: interrupt (中断数据)
+    else 订阅失败
+        S-->>C: error (错误信息)
+    end
+
+    C->>S: cmd (<unregister> 取消订阅)
+    alt 取消成功
+        S-->>C: cmd-resp (取消订阅已接受)
+    else 取消失败
+        S-->>C: error (错误信息)
+    end
+```

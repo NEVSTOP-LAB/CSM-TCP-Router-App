@@ -42,7 +42,7 @@ Item 26 = "DoSth: DoB"
 VIName = "HAL-DIO.vi"
 
 [CSMVI.HAL-DIO.vi]
-Path = "<AppDir>/Server/CSM_Modules/HAL-DIO.vi"
+Path = "<AppDir>/src/Server/CSM_Modules/HAL-DIO.vi"
 
 [CSMAPI.HAL-DIO.vi]
 Item 0 = "Turn On"
@@ -126,8 +126,8 @@ Item 27 = "action: loop check"
 Item 28 = "action: end loop"
 
 [CSM Debug Console]
-Response Timeout(s) = 30    
-History Length = 50    
+Response Timeout(s) = 30
+History Length = 50
 Periodic Enable = TRUE
 Periodic threashold(#/s) = 0.500000
 Periodic Check Peroid(s) = 3.000000
@@ -220,3 +220,12 @@ doc = "Measurement Module.%0AAPI: %0A1. Sweep %3E%3E Start%3BStop%3BStep%3BInter
 
 [CSMModule.Measure2]
 VIName = "MAL-TEST.vi"
+
+[CSMStatus.HAL-AI.vi]
+Item 0 = "Error Occurred@Error Handler"
+
+[CSMStatus.HAL-DIO.vi]
+Item 0 = "Error Occurred@Error Handler"
+
+[DebugConsole.historyView]
+History Length = 50

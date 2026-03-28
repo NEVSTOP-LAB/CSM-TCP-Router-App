@@ -2,13 +2,13 @@
 
 [English](./README.md) | [中文](./README(zh-cn).md)
 
-This repository demonstrates how to create a reusable TCP communication layer (CSM-TCP-Router) to turn a local program into a TCP server for remote control. This example showcases the advantages of the CSM framework's invisible bus.
+This repository demonstrates how to build a reusable TCP communication layer—CSM-TCP-Router—that turns a local program into a TCP server for remote control, showcasing the power of the CSM framework's invisible bus.
 
 ## Features
 
 ![framework](.doc/CSM-TCP-Router%201.svg)
 
-- All CSM messages that can be sent locally can be transmitted to the local program via TCP connection using CSM synchronous and asynchronous message formats.
+- Any CSM message that can be sent locally can also be transmitted to the local program over TCP, using CSM synchronous and asynchronous message formats.
 - Based on the JKI-TCP-Server library, it supports multiple TCP clients connecting simultaneously.
 - [client] Provides a standard TCP client that can connect to the server to verify remote connections and message sending.
 
@@ -21,14 +21,16 @@ The TCP packet format used in the CSM-TCP-Router is defined as follows:
 ╰───────────────────────────────── Header ──────────────────────────────╯╰─── Data Length Range ──╯
 ```
 
-This field defines the type of the data packet and is an enumerated value. The supported packet types are:
+This field specifies the packet type as an enumerated value. Supported types are:
 
-- Information Packet (`info`) - `0x00`
+- Information Packet (`info`) - `0x00`: Sent by the server when a client connects (welcome message) and when the connection is closed (goodbye message)
 - Error Packet (`error`) - `0x01`
 - Command Packet (`cmd`) - `0x02`
-- Synchronous Response Packet (`resp`) - `0x03`
-- Asynchronous Response Packet (`async-resp`) - `0x04`
-- Subscription Status Packet (`status`) - `0x05`
+- Command Response Packet (`cmd-resp`) - `0x03`
+- Synchronous Response Packet (`resp`) - `0x04`
+- Asynchronous Response Packet (`async-resp`) - `0x05`
+- Status Broadcast Packet (`status`) - `0x06`
+- Interrupt Broadcast Packet (`interrupt`) - `0x07`
 
 For detailed communication protocol definitions, see [Protocol Design](.doc/Protocol.v0.(en).md).
 
@@ -38,7 +40,7 @@ For detailed communication protocol definitions, see [Protocol Design](.doc/Prot
 
 ### 1. CSM Message Command Set
 
-Defined by the original code developed based on CSM. Since the CSM framework transmits messages through an invisible bus, all communication can be implemented without intrusive code changes.
+Defined by the existing CSM-based application code. Because the CSM framework uses an invisible bus for message passing, remote communication requires no intrusive changes to the existing code.
 
 For example, the AI CSM module in this program provides:
 
@@ -50,7 +52,7 @@ These messages can be sent to the local program via TCP connection for remote co
 
 ### 2. CSM-TCP-Router Command Set
 
-Defined by the TCP communication layer (CSM-TCP-Router). The functions managed by the CSM module can be remotely controlled by defining commands.
+Defined by the CSM-TCP-Router layer. These commands expose the management functions of CSM modules for remote control.
 
 - `List`: List all CSM modules
 - `List API`: List all APIs of a specified module
@@ -60,10 +62,10 @@ Defined by the TCP communication layer (CSM-TCP-Router). The functions managed b
 
 ### [Client Only] 3. CSM-TCP-Router Client Command Set
 
-A standard CSM-TCP-Router Client is provided in the code. It also has some built-in commands that cannot be used if developed based on the command set.
+The bundled standard CSM-TCP-Router Client includes additional built-in commands that are not available when building on the command set API.
 
 - `Bye`: Disconnect
-- `Switch`: Switch modules to omit the module name when inputting commands; switches back to default mode if no parameter is provided
+- `Switch`: Switch the active module to omit the module name when entering commands; omit the parameter to switch back to the default mode
 - TAB key: Automatically focus on the input dialog box
 
 ![CSM-TCP-Router Client Console](.doc/Client.png)
