@@ -2,88 +2,73 @@
 
 [English](./README.md) | [中文](./README(zh-cn).md)
 
-This repository demonstrates how to build a reusable TCP communication layer—CSM-TCP-Router—that turns a local program into a TCP server for remote control, showcasing the power of the CSM framework's invisible bus.
+CSM-TCP-Router is a reusable TCP communication layer for CSM applications.  
+It turns a local CSM program into a remotely controllable TCP server through the CSM invisible bus mechanism.
 
 ## Features
 
-![framework](.doc/CSM-TCP-Router%201.svg)
+![CSM-TCP-Router framework architecture diagram from remote TCP clients to local CSM modules via router and CSM bus](.doc/csm-tcp-router-framework.png)
 
-- Any CSM message that can be sent locally can also be transmitted to the local program over TCP, using CSM synchronous and asynchronous message formats.
-- Based on the JKI-TCP-Server library, it supports multiple TCP clients connecting simultaneously.
-- [client] Provides a standard TCP client that can connect to the server to verify remote connections and message sending.
+Excalidraw source files for the diagrams are in `.doc/*.excalidraw`.
+
+- Any CSM message available locally can be forwarded through TCP in synchronous or asynchronous format.
+- Based on JKI TCP Server, it supports multiple concurrent client connections.
+- The repository includes a standard client for connection and command verification.
 
 ## Protocol
 
-The TCP packet format used in the CSM-TCP-Router is defined as follows:
+TCP packet format:
 
 ```
-| Data Length (4B) | Version (1B) | TYPE (1B) | FLAG1 (1B) | FLAG2 (1B) |      Text Data          |
-╰───────────────────────────────── Header ──────────────────────────────╯╰─── Data Length Range ──╯
+| Data Length (4B) | Version (1B) | TYPE (1B) | FLAG1 (1B) | FLAG2 (1B) |      Text Data      |
+╰──────────────────────────── Header ────────────────────────────╯╰─ Data Length Range ─╯
 ```
 
-This field specifies the packet type as an enumerated value. Supported types are:
+Supported packet `TYPE` values:
 
-- Information Packet (`info`) - `0x00`: Sent by the server when a client connects (welcome message) and when the connection is closed (goodbye message)
-- Error Packet (`error`) - `0x01`
-- Command Packet (`cmd`) - `0x02`
-- Command Response Packet (`cmd-resp`) - `0x03`
-- Synchronous Response Packet (`resp`) - `0x04`
-- Asynchronous Response Packet (`async-resp`) - `0x05`
-- Status Broadcast Packet (`status`) - `0x06`
-- Interrupt Broadcast Packet (`interrupt`) - `0x07`
+- `info` (`0x00`): sent on connect (welcome) and disconnect (goodbye)
+- `error` (`0x01`)
+- `cmd` (`0x02`)
+- `cmd-resp` (`0x03`)
+- `resp` (`0x04`)
+- `async-resp` (`0x05`)
+- `status` (`0x06`)
+- `interrupt` (`0x07`)
 
-For detailed communication protocol definitions, see [Protocol Design](.doc/Protocol.v0.(en).md).
+See [Protocol Design](.doc/Protocol.v0.(en).md) for full details.
 
-## Supported Command Sets
+## Command Sets
 
-![image](.doc/CSM-TCP-Router.drawio.png)
+![Command sets diagram with CSM Message APIs, Router Management APIs, and Client Built-ins](.doc/csm-tcp-router-command-sets.png)
 
-### 1. CSM Message Command Set
+### 1) CSM Message APIs
 
-Defined by the existing CSM-based application code. Because the CSM framework uses an invisible bus for message passing, remote communication requires no intrusive changes to the existing code.
+Defined by existing CSM-based application code and forwarded through the router without intrusive changes.
 
-For example, the AI CSM module in this program provides:
+### 2) Router Management APIs
 
-- `Channels`: List all channels
-- `Read`: Read the value of a specified channel
-- `read all`: Read the values of all channels
+Defined by CSM-TCP-Router for module management and runtime inspection.
 
-These messages can be sent to the local program via TCP connection for remote control.
+### 3) Client Built-ins (Client only)
 
-### 2. CSM-TCP-Router Command Set
+Built into the bundled client and not available through secondary API development.
 
-Defined by the CSM-TCP-Router layer. These commands expose the management functions of CSM modules for remote control.
-
-- `List`: List all CSM modules
-- `List API`: List all APIs of a specified module
-- `List State`: List all CSM states of a specified module
-- `Help`: Display the help file of the module, stored in the Documentation field of the CSM VI
-- `Refresh lvcsm`: Refresh the cache file
-
-### [Client Only] 3. CSM-TCP-Router Client Command Set
-
-The bundled standard CSM-TCP-Router Client includes additional built-in commands that are not available when building on the command set API.
-
-- `Bye`: Disconnect
-- `Switch`: Switch the active module to omit the module name when entering commands; omit the parameter to switch back to the default mode
-- TAB key: Automatically focus on the input dialog box
-
-![CSM-TCP-Router Client Console](.doc/Client.png)
+![Client interaction flow from connect and command send to response, log record, and disconnect](.doc/csm-tcp-router-client-console.png)
 
 ## Usage
 
-1. Install this tool and dependencies via VIPM
-2. Open the example project CSM-TCP-Router.lvproj in the CSM examples
-3. Start the CSM-TCP-Router(Server).vi in the code project
-4. Start Client.vi, enter the server's IP address and port number, and click connect
-5. Enter commands and click send to see the returned messages in the console
-6. View the history of executed messages in the log interface of the Server program
-7. Enter `Bye` in Client.vi to disconnect
-8. Close the Server program
+1. Install this package and dependencies in VIPM.
+2. Open `CSM-TCP-Router.lvproj` from CSM examples.
+3. Run `CSM-TCP-Router(Server).vi`.
+4. Run `Client.vi`, enter server IP/port, and connect.
+5. Send commands and check returned messages in the client console.
+6. Check execution history in the server log panel.
+7. Enter `Bye` in `Client.vi` to disconnect.
+8. Stop the server.
 
 ### Download
 
-Search for CSM TCP Router in VIPM to download and install.
+Search `CSM TCP Router` in VIPM and install.
 
 ### Dependencies
 
