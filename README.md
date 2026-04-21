@@ -7,7 +7,9 @@ It turns a local CSM program into a remotely controllable TCP server through the
 
 ## Features
 
-![framework](.doc/image.png)
+![framework](.doc/csm-tcp-router-framework.png)
+
+Excalidraw source files for the diagrams are in `.doc/*.excalidraw`.
 
 - Any CSM message available locally can be forwarded through TCP in synchronous or asynchronous format.
 - Based on JKI TCP Server, it supports multiple concurrent client connections.
@@ -37,7 +39,7 @@ See [Protocol Design](.doc/Protocol.v0.(en).md) for full details.
 
 ## Command Sets
 
-![command-sets](.doc/CSM-TCP-Router.drawio.png)
+![command-sets](.doc/csm-tcp-router-command-sets.png)
 
 ### 1) CSM Message APIs
 
@@ -51,7 +53,7 @@ Defined by CSM-TCP-Router for module management and runtime inspection.
 
 Built into the bundled client and not available through secondary API development.
 
-![CSM-TCP-Router Client Console](.doc/Client.png)
+![CSM-TCP-Router Client Console](.doc/csm-tcp-router-client-console.png)
 
 ## Usage
 
