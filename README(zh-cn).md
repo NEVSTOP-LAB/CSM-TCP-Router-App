@@ -7,20 +7,7 @@ CSM-TCP-Router 是一个可复用的 CSM TCP 通讯层。
 
 ## 功能特性
 
-```mermaid
-flowchart LR
-    A[远程 TCP 客户端]:::client --> B[CSM-TCP-Router]:::router
-    B --> C[CSM 隐形总线]:::bus
-    C --> D[本地 CSM 模块]:::module
-    D --> C
-    C --> B
-    B --> A
-
-    classDef client fill:#e8f4ff,stroke:#1d4ed8,color:#0f172a,stroke-width:1.5px;
-    classDef router fill:#ecfeff,stroke:#0e7490,color:#0f172a,stroke-width:2px;
-    classDef bus fill:#f5f3ff,stroke:#7c3aed,color:#0f172a,stroke-width:1.5px;
-    classDef module fill:#f0fdf4,stroke:#15803d,color:#0f172a,stroke-width:1.5px;
-```
+![framework](.doc/image.png)
 
 - 所有本地可发送的 CSM 消息都可通过 TCP 以同步或异步格式转发。
 - 基于 JKI TCP Server，支持多个客户端并发连接。
@@ -50,31 +37,7 @@ TCP 数据包格式如下：
 
 ## 指令集
 
-```mermaid
-flowchart TD
-    A[指令集]:::root --> B[1. CSM 消息 API]:::csm
-    A --> C[2. Router 管理 API]:::router
-    A --> D[3. Client 内建指令]:::client
-
-    B --> B1[Channels]
-    B --> B2[Read]
-    B --> B3[read all]
-
-    C --> C1[List]
-    C --> C2[List API]
-    C --> C3[List State]
-    C --> C4[Help]
-    C --> C5[Refresh lvcsm]
-
-    D --> D1[Bye]
-    D --> D2[Switch]
-    D --> D3[TAB 快捷聚焦]
-
-    classDef root fill:#fff7ed,stroke:#c2410c,color:#0f172a,stroke-width:2px;
-    classDef csm fill:#eff6ff,stroke:#2563eb,color:#0f172a,stroke-width:1.5px;
-    classDef router fill:#f0fdfa,stroke:#0f766e,color:#0f172a,stroke-width:1.5px;
-    classDef client fill:#faf5ff,stroke:#9333ea,color:#0f172a,stroke-width:1.5px;
-```
+![command-sets](.doc/CSM-TCP-Router.drawio.png)
 
 ### 1）CSM 消息 API
 
@@ -88,24 +51,7 @@ flowchart TD
 
 由内置客户端提供，不属于二次开发时可扩展的指令集 API。
 
-```mermaid
-sequenceDiagram
-    participant U as 用户
-    participant C as 客户端控制台
-    participant R as CSM-TCP-Router
-    participant S as 服务端日志
-
-    U->>C: 连接（IP + 端口）
-    C->>R: 建立 TCP 连接
-    R-->>C: welcome (info)
-    U->>C: 发送指令
-    C->>R: cmd 数据包
-    R-->>C: resp / async-resp
-    R-->>S: 记录执行历史
-    U->>C: Bye
-    C->>R: 断开连接
-    R-->>C: goodbye (info)
-```
+![CSM-TCP-Router Client Console](.doc/Client.png)
 
 ## 使用方法
 
