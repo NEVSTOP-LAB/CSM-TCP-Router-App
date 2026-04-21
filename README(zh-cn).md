@@ -53,7 +53,7 @@ TCP 数据包格式如下：
 
 由内置客户端提供，不属于二次开发时可扩展的指令集 API。
 
-![客户端控制台](.doc/csm-tcp-router-client-console.png)
+![client-console-flow](.doc/csm-tcp-router-client-console.png)
 
 ## 使用方法
 

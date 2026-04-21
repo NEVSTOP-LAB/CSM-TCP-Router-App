@@ -53,7 +53,7 @@ Defined by CSM-TCP-Router for module management and runtime inspection.
 
 Built into the bundled client and not available through secondary API development.
 
-![client-console](.doc/csm-tcp-router-client-console.png)
+![client-console-flow](.doc/csm-tcp-router-client-console.png)
 
 ## Usage
 
