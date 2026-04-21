@@ -7,7 +7,7 @@ CSM-TCP-Router 是一个可复用的 CSM TCP 通讯层。
 
 ## 功能特性
 
-![framework](.doc/csm-tcp-router-framework.png)
+![CSM-TCP-Router框架架构图，展示远程TCP客户端经由Router和CSM隐形总线到本地CSM模块](.doc/csm-tcp-router-framework.png)
 
 图示对应的 Excalidraw 源文件位于 `.doc/*.excalidraw`。
 
@@ -39,7 +39,7 @@ TCP 数据包格式如下：
 
 ## 指令集
 
-![command-sets](.doc/csm-tcp-router-command-sets.png)
+![指令集图示，包含CSM消息API、Router管理API和Client内建指令三类](.doc/csm-tcp-router-command-sets.png)
 
 ### 1）CSM 消息 API
 
@@ -53,7 +53,7 @@ TCP 数据包格式如下：
 
 由内置客户端提供，不属于二次开发时可扩展的指令集 API。
 
-![client-console-flow](.doc/csm-tcp-router-client-console.png)
+![客户端交互流程图，展示连接、发送指令、响应、记录日志和断开连接](.doc/csm-tcp-router-client-console.png)
 
 ## 使用方法
 

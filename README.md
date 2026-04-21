@@ -7,7 +7,7 @@ It turns a local CSM program into a remotely controllable TCP server through the
 
 ## Features
 
-![framework](.doc/csm-tcp-router-framework.png)
+![CSM-TCP-Router framework architecture diagram from remote TCP clients to local CSM modules via router and CSM bus](.doc/csm-tcp-router-framework.png)
 
 Excalidraw source files for the diagrams are in `.doc/*.excalidraw`.
 
@@ -39,7 +39,7 @@ See [Protocol Design](.doc/Protocol.v0.(en).md) for full details.
 
 ## Command Sets
 
-![command-sets](.doc/csm-tcp-router-command-sets.png)
+![Command sets diagram with CSM Message APIs, Router Management APIs, and Client Built-ins](.doc/csm-tcp-router-command-sets.png)
 
 ### 1) CSM Message APIs
 
@@ -53,7 +53,7 @@ Defined by CSM-TCP-Router for module management and runtime inspection.
 
 Built into the bundled client and not available through secondary API development.
 
-![client-console-flow](.doc/csm-tcp-router-client-console.png)
+![Client interaction flow from connect and command send to response, log record, and disconnect](.doc/csm-tcp-router-client-console.png)
 
 ## Usage
 
