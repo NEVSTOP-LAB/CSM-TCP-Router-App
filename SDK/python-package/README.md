@@ -9,6 +9,8 @@ Python client SDK for the [CSM-TCP-Router](https://github.com/NEVSTOP-LAB/CSM-TC
 
 CSM-TCP-Router exposes a LabVIEW [Communicable State Machine (CSM)](https://github.com/NEVSTOP-LAB/Communicable-State-Machine) application over TCP so that any TCP client—including Python scripts, test harnesses, or CI pipelines—can send commands and receive responses without touching the LabVIEW code.
 
+> 📖 [中文文档 README.zh-cn.md](README.zh-cn.md)
+
 ---
 
 ## Installation
@@ -22,6 +24,8 @@ Requires Python 3.8 or later.  No third-party dependencies—only the Python sta
 ---
 
 ## Quickstart
+
+### Synchronous client
 
 ```python
 from csm_tcp_router import TcpRouterClient
@@ -41,6 +45,22 @@ with TcpRouterClient() as client:
     print(f"Ping: {ok}, latency={elapsed_s*1000:.1f} ms")
 ```
 
+### Asyncio client
+
+```python
+import asyncio
+from csm_tcp_router import AsyncTcpRouterClient
+
+async def main():
+    async with AsyncTcpRouterClient() as client:
+        await client.connect("localhost", 30007)
+        print(await client.list_modules())
+        resp = await client.send_and_wait("API: Read -@ DAQmx")
+        print(resp.text)
+
+asyncio.run(main())
+```
+
 ---
 
 ## Features
@@ -51,9 +71,10 @@ with TcpRouterClient() as client:
 - **Status subscriptions** – `subscribe_status()` / `unsubscribe_status()` with optional callback or polling queue.
 - **Router management helpers** – `list_modules()`, `list_api()`, `list_states()`, `help()`.
 - **Connection utilities** – `wait_for_server()` for polling during app startup.
-- **Thread-safe** – all methods may be called from multiple threads concurrently.
+- **Thread-safe sync client** – `TcpRouterClient`: all methods may be called from multiple threads concurrently.
+- **Asyncio client** – `AsyncTcpRouterClient`: full `async def` API with both sync and async callbacks supported.
 - **Zero dependencies** – pure Python standard library.
-- **Context manager** support (`with TcpRouterClient() as client:`).
+- **Context manager** support (`with TcpRouterClient()` / `async with AsyncTcpRouterClient()`).
 
 ---
 
@@ -116,7 +137,7 @@ Client ◄── CMD_RESP ─────────────── Server
 
 ## API Reference
 
-### `TcpRouterClient`
+### `TcpRouterClient` (sync)
 
 #### Connection
 
@@ -161,6 +182,52 @@ Client ◄── CMD_RESP ─────────────── Server
 | `status_queue` | `Queue[StatusNotification]` | Receive status/interrupt broadcasts by polling. |
 | `async_response_queue` | `Queue[AsyncResponse]` | Receive async responses by polling. |
 
+---
+
+### `AsyncTcpRouterClient` (asyncio)
+
+All methods are `async def` coroutines; use `await` to call them.
+
+#### Connection
+
+| Method | Description |
+|---|---|
+| `await connect(host, port, timeout=5.0)` | Open a TCP connection; raises `ConnectionError` on failure. |
+| `await disconnect()` | Close the connection; safe to call when not connected. |
+| `connected` | `True` when the writer is open. |
+| `await wait_for_server(host, port, timeout=30, retry_interval=0.5)` | Poll until the server is reachable. |
+
+#### Commands
+
+| Method | Description |
+|---|---|
+| `await send_and_wait(command, timeout=5.0) → CommandResponse` | Synchronous command (`-@`). |
+| `await post(command, timeout=5.0)` | Async command (`->`). |
+| `await post_no_reply(command, timeout=5.0)` | No-reply command (`->|`). |
+| `await ping(timeout=2.0) → (bool, float)` | Round-trip latency check. |
+
+#### Router management helpers
+
+Same as sync client but all methods are `async def`.
+
+#### Subscriptions
+
+| Method | Description |
+|---|---|
+| `await subscribe_status(status_name, module_name, callback=None, timeout=5.0)` | Subscribe; callback may be sync or `async def`. |
+| `await unsubscribe_status(status_name, module_name, timeout=5.0)` | Unsubscribe. |
+| `register_async_callback(original_command, callback)` | Register callback for `ASYNC_RESP`; may be sync or `async def`. |
+| `unregister_async_callback(original_command)` | Remove callback. |
+
+#### Queues
+
+| Attribute | Type | Description |
+|---|---|---|
+| `status_queue` | `asyncio.Queue[StatusNotification]` | Available after `connect()`; poll with `await queue.get()`. |
+| `async_response_queue` | `asyncio.Queue[AsyncResponse]` | Available after `connect()`. |
+
+---
+
 ### Data models
 
 #### `CommandResponse`
@@ -194,8 +261,9 @@ Client ◄── CMD_RESP ─────────────── Server
 
 See the [`examples/`](examples/) directory:
 
-- [`basic_usage.py`](examples/basic_usage.py) – connect, ping, list modules, send commands.
-- [`subscribe_status.py`](examples/subscribe_status.py) – real-time status subscription with callback.
+- [`basic_usage.py`](examples/basic_usage.py) – sync client: connect, ping, list modules, send commands.
+- [`subscribe_status.py`](examples/subscribe_status.py) – sync client: real-time status subscription with callback.
+- [`async_usage.py`](examples/async_usage.py) – asyncio client: all features using `async def` / `await`.
 
 ---
 
@@ -226,9 +294,9 @@ numbering (aligned with protocol v1-draft rather than the published v0 spec).
 # Install dev dependencies
 pip install -e ".[dev]"
 # or
-pip install hatchling pytest ruff
+pip install hatchling pytest pytest-asyncio ruff
 
-# Run tests
+# Run tests (sync + async)
 pytest
 
 # Lint
@@ -240,3 +308,4 @@ ruff check src/ tests/
 ## License
 
 [MIT](LICENSE) — © NEVSTOP-LAB
+

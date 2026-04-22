@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "csm-tcp-router-client"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python client SDK for the CSM-TCP-Router LabVIEW server"
 readme = "README.md"
 license = { text = "MIT" }
@@ -19,9 +19,11 @@ keywords = [
     "sdk",
     "daq",
     "communicable-state-machine",
+    "asyncio",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Framework :: AsyncIO",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
@@ -53,6 +55,7 @@ packages = ["src/csm_tcp_router"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts   = "-v --tb=short"
+asyncio_mode = "auto"
 
 # ---------------------------------------------------------------------------
 # Linting (ruff)

@@ -11,7 +11,34 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
-## [0.1.0] – 2026-04-22
+## [0.2.0] – 2026-04-22
+
+### Added
+
+- `AsyncTcpRouterClient` class: full asyncio API mirroring every method of
+  `TcpRouterClient`, using `asyncio.StreamReader`/`StreamWriter` and
+  `asyncio.Queue` for non-blocking I/O.
+- Async context-manager support: `async with AsyncTcpRouterClient() as client:`.
+- Both sync and `async def` callbacks supported for `subscribe_status()` and
+  `register_async_callback()` on the async client.
+- `AsyncTcpRouterClient` exported from the top-level `csm_tcp_router` package.
+- `examples/async_usage.py` – asyncio quickstart demonstrating all features.
+- Test suite extended with `tests/test_async_client.py` (48 tests: unit +
+  integration via `MockServer`); test runner now uses `asyncio_mode = "auto"`.
+- `pytest-asyncio` added to CI test dependencies.
+- Chinese documentation: `README.zh-cn.md` (full translation of `README.md`).
+- `README.md` updated with asyncio quickstart, async API reference table, link
+  to Chinese docs, and `async_usage.py` in the examples list.
+- CI: added `publish-testpypi` job that publishes to TestPyPI *before*
+  `publish` (production PyPI); production publish now depends on TestPyPI
+  success; both use OIDC trusted publishing.
+- `Framework :: AsyncIO` classifier added to package metadata.
+
+### Changed
+
+- Package version bumped to `0.2.0`.
+- `asyncio_mode = "auto"` added to `pyproject.toml` pytest options; all async
+  tests run automatically without explicit `@pytest.mark.asyncio` decorators.
 
 ### Added
 
@@ -48,5 +75,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - GitHub Actions workflow `Python_SDK.yml`: lint (ruff), test (pytest) on
   Python 3.8–3.12, build, and optional publish to PyPI on tag.
 
-[Unreleased]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.1.0...HEAD
+[Unreleased]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.2.0...HEAD
+[0.2.0]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.1.0...python-sdk-v0.2.0
 [0.1.0]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/releases/tag/python-sdk-v0.1.0
