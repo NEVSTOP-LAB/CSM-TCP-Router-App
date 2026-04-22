@@ -66,12 +66,18 @@ class Transport:
             raise RouterConnectionError(
                 "Already connected; call disconnect() first."
             )
+        sock: Optional[socket.socket] = None
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(timeout)
             sock.connect((host, port))
             sock.settimeout(None)  # switch to blocking for the recv loop
         except OSError as exc:
+            if sock is not None:
+                try:
+                    sock.close()
+                except OSError:
+                    pass
             raise RouterConnectionError(
                 f"Cannot connect to {host}:{port}: {exc}"
             ) from exc

@@ -40,6 +40,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `asyncio_mode = "auto"` added to `pyproject.toml` pytest options; all async
   tests run automatically without explicit `@pytest.mark.asyncio` decorators.
 
+---
+
+## [0.1.0] – 2026-04-22
+
 ### Added
 
 - Initial release of the `csm-tcp-router-client` Python SDK.

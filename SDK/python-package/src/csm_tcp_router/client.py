@@ -7,6 +7,7 @@ import threading
 import time
 from typing import Callable, Dict, Optional, Tuple
 
+from ._errors import _parse_server_error
 from ._protocol import encode_packet
 from ._transport import Transport
 from .exceptions import ConnectionError as RouterConnectionError
@@ -35,8 +36,11 @@ class TcpRouterClient:
     """Python client for a CSM-TCP-Router server.
 
     This class mirrors the LabVIEW ClientAPI VIs and speaks the
-    CSM-TCP-Router protocol v0.  It is thread-safe: multiple threads may
-    call its methods concurrently.
+    CSM-TCP-Router protocol v0.  It is thread-safe in that its internal
+    state is protected by locks; however, the protocol allows at most one
+    in-flight *synchronous* command at a time and at most one in-flight
+    *async* command / subscription at a time.  Concurrent callers are
+    serialised by ``_resp_lock`` and ``_cmd_resp_lock`` respectively.
 
     **Quickstart**::
 
@@ -99,6 +103,12 @@ class TcpRouterClient:
         self._async_callbacks: Dict[str, AsyncCallback] = {}
         self._lock = threading.Lock()
 
+        # Serialisation locks – at most one in-flight RESP / CMD_RESP waiter
+        # at a time.  This prevents concurrent callers from consuming each
+        # other's response packets.
+        self._resp_lock = threading.Lock()
+        self._cmd_resp_lock = threading.Lock()
+
     # ------------------------------------------------------------------
     # Connection management
     # ------------------------------------------------------------------
@@ -116,8 +126,15 @@ class TcpRouterClient:
     def disconnect(self) -> None:
         """Disconnect from the server and release all resources.
 
-        Safe to call even if not currently connected.
+        Safe to call even if not currently connected.  Any threads currently
+        blocked inside :meth:`send_and_wait`, :meth:`post`, or similar methods
+        will receive a :exc:`~csm_tcp_router.exceptions.ConnectionError`
+        immediately rather than waiting for their timeout to expire.
         """
+        # Wake blocked waiters *before* tearing down the transport.
+        sentinel = RouterConnectionError("Disconnected from server.")
+        self._resp_queue.put(sentinel)
+        self._cmd_resp_queue.put(sentinel)
         self._transport.disconnect()
 
     @property
@@ -177,8 +194,9 @@ class TcpRouterClient:
         :raises ServerError: if the server returns an error packet.
         """
         wire = encode_packet(command.encode("utf-8"), PacketType.CMD)
-        self._transport.send_raw(wire)
-        return self._wait_for_resp(timeout)
+        with self._resp_lock:
+            self._transport.send_raw(wire)
+            return self._wait_for_resp(timeout)
 
     def post(self, command: str, timeout: float = 5.0) -> None:
         """Send an **asynchronous** command and wait for the ``cmd-resp`` handshake.
@@ -198,8 +216,9 @@ class TcpRouterClient:
         :raises ServerError: if the server rejects the command.
         """
         wire = encode_packet(command.encode("utf-8"), PacketType.CMD)
-        self._transport.send_raw(wire)
-        self._wait_for_cmd_resp(timeout)
+        with self._cmd_resp_lock:
+            self._transport.send_raw(wire)
+            self._wait_for_cmd_resp(timeout)
 
     def post_no_reply(self, command: str, timeout: float = 5.0) -> None:
         """Send an **async no-reply** command and wait for the ``cmd-resp`` handshake.
@@ -217,8 +236,9 @@ class TcpRouterClient:
         :raises ServerError: if the server rejects the command.
         """
         wire = encode_packet(command.encode("utf-8"), PacketType.CMD)
-        self._transport.send_raw(wire)
-        self._wait_for_cmd_resp(timeout)
+        with self._cmd_resp_lock:
+            self._transport.send_raw(wire)
+            self._wait_for_cmd_resp(timeout)
 
     def ping(self, timeout: float = 2.0) -> Tuple[bool, float]:
         """Send a ``Ping`` command and measure round-trip latency.
@@ -293,8 +313,9 @@ class TcpRouterClient:
         cmd = f"{status_name}@{module_name} -><register>"
         wire = encode_packet(cmd.encode("utf-8"), PacketType.CMD)
         try:
-            self._transport.send_raw(wire)
-            self._wait_for_cmd_resp(timeout)
+            with self._cmd_resp_lock:
+                self._transport.send_raw(wire)
+                self._wait_for_cmd_resp(timeout)
         except Exception:
             with self._lock:
                 self._status_callbacks.pop((status_name, module_name), None)
@@ -317,8 +338,9 @@ class TcpRouterClient:
         """
         cmd = f"{status_name}@{module_name} -><unregister>"
         wire = encode_packet(cmd.encode("utf-8"), PacketType.CMD)
-        self._transport.send_raw(wire)
-        self._wait_for_cmd_resp(timeout)
+        with self._cmd_resp_lock:
+            self._transport.send_raw(wire)
+            self._wait_for_cmd_resp(timeout)
         with self._lock:
             self._status_callbacks.pop((status_name, module_name), None)
 
@@ -432,18 +454,3 @@ class TcpRouterClient:
         if isinstance(item, Exception):
             raise item
         # CMD_RESP payload is a handshake acknowledgment; discard it
-
-
-def _parse_server_error(packet: Packet) -> ServerError:
-    """Extract code and message from a CSM Error format ``[Error: <code>] <msg>``."""
-    text = packet.data.decode("utf-8", errors="replace").strip()
-    code = ""
-    msg = text
-    if text.startswith("[Error:"):
-        try:
-            end_idx = text.index("]")
-            code = text[7:end_idx].strip()
-            msg = text[end_idx + 1:].strip()
-        except ValueError:
-            pass
-    return ServerError(msg, code)

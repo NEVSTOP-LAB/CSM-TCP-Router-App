@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import struct
 import time
 from typing import Any, Callable, Coroutine, Dict, Optional, Tuple, Union
 
+from ._errors import _parse_server_error
 from ._protocol import HEADER_SIZE, encode_packet, parse_packet
 from .exceptions import ConnectionError as RouterConnectionError
 from .exceptions import ProtocolError, ServerError
@@ -76,6 +78,9 @@ class AsyncTcpRouterClient:
         self._resp_queue: Optional[asyncio.Queue[object]] = None
         self._cmd_resp_queue: Optional[asyncio.Queue[object]] = None
         self._send_lock: Optional[asyncio.Lock] = None
+        # Serialisation locks – at most one in-flight RESP / CMD_RESP waiter
+        self._resp_lock: Optional[asyncio.Lock] = None
+        self._cmd_resp_lock: Optional[asyncio.Lock] = None
 
         #: Polling queue for :class:`~csm_tcp_router.models.AsyncResponse` objects
         #: received from the server.  Available after :meth:`connect` is called.
@@ -98,6 +103,8 @@ class AsyncTcpRouterClient:
         self._resp_queue = asyncio.Queue()
         self._cmd_resp_queue = asyncio.Queue()
         self._send_lock = asyncio.Lock()
+        self._resp_lock = asyncio.Lock()
+        self._cmd_resp_lock = asyncio.Lock()
         self.async_response_queue = asyncio.Queue()
         self.status_queue = asyncio.Queue()
 
@@ -136,8 +143,17 @@ class AsyncTcpRouterClient:
     async def disconnect(self) -> None:
         """Close the connection and stop the background receive task.
 
-        Safe to call even if not currently connected.
+        Safe to call even if not currently connected.  Any coroutines currently
+        blocked inside :meth:`send_and_wait`, :meth:`post`, or similar methods
+        will receive a :exc:`~csm_tcp_router.exceptions.ConnectionError`
+        immediately rather than waiting for their timeout to expire.
         """
+        # Wake blocked waiters *before* cancelling the recv task.
+        sentinel = RouterConnectionError("Disconnected from server.")
+        if self._resp_queue is not None:
+            self._resp_queue.put_nowait(sentinel)
+        if self._cmd_resp_queue is not None:
+            self._cmd_resp_queue.put_nowait(sentinel)
         # Cancel the recv task first; its finally block notifies pending waiters
         if self._recv_task is not None and not self._recv_task.done():
             self._recv_task.cancel()
@@ -209,8 +225,10 @@ class AsyncTcpRouterClient:
         :raises ServerError: if the server returns an error packet.
         """
         wire = encode_packet(command.encode("utf-8"), PacketType.CMD)
-        await self._send_raw(wire)
-        return await self._wait_for_resp(timeout)
+        assert self._resp_lock is not None
+        async with self._resp_lock:
+            await self._send_raw(wire)
+            return await self._wait_for_resp(timeout)
 
     async def post(self, command: str, timeout: float = 5.0) -> None:
         """Send an **asynchronous** command and await the ``cmd-resp`` handshake.
@@ -226,8 +244,10 @@ class AsyncTcpRouterClient:
         :raises ServerError: if the server rejects the command.
         """
         wire = encode_packet(command.encode("utf-8"), PacketType.CMD)
-        await self._send_raw(wire)
-        await self._wait_for_cmd_resp(timeout)
+        assert self._cmd_resp_lock is not None
+        async with self._cmd_resp_lock:
+            await self._send_raw(wire)
+            await self._wait_for_cmd_resp(timeout)
 
     async def post_no_reply(self, command: str, timeout: float = 5.0) -> None:
         """Send an **async no-reply** command and await the ``cmd-resp`` handshake.
@@ -243,8 +263,10 @@ class AsyncTcpRouterClient:
         :raises ServerError: if the server rejects the command.
         """
         wire = encode_packet(command.encode("utf-8"), PacketType.CMD)
-        await self._send_raw(wire)
-        await self._wait_for_cmd_resp(timeout)
+        assert self._cmd_resp_lock is not None
+        async with self._cmd_resp_lock:
+            await self._send_raw(wire)
+            await self._wait_for_cmd_resp(timeout)
 
     async def ping(self, timeout: float = 2.0) -> Tuple[bool, float]:
         """Send a ``Ping`` command and measure round-trip latency.
@@ -312,9 +334,11 @@ class AsyncTcpRouterClient:
         self._status_callbacks[(status_name, module_name)] = callback
         cmd = f"{status_name}@{module_name} -><register>"
         wire = encode_packet(cmd.encode("utf-8"), PacketType.CMD)
+        assert self._cmd_resp_lock is not None
         try:
-            await self._send_raw(wire)
-            await self._wait_for_cmd_resp(timeout)
+            async with self._cmd_resp_lock:
+                await self._send_raw(wire)
+                await self._wait_for_cmd_resp(timeout)
         except Exception:
             self._status_callbacks.pop((status_name, module_name), None)
             raise
@@ -336,8 +360,10 @@ class AsyncTcpRouterClient:
         """
         cmd = f"{status_name}@{module_name} -><unregister>"
         wire = encode_packet(cmd.encode("utf-8"), PacketType.CMD)
-        await self._send_raw(wire)
-        await self._wait_for_cmd_resp(timeout)
+        assert self._cmd_resp_lock is not None
+        async with self._cmd_resp_lock:
+            await self._send_raw(wire)
+            await self._wait_for_cmd_resp(timeout)
         self._status_callbacks.pop((status_name, module_name), None)
 
     def register_async_callback(
@@ -430,10 +456,9 @@ class AsyncTcpRouterClient:
             cb = self._async_callbacks.get(resp.original_command)
             if cb is not None:
                 try:
-                    if asyncio.iscoroutinefunction(cb):
-                        await cb(resp)  # type: ignore[arg-type]
-                    else:
-                        cb(resp)  # type: ignore[arg-type]
+                    result = cb(resp)  # type: ignore[arg-type]
+                    if inspect.isawaitable(result):
+                        await result
                 except Exception:
                     pass
 
@@ -445,10 +470,9 @@ class AsyncTcpRouterClient:
             )
             if cb is not None:
                 try:
-                    if asyncio.iscoroutinefunction(cb):
-                        await cb(notif)  # type: ignore[arg-type]
-                    else:
-                        cb(notif)  # type: ignore[arg-type]
+                    result = cb(notif)  # type: ignore[arg-type]
+                    if inspect.isawaitable(result):
+                        await result
                 except Exception:
                     pass
 
@@ -497,18 +521,3 @@ class AsyncTcpRouterClient:
         if isinstance(item, Exception):
             raise item
         # CMD_RESP payload is a handshake acknowledgment; discard it
-
-
-def _parse_server_error(packet: Packet) -> ServerError:
-    """Extract code and message from CSM Error format ``[Error: <code>] <msg>``."""
-    text = packet.data.decode("utf-8", errors="replace").strip()
-    code = ""
-    msg = text
-    if text.startswith("[Error:"):
-        try:
-            end_idx = text.index("]")
-            code = text[7:end_idx].strip()
-            msg = text[end_idx + 1:].strip()
-        except ValueError:
-            pass
-    return ServerError(msg, code)

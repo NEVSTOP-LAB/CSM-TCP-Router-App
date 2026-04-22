@@ -33,10 +33,7 @@ def _make_packet(ptype: PacketType, text: str = "") -> Packet:
 def _client_with_queues() -> AsyncTcpRouterClient:
     """Return a client with asyncio objects pre-initialised (no TCP connection)."""
     client = AsyncTcpRouterClient()
-    client._resp_queue = asyncio.Queue()
-    client._cmd_resp_queue = asyncio.Queue()
-    client.async_response_queue = asyncio.Queue()
-    client.status_queue = asyncio.Queue()
+    client._init_async_objects()
     return client
 
 
@@ -443,10 +440,7 @@ class TestConnectedProperty:
 
     async def test_send_when_not_connected_raises(self):
         client = AsyncTcpRouterClient()
-        client._resp_queue = asyncio.Queue()
-        client._cmd_resp_queue = asyncio.Queue()
-        client.async_response_queue = asyncio.Queue()
-        client.status_queue = asyncio.Queue()
+        client._init_async_objects()
         with pytest.raises(RouterConnectionError, match="Not connected"):
             await client.send_and_wait("Ping", timeout=0.1)
 
