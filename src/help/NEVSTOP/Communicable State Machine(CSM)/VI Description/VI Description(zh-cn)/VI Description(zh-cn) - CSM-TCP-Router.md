@@ -63,6 +63,10 @@ Client API 位于 `src/_addons/TCP-Router/ClientAPI/`。
 ### Unregister Status Change.vi
 取消状态变更订阅回调。
 
+> [!NOTE]
+> `Register Status Change.vi` / `Unregister Status Change.vi` 主要用于兼容旧用法。
+> 新的集成建议优先使用 `... for Client.vi` 版本接口。
+
 ### Register Status for Client.vi
 面向指定客户端上下文注册状态订阅。
 

@@ -63,6 +63,10 @@ Register a status-change subscription callback.
 ### Unregister Status Change.vi
 Unregister a status-change subscription callback.
 
+> [!NOTE]
+> `Register Status Change.vi` / `Unregister Status Change.vi` are kept for compatibility.
+> For new integrations, prefer the `... for Client.vi` variants.
+
 ### Register Status for Client.vi
 Register status subscription for a specified client context.
 
