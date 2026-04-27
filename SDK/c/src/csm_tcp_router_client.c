@@ -167,7 +167,6 @@ static double csm_monotonic_ms(void) {
 #if defined(_WIN32)
 static csm_mutex_t g_wsa_lock;
 static INIT_ONCE   g_wsa_lock_init_once_state = INIT_ONCE_STATIC_INIT;
-static int         g_wsa_lock_inited = 0;
 static int         g_wsa_refcount    = 0;
 
 static BOOL CALLBACK csm_wsa_lock_init_once_cb(PINIT_ONCE init_once,
@@ -175,7 +174,6 @@ static BOOL CALLBACK csm_wsa_lock_init_once_cb(PINIT_ONCE init_once,
                                                PVOID *context) {
     (void)init_once; (void)param; (void)context;
     csm_mutex_init(&g_wsa_lock);
-    g_wsa_lock_inited = 1;
     return TRUE;
 }
 
@@ -203,7 +201,7 @@ static int csm_wsa_startup(void) {
 }
 
 static void csm_wsa_cleanup(void) {
-    if (!g_wsa_lock_inited) return;
+    csm_wsa_lock_init_once();
     csm_mutex_lock(&g_wsa_lock);
     if (g_wsa_refcount > 0) {
         g_wsa_refcount--;
