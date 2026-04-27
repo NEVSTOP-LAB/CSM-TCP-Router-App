@@ -1,10 +1,9 @@
-"""csm-tcp-router-client – single-file Python client SDK for the CSM-TCP-Router server.
+"""csm-tcp-router-client – CSM-TCP-Router 服务器的单文件 Python 客户端 SDK。
 
-This module bundles the entire client implementation (sync and async) along
-with the wire-protocol codec, exception hierarchy and public data models
-into a single importable file.
+本模块将完整的客户端实现（同步与异步）、线路协议编解码器、
+异常层次结构以及公共数据模型打包到一个可直接导入的文件中。
 
-Sync usage::
+同步用法::
 
     from csm_tcp_router_client import TcpRouterClient
 
@@ -12,7 +11,7 @@ Sync usage::
         client.connect("localhost", 30007)
         print(client.list_modules())
 
-Async usage::
+异步用法::
 
     import asyncio
     from csm_tcp_router_client import AsyncTcpRouterClient
@@ -24,12 +23,12 @@ Async usage::
 
     asyncio.run(main())
 
-Wire format (8-byte header, big-endian)::
+线路格式（8 字节报头，大端序）::
 
     | Data Length (4B) | Version (1B=0x01) | Type (1B) | FLAG1 (1B) | FLAG2 (1B) |
     ╰────────────────────────── Header (8B) ──────────────────────────╯
 
-followed by exactly ``Data Length`` bytes of payload.
+后跟恰好 ``Data Length`` 字节的有效载荷。
 """
 
 from __future__ import annotations
@@ -46,22 +45,22 @@ from enum import IntEnum
 from typing import Any, Callable, Coroutine, Dict, Optional, Tuple, Union
 
 __all__ = [
-    # Clients
+    # 客户端
     "TcpRouterClient",
     "AsyncTcpRouterClient",
-    # Exceptions
+    # 异常
     "TcpRouterError",
     "ConnectionError",
     "TimeoutError",
     "ProtocolError",
     "ServerError",
-    # Models
+    # 数据模型
     "PacketType",
     "Packet",
     "CommandResponse",
     "AsyncResponse",
     "StatusNotification",
-    # Version
+    # 版本
     "__version__",
 ]
 
@@ -69,33 +68,32 @@ __version__ = "0.3.0"
 
 
 # ===========================================================================
-# Exceptions
+# 异常
 # ===========================================================================
 
 
 class TcpRouterError(Exception):
-    """Base exception for all CSM-TCP-Router client errors."""
+    """所有 CSM-TCP-Router 客户端错误的基异常。"""
 
 
 class ConnectionError(TcpRouterError):
-    """Raised when a connection cannot be established or is lost."""
+    """当连接无法建立或已断开时抛出。"""
 
 
 class TimeoutError(TcpRouterError):
-    """Raised when a synchronous operation exceeds its timeout."""
+    """当同步操作超过其超时时间时抛出。"""
 
 
 class ProtocolError(TcpRouterError):
-    """Raised when an invalid or unexpected protocol frame is received."""
+    """当接收到无效或意外的协议帧时抛出。"""
 
 
 class ServerError(TcpRouterError):
-    """Raised when the server returns an error packet.
+    """当服务器返回错误数据包时抛出。
 
     Attributes:
-        message: Human-readable error text from the server.
-        code: Optional error code extracted from the CSM Error format
-              ``[Error: <code>] <message>``.
+        message: 来自服务器的可读错误文本。
+        code: 从 CSM 错误格式 ``[Error: <code>] <message>`` 中提取的可选错误代码。
     """
 
     def __init__(self, message: str, code: str = "") -> None:
@@ -109,30 +107,29 @@ class ServerError(TcpRouterError):
         return self.message
 
 
-# Internal aliases used by the transport / receive code below to avoid
-# ambiguity with the module-level shadowed builtins.
+# 传输/接收代码中使用的内部别名，用于避免与模块级遮蔽的内置名称产生歧义。
 _RouterConnectionError = ConnectionError
 _RouterTimeoutError = TimeoutError
 
 
 # ===========================================================================
-# Public data models
+# 公共数据模型
 # ===========================================================================
 
 
 class PacketType(IntEnum):
-    """Packet type constants as defined in the CSM-TCP-Router protocol v0.
+    """CSM-TCP-Router 协议 v0 中定义的数据包类型常量。
 
-    Wire values
+    线路值
     -----------
-    ``INFO``       0x00 – informational messages (welcome / goodbye)
-    ``ERROR``      0x01 – error messages from the server
-    ``CMD``        0x02 – command sent by the client
-    ``CMD_RESP``   0x03 – server handshake for async / no-reply / subscribe
-    ``RESP``       0x04 – synchronous response payload
-    ``ASYNC_RESP`` 0x05 – asynchronous response payload
-    ``STATUS``     0x06 – status broadcast from a subscribed CSM module
-    ``INTERRUPT``  0x07 – interrupt broadcast from a subscribed CSM module
+    ``INFO``       0x00 – 信息消息（欢迎/再见）
+    ``ERROR``      0x01 – 来自服务器的错误消息
+    ``CMD``        0x02 – 客户端发送的命令
+    ``CMD_RESP``   0x03 – 服务器对异步/无回复/订阅的握手确认
+    ``RESP``       0x04 – 同步响应有效载荷
+    ``ASYNC_RESP`` 0x05 – 异步响应有效载荷
+    ``STATUS``     0x06 – 来自已订阅 CSM 模块的状态广播
+    ``INTERRUPT``  0x07 – 来自已订阅 CSM 模块的中断广播
     """
 
     INFO = 0x00
@@ -147,7 +144,7 @@ class PacketType(IntEnum):
 
 @dataclass(frozen=True)
 class Packet:
-    """A decoded packet received from the server (internal representation)."""
+    """从服务器接收到的已解码数据包（内部表示）。"""
 
     type: PacketType
     data: bytes
@@ -158,13 +155,13 @@ class Packet:
 
 @dataclass(frozen=True)
 class CommandResponse:
-    """The result of a synchronous command (:meth:`TcpRouterClient.send_and_wait`)."""
+    """同步命令（:meth:`TcpRouterClient.send_and_wait`）的结果。"""
 
     raw: bytes
 
     @property
     def text(self) -> str:
-        """Decoded UTF-8 text of the response payload."""
+        """响应有效载荷的 UTF-8 解码文本。"""
         return self.raw.decode("utf-8", errors="replace")
 
     def __repr__(self) -> str:
@@ -173,12 +170,12 @@ class CommandResponse:
 
 @dataclass(frozen=True)
 class AsyncResponse:
-    """An asynchronous response payload delivered via an ``async-resp`` packet.
+    """通过 ``async-resp`` 数据包传递的异步响应有效载荷。
 
     Attributes:
-        raw: Raw response bytes (the part *before* the `` <- `` separator).
-        original_command: The original command text echoed back by the server
-                          (the part *after* the `` <- `` separator).
+        raw: 原始响应字节（`` <- `` 分隔符*之前*的部分）。
+        original_command: 服务器回显的原始命令文本
+                          （`` <- `` 分隔符*之后*的部分）。
     """
 
     raw: bytes
@@ -186,14 +183,14 @@ class AsyncResponse:
 
     @property
     def text(self) -> str:
-        """Decoded UTF-8 text of the response payload."""
+        """响应有效载荷的 UTF-8 解码文本。"""
         return self.raw.decode("utf-8", errors="replace")
 
     @classmethod
     def from_packet(cls, packet: Packet) -> AsyncResponse:
-        """Parse an ``ASYNC_RESP`` packet.
+        """解析一个 ``ASYNC_RESP`` 数据包。
 
-        Server format: ``"<response-data> <- <original-command>"``.
+        服务器格式：``"<response-data> <- <original-command>"``。
         """
         text = packet.data.decode("utf-8", errors="replace")
         parts = text.split(" <- ", 1)
@@ -207,15 +204,15 @@ class AsyncResponse:
 
 @dataclass(frozen=True)
 class StatusNotification:
-    """A status broadcast delivered via a ``status`` or ``interrupt`` packet.
+    """通过 ``status`` 或 ``interrupt`` 数据包传递的状态广播。
 
     Attributes:
-        raw: Full raw payload bytes.
-        packet_type: Either :attr:`PacketType.STATUS` or
-                     :attr:`PacketType.INTERRUPT`.
-        status_name: The name of the broadcasted status (left of ``>>``).
-        data: The status payload (between ``>>`` and ``<-``).
-        module_name: The sending CSM module name (right of ``<-``).
+        raw: 完整的原始有效载荷字节。
+        packet_type: :attr:`PacketType.STATUS` 或
+                     :attr:`PacketType.INTERRUPT` 之一。
+        status_name: 广播的状态名称（``>>`` 左侧）。
+        data: 状态有效载荷（``>>`` 与 ``<-`` 之间）。
+        module_name: 发送该状态的 CSM 模块名称（``<-`` 右侧）。
     """
 
     raw: bytes
@@ -226,9 +223,9 @@ class StatusNotification:
 
     @classmethod
     def from_packet(cls, packet: Packet) -> StatusNotification:
-        """Parse a ``STATUS`` or ``INTERRUPT`` packet.
+        """解析一个 ``STATUS`` 或 ``INTERRUPT`` 数据包。
 
-        Server format: ``"<status-name> >> <data> <- <module>"``.
+        服务器格式：``"<status-name> >> <data> <- <module>"``。
         """
         text = packet.data.decode("utf-8", errors="replace")
         module = ""
@@ -258,16 +255,16 @@ class StatusNotification:
 
 
 # ===========================================================================
-# Protocol codec (internal but importable for advanced use / testing)
+# 协议编解码器（内部使用，但可导入供高级用途/测试）
 # ===========================================================================
 
-# Header layout: big-endian uint32 data_len + 4 x uint8 (version, type, flag1, flag2)
+# 报头布局：大端序 uint32 data_len + 4 x uint8（version, type, flag1, flag2）
 _HEADER_FORMAT = "!IBBBB"
 
-#: Number of bytes in the fixed packet header.
+#: 固定数据包报头的字节数。
 HEADER_SIZE: int = struct.calcsize(_HEADER_FORMAT)  # == 8
 
-#: Protocol version byte sent in every outgoing packet.
+#: 每个出站数据包中发送的协议版本字节。
 PROTOCOL_VERSION: int = 0x01
 
 
@@ -277,13 +274,13 @@ def encode_packet(
     flag1: int = 0,
     flag2: int = 0,
 ) -> bytes:
-    """Encode *data* into a complete wire-format packet (header + body).
+    """将 *data* 编码为完整的线路格式数据包（报头 + 正文）。
 
-    :param data: Raw payload bytes.
-    :param packet_type: :class:`PacketType` for the header.
-    :param flag1: FLAG1 byte (currently unused; defaults to 0).
-    :param flag2: FLAG2 byte (currently unused; defaults to 0).
-    :returns: Concatenated header + payload bytes ready for ``sendall()``.
+    :param data: 原始有效载荷字节。
+    :param packet_type: 报头中使用的 :class:`PacketType`。
+    :param flag1: FLAG1 字节（当前未使用；默认为 0）。
+    :param flag2: FLAG2 字节（当前未使用；默认为 0）。
+    :returns: 已拼接的报头 + 有效载荷字节，可直接传递给 ``sendall()``。
     """
     header = struct.pack(
         _HEADER_FORMAT,
@@ -297,10 +294,10 @@ def encode_packet(
 
 
 def decode_header(header_bytes: bytes) -> Tuple[int, int, int, int, int]:
-    """Decode an 8-byte header into its constituent fields.
+    """将 8 字节报头解码为其各组成字段。
 
     :returns: ``(data_len, version, type_byte, flag1, flag2)``
-    :raises ProtocolError: if *header_bytes* is not exactly :data:`HEADER_SIZE` bytes.
+    :raises ProtocolError: 若 *header_bytes* 不恰好为 :data:`HEADER_SIZE` 字节。
     """
     if len(header_bytes) != HEADER_SIZE:
         raise ProtocolError(
@@ -310,13 +307,12 @@ def decode_header(header_bytes: bytes) -> Tuple[int, int, int, int, int]:
 
 
 def parse_packet(header_bytes: bytes, body: bytes) -> Packet:
-    """Build a :class:`Packet` from raw header + body.
+    """从原始报头 + 正文构建 :class:`Packet`。
 
-    Unknown packet type bytes are mapped to :attr:`PacketType.INFO` for
-    forward compatibility (the server may introduce new types in future
-    protocol revisions).
+    未知的数据包类型字节将映射到 :attr:`PacketType.INFO` 以保持
+    前向兼容性（服务器在未来的协议修订中可能引入新类型）。
 
-    :raises ProtocolError: on header size mismatch or body length mismatch.
+    :raises ProtocolError: 当报头大小不匹配或正文长度不匹配时。
     """
     data_len, version, type_byte, flag1, flag2 = decode_header(header_bytes)
     if len(body) != data_len:
@@ -327,18 +323,18 @@ def parse_packet(header_bytes: bytes, body: bytes) -> Packet:
     try:
         ptype = PacketType(type_byte)
     except ValueError:
-        # Forward-compatible: treat unknown type as INFO
+        # 前向兼容：将未知类型视为 INFO
         ptype = PacketType.INFO
     return Packet(type=ptype, data=body, version=version, flag1=flag1, flag2=flag2)
 
 
 # ===========================================================================
-# Shared server-error parsing helper
+# 共享的服务器错误解析辅助函数
 # ===========================================================================
 
 
 def _parse_server_error(packet: Packet) -> ServerError:
-    """Extract code and message from a CSM Error format ``[Error: <code>] <msg>``."""
+    """从 CSM 错误格式 ``[Error: <code>] <msg>`` 中提取错误代码和消息。"""
     text = packet.data.decode("utf-8", errors="replace").strip()
     code = ""
     msg = text
@@ -353,16 +349,15 @@ def _parse_server_error(packet: Packet) -> ServerError:
 
 
 # ===========================================================================
-# Internal: thread-based TCP transport (used by the sync client)
+# 内部：基于线程的 TCP 传输（由同步客户端使用）
 # ===========================================================================
 
 
 class _Transport:
-    """Thread-safe, blocking TCP transport.
+    """线程安全的阻塞式 TCP 传输。
 
-    A background daemon thread continuously reads packets from the socket and
-    dispatches them via *on_packet*.  Callers are responsible for keeping
-    callbacks fast and non-blocking, as they run in the receive thread.
+    后台守护线程持续从套接字读取数据包，并通过 *on_packet* 进行分发。
+    调用方负责保持回调函数快速且无阻塞，因为它们在接收线程中运行。
     """
 
     def __init__(
@@ -379,11 +374,11 @@ class _Transport:
 
     @property
     def connected(self) -> bool:
-        """``True`` while the socket is open and the stop event has not fired."""
+        """``True`` 表示套接字已打开且停止事件尚未触发。"""
         return self._sock is not None and not self._stop_event.is_set()
 
     def connect(self, host: str, port: int, timeout: float = 5.0) -> None:
-        """Open a TCP connection and start the receive thread."""
+        """建立 TCP 连接并启动接收线程。"""
         if self.connected:
             raise _RouterConnectionError(
                 "Already connected; call disconnect() first."
@@ -393,7 +388,7 @@ class _Transport:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(timeout)
             sock.connect((host, port))
-            sock.settimeout(None)  # switch to blocking for the recv loop
+            sock.settimeout(None)  # 切换为阻塞模式以用于接收循环
         except OSError as exc:
             if sock is not None:
                 try:
@@ -414,7 +409,7 @@ class _Transport:
         self._recv_thread.start()
 
     def disconnect(self, join_timeout: float = 2.0) -> None:
-        """Close the connection and stop the receive thread."""
+        """关闭连接并停止接收线程。"""
         self._stop_event.set()
         if self._sock is not None:
             try:
@@ -430,7 +425,7 @@ class _Transport:
             self._recv_thread.join(timeout=join_timeout)
 
     def send_raw(self, data: bytes) -> None:
-        """Send *data* atomically.  Thread-safe."""
+        """原子性地发送 *data*。线程安全。"""
         if not self.connected:
             raise _RouterConnectionError("Not connected.")
         with self._send_lock:
@@ -441,12 +436,12 @@ class _Transport:
                 raise _RouterConnectionError(f"Send failed: {exc}") from exc
 
     def _recv_all(self, size: int) -> bytes:
-        """Read exactly *size* bytes; returns empty bytes on clean EOF or disconnect."""
+        """精确读取 *size* 字节；在干净的 EOF 或断开连接时返回空字节。"""
         buf = bytearray(size)
         view = memoryview(buf)
         received = 0
         while received < size:
-            sock = self._sock  # capture locally to avoid TOCTOU race with disconnect()
+            sock = self._sock  # 本地捕获，避免与 disconnect() 产生 TOCTOU 竞争
             if sock is None:
                 return b""
             try:
@@ -459,14 +454,14 @@ class _Transport:
         return bytes(buf)
 
     def _recv_loop(self) -> None:
-        """Background thread: read packets and dispatch via callback."""
+        """后台线程：读取数据包并通过回调进行分发。"""
         try:
             while not self._stop_event.is_set():
                 header = self._recv_all(HEADER_SIZE)
                 if not header:
                     break
 
-                # Extract data_len from the first 4 bytes without full decode
+                # 从前 4 个字节提取 data_len，无需完整解码
                 (data_len,) = struct.unpack("!I", header[:4])
                 body = self._recv_all(data_len)
                 if len(body) != data_len:
@@ -475,7 +470,7 @@ class _Transport:
                 try:
                     packet = parse_packet(header, body)
                 except ProtocolError:
-                    # Corrupted frame – skip it and keep the loop alive
+                    # 帧损坏 – 跳过并保持循环运行
                     continue
 
                 self._on_packet(packet)
@@ -489,15 +484,15 @@ class _Transport:
 
 
 # ===========================================================================
-# TcpRouterClient – thread-based synchronous client
+# TcpRouterClient – 基于线程的同步客户端
 # ===========================================================================
 
-# Type aliases
+# 类型别名
 _SubKey = Tuple[str, str]
 StatusCallback = Callable[[StatusNotification], None]
 AsyncCallback = Callable[[AsyncResponse], None]
 
-# Items held in the internal queues are either Packet or Exception instances.
+# 内部队列中存放的元素为 Packet 或 Exception 实例。
 _QueueItem = object
 
 
