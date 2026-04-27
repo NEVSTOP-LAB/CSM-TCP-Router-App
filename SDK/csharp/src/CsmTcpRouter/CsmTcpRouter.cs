@@ -585,18 +585,35 @@ namespace CsmTcpRouter
             {
                 using (var probe = new TcpClient())
                 {
-                    try
+                    var connectTask = probe.ConnectAsync(host, port);
+                    var winner = await Task.WhenAny(connectTask, Task.Delay(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
+                    if (winner == connectTask)
                     {
-                        var ct = probe.ConnectAsync(host, port);
-                        var winner = await Task.WhenAny(ct, Task.Delay(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
-                        if (winner == ct && !ct.IsFaulted)
+                        try
                         {
+                            // Observe any connect exception (faulted task);
+                            // success means the server is reachable.
+                            await connectTask.ConfigureAwait(false);
                             try { probe.Close(); } catch { /* ignore */ }
                             return true;
                         }
+                        catch (SocketException) { /* not ready yet */ }
+                        catch (IOException) { /* not ready yet */ }
                     }
-                    catch (SocketException) { /* not ready yet */ }
-                    catch (IOException) { /* not ready yet */ }
+                    else
+                    {
+                        // Delay won; abort the in-flight connect attempt by
+                        // closing the probe socket, then observe any pending
+                        // exception so it is not unobserved.
+                        try { probe.Close(); } catch { /* ignore */ }
+                        try
+                        {
+                            await connectTask.ConfigureAwait(false);
+                        }
+                        catch (SocketException) { /* not ready yet */ }
+                        catch (IOException) { /* not ready yet */ }
+                        catch (ObjectDisposedException) { /* connect aborted by closing probe */ }
+                    }
                 }
                 await Task.Delay(interval).ConfigureAwait(false);
             }
@@ -788,7 +805,14 @@ namespace CsmTcpRouter
             var tcs = _respTcs;
             var winner = await Task.WhenAny(tcs.Task, Task.Delay(timeout)).ConfigureAwait(false);
             if (winner != tcs.Task)
+            {
+                // Protocol v0 has no correlation id, so a late RESP for the
+                // timed-out command could be misattributed to the *next*
+                // SendAndWait call.  Force a disconnect so the connection
+                // is unusable until the caller reconnects.
+                try { _transport.Disconnect(); } catch { /* ignore */ }
                 throw new RouterTimeoutException($"No response received within {timeout.TotalSeconds:F1}s.");
+            }
             object item = await tcs.Task.ConfigureAwait(false);
             if (item is Exception exc) throw exc;
             var packet = (Packet)item;
@@ -800,7 +824,13 @@ namespace CsmTcpRouter
             var tcs = _cmdRespTcs;
             var winner = await Task.WhenAny(tcs.Task, Task.Delay(timeout)).ConfigureAwait(false);
             if (winner != tcs.Task)
+            {
+                // Same desync risk as WaitForRespAsync: a late CMD_RESP could
+                // complete the next in-flight waiter.  Force a disconnect so
+                // the connection cannot be reused after a handshake timeout.
+                try { _transport.Disconnect(); } catch { /* ignore */ }
                 throw new RouterTimeoutException($"No cmd-resp received within {timeout.TotalSeconds:F1}s.");
+            }
             object item = await tcs.Task.ConfigureAwait(false);
             if (item is Exception exc) throw exc;
             // CMD_RESP payload is a handshake acknowledgment; discard it.

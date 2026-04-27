@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +16,21 @@ namespace CsmTcpRouter.Tests
     public class ClientIntegrationTests
     {
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(2);
+
+        /// <summary>
+        /// Bind a TcpListener to port 0 (OS-assigned), grab the port, then stop
+        /// the listener.  The port is then almost certainly closed for the
+        /// duration of the test, so we can rely on connect attempts to fail
+        /// without depending on system state (e.g. port 1 may be open).
+        /// </summary>
+        private static int GetClosedPort()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            listener.Stop();
+            return port;
+        }
 
         // ---------------------------------------------------------------
         // Connect / Disconnect
@@ -57,9 +74,9 @@ namespace CsmTcpRouter.Tests
         public void Connect_BadPort_Throws()
         {
             using var client = new TcpRouterClient();
-            // Port 1 is virtually guaranteed to be closed; use a short timeout.
+            int closedPort = GetClosedPort();
             Assert.Throws<RouterConnectionException>(
-                () => client.Connect("127.0.0.1", 1, TimeSpan.FromMilliseconds(500)));
+                () => client.Connect("127.0.0.1", closedPort, TimeSpan.FromMilliseconds(500)));
         }
 
         // ---------------------------------------------------------------
@@ -212,11 +229,15 @@ namespace CsmTcpRouter.Tests
             client.Connect(server.Host, server.Port, DefaultTimeout);
 
             int hits = 0;
-            client.SubscribeStatus("Status", "AI", _ => Interlocked.Increment(ref hits), DefaultTimeout);
+            using var ev = new ManualResetEventSlim();
+            client.SubscribeStatus(
+                "Status", "AI",
+                _ => { Interlocked.Increment(ref hits); ev.Set(); },
+                DefaultTimeout);
             client.UnsubscribeStatus("Status", "AI", DefaultTimeout);
 
             server.PushStatus("Status >> v1 <- AI");
-            Thread.Sleep(150);
+            Assert.False(ev.Wait(TimeSpan.FromMilliseconds(150)), "callback was invoked after unsubscribe");
             Assert.Equal(0, hits);
         }
 
@@ -277,8 +298,8 @@ namespace CsmTcpRouter.Tests
         public void WaitForServer_ReturnsFalseOnTimeout()
         {
             using var client = new TcpRouterClient();
-            // Pick a port that almost certainly isn't listening.
-            bool ready = client.WaitForServer("127.0.0.1", 1, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(50));
+            int closedPort = GetClosedPort();
+            bool ready = client.WaitForServer("127.0.0.1", closedPort, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(50));
             Assert.False(ready);
         }
 
