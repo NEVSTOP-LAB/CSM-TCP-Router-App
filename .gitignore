@@ -68,3 +68,24 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+
+# C# / .NET
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.nupkg
+*.snupkg
+nupkg/
+TestResults/
+[Tt]est[Rr]esults/
+coverage.cobertura.xml
+*.received.*
+project.lock.json
+project.fragment.lock.json
+artifacts/

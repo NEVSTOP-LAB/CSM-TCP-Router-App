@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Multi-target so the SDK runs on .NET Framework 4.6.2+, .NET Core 3.1+,
+         .NET 6/7/8/9 (via netstandard2.0) and modern .NET (via net8.0). -->
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- no XML doc warnings for every public member -->
+
+    <!-- ===================================================================
+         NuGet package metadata
+         =================================================================== -->
+    <IsPackable>true</IsPackable>
+    <PackageId>CsmTcpRouter.Client</PackageId>
+    <Version>0.1.0</Version>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <Authors>NEVSTOP-LAB</Authors>
+    <Company>NEVSTOP-LAB</Company>
+    <Product>CsmTcpRouter.Client</Product>
+    <Title>CSM-TCP-Router .NET Client</Title>
+    <Description>C# client SDK for the CSM-TCP-Router LabVIEW server. Speaks the CSM-TCP-Router protocol v0 over TCP and exposes a high-level synchronous and asynchronous API for sending commands, awaiting responses, and subscribing to status / interrupt broadcasts from a Communicable State Machine (CSM).</Description>
+    <Copyright>Copyright (c) 2026 NEVSTOP-LAB</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>csm;labview;tcp;router;client;sdk;daq;communicable-state-machine;async</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See CHANGELOG.md for release notes.</PackageReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <!-- Bundle README and LICENSE inside the .nupkg -->
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- Deterministic builds for reproducibility on CI -->
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+</Project>
