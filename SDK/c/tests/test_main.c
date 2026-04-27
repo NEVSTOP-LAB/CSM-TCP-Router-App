@@ -1,4 +1,4 @@
-/* test_main.c - Runner for the C SDK test suite. */
+/* test_main.c - C SDK 测试套件的运行器。 */
 #include "test_harness.h"
 
 #include <stdio.h>
@@ -64,8 +64,7 @@ static const csm_test_t TESTS[] = {
 
 int main(int argc, char **argv) {
     const char *only = (argc > 1) ? argv[1] : NULL;
-    /* `volatile` ensures these survive the longjmp performed by failing
-     * assertions inside individual test bodies. */
+    /* `volatile` 确保这些变量在各个测试体内的失败断言执行 longjmp 后仍然存活。 */
     volatile int passed = 0, failed = 0, skipped = 0;
     volatile int total_assertions = 0;
     size_t n = sizeof(TESTS) / sizeof(TESTS[0]);

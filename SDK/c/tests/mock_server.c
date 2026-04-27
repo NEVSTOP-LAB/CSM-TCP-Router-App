@@ -1,4 +1,4 @@
-/* mock_server.c - cross-platform implementation of the test mock server. */
+/* mock_server.c - 测试模拟服务器的跨平台实现。 */
 
 #if !defined(_WIN32)
 #  ifndef _POSIX_C_SOURCE
@@ -38,7 +38,7 @@ static void ms_cond_signal(ms_cond_t *c){WakeConditionVariable(c);}
 static int  ms_cond_wait_ms(ms_cond_t *c, ms_mutex_t *m, unsigned int ms){
     return SleepConditionVariableCS(c, m, ms == 0 ? INFINITE : ms) ? 1 : 0;
 }
-#if 0  /* reserved for future use */
+#if 0  /* 保留供将来使用 */
 static void ms_sleep_ms(unsigned int ms){Sleep(ms);}
 #endif
 #else
@@ -71,7 +71,7 @@ static int ms_cond_wait_ms(ms_cond_t *c, ms_mutex_t *m, unsigned int ms){
     if (ts.tv_nsec>=1000000000L){ts.tv_sec+=ts.tv_nsec/1000000000L;ts.tv_nsec%=1000000000L;}
     return pthread_cond_timedwait(c,m,&ts) == 0 ? 1 : 0;
 }
-#if 0  /* reserved for future use */
+#if 0  /* 保留供将来使用 */
 static void ms_sleep_ms(unsigned int ms){
     struct timespec ts; ts.tv_sec=ms/1000; ts.tv_nsec=(long)(ms%1000)*1000000L;
     nanosleep(&ts,NULL);
@@ -83,7 +83,7 @@ static void ms_sleep_ms(unsigned int ms){
 #define MS_HEADER 8
 #define MS_VER 0x01
 
-/* --- response map --- */
+/* --- 响应映射 --- */
 typedef struct ms_resp {
     struct ms_resp *next;
     char           *cmd;
@@ -92,7 +92,7 @@ typedef struct ms_resp {
     size_t          data_len;
 } ms_resp_t;
 
-/* --- received command queue --- */
+/* --- 已接收命令队列 --- */
 typedef struct ms_msg {
     struct ms_msg *next;
     char          *text;
@@ -142,7 +142,7 @@ static uint32_t ms_unpack_be32(const uint8_t *b){
     return ((uint32_t)b[0]<<24)|((uint32_t)b[1]<<16)|((uint32_t)b[2]<<8)|(uint32_t)b[3];
 }
 
-/* Encode header + payload into newly-allocated buffer; caller frees. */
+/* 将头部 + 载荷编码到新分配的缓冲区中；调用者负责释放。 */
 static uint8_t *ms_encode(csm_packet_type_t type, const void *data, size_t len, size_t *out_len) {
     uint8_t *buf = (uint8_t *)malloc(MS_HEADER + len);
     if (!buf) return NULL;
@@ -187,7 +187,7 @@ static int ms_recv_all(ms_socket_t s, uint8_t *buf, size_t len) {
     return 0;
 }
 
-/* --- Public API --- */
+/* --- 公共 API --- */
 
 csm_mock_server_t *csm_mock_server_create(void) {
     if (ms_wsa_init() != 0) return NULL;
@@ -206,7 +206,7 @@ csm_mock_server_t *csm_mock_server_create(void) {
 
 static void ms_handle_command(csm_mock_server_t *s, ms_socket_t conn,
                               const char *cmd) {
-    /* Look up custom response. */
+    /* 查找自定义响应。 */
     ms_mutex_lock(&s->resp_lock);
     ms_resp_t *r = s->responses;
     while (r) {
@@ -221,7 +221,7 @@ static void ms_handle_command(csm_mock_server_t *s, ms_socket_t conn,
     }
     ms_mutex_unlock(&s->resp_lock);
 
-    /* Built-in defaults. */
+    /* 内置默认值。 */
     size_t out_len = 0;
     uint8_t *wire = NULL;
     if (strcmp(cmd, "Ping") == 0) {
@@ -242,7 +242,7 @@ static void ms_handle_command(csm_mock_server_t *s, ms_socket_t conn,
     } else if (strstr(cmd, "-><register>") || strstr(cmd, "-><unregister>")) {
         wire = ms_encode(CSM_PT_CMD_RESP, "", 0, &out_len);
     } else {
-        /* Generic async handshake. */
+        /* 通用异步握手。 */
         wire = ms_encode(CSM_PT_CMD_RESP, "", 0, &out_len);
     }
     if (wire) { ms_send_all(conn, wire, out_len); free(wire); }
@@ -260,7 +260,7 @@ ms_client_thread(void *arg) {
     ms_socket_t conn = ctx->conn;
     free(ctx);
 
-    /* Send welcome INFO. */
+    /* 发送欢迎 INFO 包。 */
     size_t wlen = 0;
     uint8_t *welcome = ms_encode(CSM_PT_INFO, "Welcome to mock server", 22, &wlen);
     if (welcome) { ms_send_all(conn, welcome, wlen); free(welcome); }
@@ -281,15 +281,15 @@ ms_client_thread(void *arg) {
                 if (data_len) memcpy(cmd, body, data_len);
                 cmd[data_len] = '\0';
 
-                /* Trim trailing whitespace. */
+                /* 修剪尾部空白。 */
                 size_t L = strlen(cmd);
                 while (L && (cmd[L-1]==' '||cmd[L-1]=='\r'||cmd[L-1]=='\n'||cmd[L-1]=='\t'))
                     cmd[--L] = '\0';
 
-                /* Handle the command first (using the local copy). */
+                /* 先处理命令（使用本地副本）。 */
                 ms_handle_command(s, conn, cmd);
 
-                /* Then enqueue a copy for the test to inspect. */
+                /* 然后将副本入队供测试检查。 */
                 ms_msg_t *m = (ms_msg_t *)calloc(1, sizeof(*m));
                 if (m) {
                     m->text = (char *)malloc(strlen(cmd) + 1);
@@ -311,7 +311,7 @@ ms_client_thread(void *arg) {
         free(body);
     }
 
-    /* Remove from clients list. */
+    /* 从客户端列表中移除。 */
     ms_mutex_lock(&s->client_lock);
     for (int i = 0; i < MS_MAX_CLIENTS; ++i) {
         if (s->clients[i] == conn) { s->clients[i] = MS_INVALID_SOCKET; break; }
@@ -426,7 +426,7 @@ void csm_mock_server_stop(csm_mock_server_t *s) {
         ms_close_socket(s->listen_sock);
         s->listen_sock = MS_INVALID_SOCKET;
     }
-    /* Close client sockets to wake handlers. */
+    /* 关闭客户端套接字以唤醒处理程序。 */
     ms_mutex_lock(&s->client_lock);
     for (int i = 0; i < MS_MAX_CLIENTS; ++i) {
         if (s->clients[i] != MS_INVALID_SOCKET) {
@@ -450,7 +450,7 @@ void csm_mock_server_stop(csm_mock_server_t *s) {
 #endif
         s->thread_started = 0;
     }
-    /* Wait for handlers to finish (best-effort, brief). */
+    /* 等待处理程序完成（尽力而为，时间较短）。 */
     ms_mutex_lock(&s->handler_lock);
     int waited = 0;
     while (s->handler_count > 0 && waited < 20) {

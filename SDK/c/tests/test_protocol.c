@@ -1,4 +1,4 @@
-/* test_protocol.c - Unit tests for the protocol codec. */
+/* test_protocol.c - 协议编解码的单元测试。 */
 #include "csm_tcp_router_client.h"
 #include "test_harness.h"
 
@@ -18,7 +18,7 @@ CSM_TEST(test_encode_decode_roundtrip) {
     CSM_ASSERT_EQ_INT(r, CSM_OK);
     CSM_ASSERT_EQ_INT(out_len, 8 + 5);
 
-    /* Header bytes: big-endian length, version, type, flag1, flag2. */
+    /* 头部字节：大端序长度、版本、类型、flag1、flag2。 */
     CSM_ASSERT_EQ_INT(buf[0], 0);
     CSM_ASSERT_EQ_INT(buf[1], 0);
     CSM_ASSERT_EQ_INT(buf[2], 0);

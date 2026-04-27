@@ -1,14 +1,12 @@
-/* csm_tcp_router_client.c - Cross-platform implementation of the
- * CSM-TCP-Router C client SDK.
+/* csm_tcp_router_client.c - CSM-TCP-Router C 客户端 SDK 的跨平台实现。
  *
- * Threading: the receive loop runs on a single background thread.  All
- * public functions are safe to call from any thread; the client serialises
- * concurrent waiters for synchronous (RESP) and command-handshake
- * (CMD_RESP) responses respectively, mirroring the Python SDK.
+ * 线程模型：接收循环运行于单个后台线程。所有公共函数均可从任意线程安全调用；
+ * 客户端分别对同步（RESP）和命令握手（CMD_RESP）响应的并发等待者进行串行化，
+ * 与 Python SDK 保持一致。
  *
- * Sockets / threads abstraction:
- *   - Windows: Winsock2 + Win32 CRITICAL_SECTION / CONDITION_VARIABLE / threads.
- *   - POSIX:   BSD sockets + pthreads.
+ * 套接字 / 线程抽象：
+ *   - Windows：Winsock2 + Win32 CRITICAL_SECTION / CONDITION_VARIABLE / 线程。
+ *   - POSIX：  BSD 套接字 + pthreads。
  */
 
 #if !defined(_WIN32)
@@ -30,14 +28,13 @@
 #include <string.h>
 #include <time.h>
 
-/* CSM_BUILD_LIBRARY is defined by the build system (CMake / MSBuild) when
- * compiling the library, so that csm_tcp_router_client.h decorates the
- * exported symbols with the correct __declspec for shared builds.
- * Defining it unconditionally here would break consumers that compile this
- * .c file directly into their own DLL with a different export contract. */
+/* CSM_BUILD_LIBRARY 由构建系统（CMake / MSBuild）在编译库时定义，
+ * 以便 csm_tcp_router_client.h 使用正确的 __declspec 装饰共享构建中
+ * 导出的符号。在此处无条件定义会破坏那些将此 .c 文件直接编译进
+ * 自己的 DLL（采用不同导出约定）的使用者。 */
 
 /* ========================================================================= */
-/* Platform abstraction                                                      */
+/* 平台抽象                                                                  */
 /* ========================================================================= */
 
 #if defined(_WIN32)
@@ -64,11 +61,11 @@ static void csm_mutex_unlock(csm_mutex_t *m)  { LeaveCriticalSection(m); }
 static void csm_cond_init(csm_cond_t *c)      { InitializeConditionVariable(c); }
 static void csm_cond_destroy(csm_cond_t *c)   { (void)c; }
 static void csm_cond_signal(csm_cond_t *c)    { WakeConditionVariable(c); }
-#if 0  /* reserved for future broadcast use */
+#if 0  /* 保留供将来广播使用 */
 static void csm_cond_broadcast(csm_cond_t *c) { WakeAllConditionVariable(c); }
 #endif
 
-/* Returns 1 on signal, 0 on timeout. */
+/* 有信号时返回 1，超时返回 0。 */
 static int csm_cond_wait_ms(csm_cond_t *c, csm_mutex_t *m, unsigned int ms) {
     BOOL ok = SleepConditionVariableCS(c, m, ms == 0 ? INFINITE : ms);
     if (ok) return 1;
@@ -113,7 +110,7 @@ static void csm_mutex_unlock(csm_mutex_t *m)  { pthread_mutex_unlock(m); }
 static void csm_cond_init(csm_cond_t *c)      { pthread_cond_init(c, NULL); }
 static void csm_cond_destroy(csm_cond_t *c)   { pthread_cond_destroy(c); }
 static void csm_cond_signal(csm_cond_t *c)    { pthread_cond_signal(c); }
-#if 0  /* reserved for future broadcast use */
+#if 0  /* 保留供将来广播使用 */
 static void csm_cond_broadcast(csm_cond_t *c) { pthread_cond_broadcast(c); }
 #endif
 
@@ -161,7 +158,7 @@ static double csm_monotonic_ms(void) {
 #endif
 
 /* ========================================================================= */
-/* WSA bootstrap (Windows only) - reference-counted                          */
+/* WSA 引导（仅 Windows）— 引用计数                                          */
 /* ========================================================================= */
 
 #if defined(_WIN32)
@@ -178,9 +175,8 @@ static BOOL CALLBACK csm_wsa_lock_init_once_cb(PINIT_ONCE init_once,
 }
 
 static void csm_wsa_lock_init_once(void) {
-    /* InitOnceExecuteOnce guarantees the callback runs exactly once
-     * across all threads in the process, so the critical section is
-     * initialised exactly once even under concurrent client creation. */
+    /* InitOnceExecuteOnce 保证回调在进程内所有线程中恰好执行一次，
+     * 因此即使在并发创建客户端时，临界区也只会被初始化一次。 */
     InitOnceExecuteOnce(&g_wsa_lock_init_once_state,
                         csm_wsa_lock_init_once_cb, NULL, NULL);
 }
@@ -215,7 +211,7 @@ static void csm_wsa_cleanup(void) {}
 #endif
 
 /* ========================================================================= */
-/* Result code helpers                                                       */
+/* 结果码辅助函数                                                             */
 /* ========================================================================= */
 
 const char *csm_result_str(csm_result_t code) {
@@ -234,7 +230,7 @@ const char *csm_result_str(csm_result_t code) {
 }
 
 /* ========================================================================= */
-/* Memory helpers                                                            */
+/* 内存辅助函数                                                               */
 /* ========================================================================= */
 
 static char *csm_strdup_n(const char *s, size_t n) {
@@ -288,7 +284,7 @@ void csm_packet_dispose(csm_packet_t *pkt) {
 }
 
 /* ========================================================================= */
-/* Protocol codec                                                            */
+/* 协议编解码                                                                 */
 /* ========================================================================= */
 
 static void csm_pack_be32(uint8_t *buf, uint32_t v) {
@@ -355,7 +351,7 @@ csm_result_t csm_parse_packet(const uint8_t *header_bytes,
     if (r != CSM_OK) return r;
     if ((size_t)data_len != body_len) return CSM_ERR_PROTOCOL;
 
-    /* Forward-compatible: unknown type bytes are mapped to INFO. */
+    /* 向前兼容：未知类型字节映射为 INFO。 */
     csm_packet_type_t pt;
     switch (type_byte) {
         case CSM_PT_INFO:
@@ -388,23 +384,23 @@ csm_result_t csm_parse_packet(const uint8_t *header_bytes,
 }
 
 /* ========================================================================= */
-/* Internal: server-error parsing                                            */
+/* 内部：服务器错误解析                                                       */
 /* ========================================================================= */
 
-/* Parse a packet payload of the form "[Error: <code>] <message>" into out_err. */
+/* 将形如 "[Error: <code>] <message>" 的数据包载荷解析到 out_err。 */
 static void csm_parse_server_error(const uint8_t      *data,
                                    size_t              len,
                                    csm_server_error_t *out_err) {
     out_err->code[0] = '\0';
     out_err->message[0] = '\0';
 
-    /* Copy into a NUL-terminated stack buffer (capped). */
+    /* 复制到以 NUL 结尾的栈缓冲区（截断至上限）。 */
     char buf[1024];
     size_t copy_len = len < sizeof(buf) - 1 ? len : sizeof(buf) - 1;
     if (copy_len) memcpy(buf, data, copy_len);
     buf[copy_len] = '\0';
 
-    /* Trim trailing whitespace. */
+    /* 去除尾部空白字符。 */
     while (copy_len > 0 && (buf[copy_len - 1] == ' ' ||
                             buf[copy_len - 1] == '\r' ||
                             buf[copy_len - 1] == '\n' ||
@@ -419,7 +415,7 @@ static void csm_parse_server_error(const uint8_t      *data,
         char *end = strchr(buf, ']');
         if (end) {
             size_t code_len = (size_t)(end - (buf + prefix_len));
-            /* Trim leading/trailing spaces from code. */
+            /* 去除错误码首尾的空格。 */
             const char *cs = buf + prefix_len;
             while (code_len && *cs == ' ') { cs++; code_len--; }
             while (code_len && cs[code_len - 1] == ' ') code_len--;
@@ -440,15 +436,14 @@ static void csm_parse_server_error(const uint8_t      *data,
 }
 
 /* ========================================================================= */
-/* Internal: bounded queues                                                  */
+/* 内部：有界队列                                                             */
 /* ========================================================================= */
 
-/* Generic queue node. Items hold either a packet (for resp/cmd_resp), or
- * a notification / async response (for the polling queues), or a sentinel
- * (signaled via `is_disconnect`). */
+/* 通用队列节点。元素持有数据包（用于 resp/cmd_resp）、
+ * 通知 / 异步响应（用于轮询队列），或哨兵（通过 `is_disconnect` 发出信号）。 */
 typedef struct csm_queue_node {
     struct csm_queue_node *next;
-    void                  *item; /* type depends on queue */
+    void                  *item; /* 类型取决于所属队列 */
     int                    is_disconnect;
     int                    is_server_error;
     csm_server_error_t     server_error;
@@ -481,7 +476,7 @@ static void csm_queue_destroy_with(csm_queue_t *q,
     csm_mutex_destroy(&q->lock);
 }
 
-/* Push an item; takes ownership of *item* on success. */
+/* 压入一个元素；成功时获得 *item* 的所有权。 */
 static int csm_queue_push(csm_queue_t *q, void *item,
                           int is_disconnect, int is_server_error,
                           const csm_server_error_t *err) {
@@ -501,9 +496,9 @@ static int csm_queue_push(csm_queue_t *q, void *item,
     return 0;
 }
 
-/* Pop one item, blocking up to *timeout_ms*. Returns CSM_OK with *out_item
- * set (and ownership transferred), CSM_ERR_TIMEOUT, CSM_ERR_CONNECTION
- * (sentinel), or CSM_ERR_SERVER (with *out_err* populated). */
+/* 弹出一个元素，最多阻塞 *timeout_ms* 毫秒。成功时返回 CSM_OK 并设置 *out_item*
+ * （所有权转移），超时返回 CSM_ERR_TIMEOUT，连接断开返回 CSM_ERR_CONNECTION
+ *（哨兵），或返回 CSM_ERR_SERVER（同时填充 *out_err*）。 */
 static csm_result_t csm_queue_pop(csm_queue_t        *q,
                                   unsigned int        timeout_ms,
                                   void              **out_item,
@@ -537,9 +532,9 @@ static csm_result_t csm_queue_pop(csm_queue_t        *q,
         n->item = NULL;
     }
     if (n->item) {
-        /* Item not consumed (e.g. caller passed NULL out_item). Leak-safe
-         * default is to free as bytes via the disposer set by the caller's
-         * queue-specific wrapper; here we just drop it. */
+        /* 元素未被消费（例如调用者传入了 NULL out_item）。
+         * 默认以字节方式通过调用者队列特定包装器设置的释放函数释放，
+         * 此处直接丢弃以保证无内存泄漏。 */
         free(n->item);
     }
     free(n);
@@ -547,7 +542,7 @@ static csm_result_t csm_queue_pop(csm_queue_t        *q,
 }
 
 /* ========================================================================= */
-/* Subscription / async-callback registries                                  */
+/* 订阅 / 异步回调注册表                                                      */
 /* ========================================================================= */
 
 typedef struct csm_status_sub {
@@ -566,28 +561,28 @@ typedef struct csm_async_sub {
 } csm_async_sub_t;
 
 /* ========================================================================= */
-/* Client                                                                    */
+/* 客户端                                                                    */
 /* ========================================================================= */
 
 struct csm_client {
     csm_socket_t  sock;
     csm_thread_t  recv_thread;
     int           recv_thread_running;
-    int           connected;        /* set under state_lock */
-    int           stop_flag;        /* set to request shutdown */
+    int           connected;        /* 在 state_lock 下设置 */
+    int           stop_flag;        /* 置位以请求关闭 */
 
-    csm_mutex_t   state_lock;       /* protects connected/stop_flag/sock */
-    csm_mutex_t   send_lock;        /* serialises sendall() */
+    csm_mutex_t   state_lock;       /* 保护 connected/stop_flag/sock */
+    csm_mutex_t   send_lock;        /* 串行化 sendall() */
 
-    csm_mutex_t   resp_lock;        /* at most one in-flight RESP waiter */
-    csm_mutex_t   cmd_resp_lock;    /* at most one in-flight CMD_RESP waiter */
+    csm_mutex_t   resp_lock;        /* 最多一个在途 RESP 等待者 */
+    csm_mutex_t   cmd_resp_lock;    /* 最多一个在途 CMD_RESP 等待者 */
 
-    csm_queue_t   resp_queue;       /* items: csm_packet_t* */
-    csm_queue_t   cmd_resp_queue;   /* items: csm_packet_t* (or NULL) */
-    csm_queue_t   status_queue;     /* items: csm_status_notification_t* */
-    csm_queue_t   async_queue;      /* items: csm_async_response_t* */
+    csm_queue_t   resp_queue;       /* 元素：csm_packet_t* */
+    csm_queue_t   cmd_resp_queue;   /* 元素：csm_packet_t*（或 NULL） */
+    csm_queue_t   status_queue;     /* 元素：csm_status_notification_t* */
+    csm_queue_t   async_queue;      /* 元素：csm_async_response_t* */
 
-    csm_mutex_t   sub_lock;         /* protects subscription registries */
+    csm_mutex_t   sub_lock;         /* 保护订阅注册表 */
     csm_status_sub_t *status_subs;
     csm_async_sub_t  *async_subs;
 
@@ -596,7 +591,7 @@ struct csm_client {
     csm_server_error_t last_server_error;
 };
 
-/* --- helpers --- */
+/* --- 辅助函数 --- */
 
 static void csm_packet_free_void(void *p) {
     csm_packet_t *pkt = (csm_packet_t *)p;
@@ -619,14 +614,13 @@ static void csm_async_resp_free_void(void *p) {
     free(r);
 }
 
-/* Set client.sock under state_lock; closes any old one. */
+/* 在 state_lock 下设置 client.sock；关闭旧套接字（如有）。 */
 static void csm_set_socket_locked(csm_client_t *c, csm_socket_t s) {
     if (c->sock != CSM_INVALID_SOCKET) csm_close_socket(c->sock);
     c->sock = s;
 }
 
-/* Remember the most-recent server error so callers can fetch it after
- * receiving a CSM_ERR_SERVER. */
+/* 记录最近一次服务器错误，以便调用者在收到 CSM_ERR_SERVER 后获取。 */
 static void csm_record_server_error(csm_client_t *c,
                                     const csm_server_error_t *err) {
     csm_mutex_lock(&c->err_lock);
@@ -635,7 +629,7 @@ static void csm_record_server_error(csm_client_t *c,
     csm_mutex_unlock(&c->err_lock);
 }
 
-/* --- subscription registries (under sub_lock) --- */
+/* --- 订阅注册表（在 sub_lock 下操作）--- */
 
 static csm_status_sub_t *csm_find_status_sub(csm_client_t *c,
                                              const char   *status_name,
@@ -755,9 +749,9 @@ static void csm_free_all_subs(csm_client_t *c) {
     csm_mutex_unlock(&c->sub_lock);
 }
 
-/* --- recv helpers --- */
+/* --- 接收辅助函数 --- */
 
-/* Read exactly *size* bytes from sock; returns 0 on success, -1 on EOF/err. */
+/* 从套接字精确读取 *size* 字节；成功返回 0，EOF/错误返回 -1。 */
 static int csm_recv_all(csm_socket_t sock, uint8_t *buf, size_t size) {
     size_t total = 0;
     while (total < size) {
@@ -772,17 +766,17 @@ static int csm_recv_all(csm_socket_t sock, uint8_t *buf, size_t size) {
     return 0;
 }
 
-/* --- Parsing helpers for ASYNC_RESP / STATUS payloads --- */
+/* --- ASYNC_RESP / STATUS 载荷的解析辅助函数 --- */
 
 static void csm_async_resp_free_void(void *p);
 static void csm_status_notif_free_void(void *p);
 
-/* Build an csm_async_response_t from raw payload data. */
+/* 从原始载荷数据构造 csm_async_response_t。 */
 static csm_async_response_t *csm_make_async_response(const uint8_t *data,
                                                     size_t         len) {
     csm_async_response_t *r = (csm_async_response_t *)calloc(1, sizeof(*r));
     if (!r) return NULL;
-    /* Server format: "<response-data> <- <original-command>". */
+    /* 服务器格式："<response-data> <- <original-command>"。 */
     const char  *sep   = " <- ";
     const size_t seplen = 4;
     size_t split = (size_t)-1;
@@ -808,7 +802,7 @@ static csm_async_response_t *csm_make_async_response(const uint8_t *data,
     return r;
 }
 
-/* Build a csm_status_notification_t from raw payload data. */
+/* 从原始载荷数据构造 csm_status_notification_t。 */
 static csm_status_notification_t *csm_make_status_notif(csm_packet_type_t pt,
                                                        const uint8_t   *data,
                                                        size_t           len) {
@@ -821,7 +815,7 @@ static csm_status_notification_t *csm_make_status_notif(csm_packet_type_t pt,
     n->raw[len] = '\0';
     n->raw_len = len;
 
-    /* Find rightmost " <- " separator (rsplit by 1). */
+    /* 从右向左查找最后一个 " <- " 分隔符（rsplit by 1）。 */
     const char *raw_str = n->raw;
     const char *left = raw_str;
     size_t left_len = len;
@@ -838,7 +832,7 @@ static csm_status_notification_t *csm_make_status_notif(csm_packet_type_t pt,
         }
     }
 
-    /* Trim whitespace from module. */
+    /* 去除模块名首尾空白字符。 */
     while (module_len && (*module_start == ' ' || *module_start == '\t')) {
         module_start++; module_len--;
     }
@@ -849,7 +843,7 @@ static csm_status_notification_t *csm_make_status_notif(csm_packet_type_t pt,
         module_len--;
     }
 
-    /* Split left by " >> " into status_name + data. */
+    /* 以 " >> " 将左半部分拆分为 status_name 和 data。 */
     const char *status_start = NULL;
     size_t status_len = 0;
     const char *data_start = left;
@@ -866,7 +860,7 @@ static csm_status_notification_t *csm_make_status_notif(csm_packet_type_t pt,
         }
     }
 
-    /* Trim status_name and data. */
+    /* 去除 status_name 和 data 首尾空白字符。 */
     while (status_len && (*status_start == ' ' || *status_start == '\t')) { status_start++; status_len--; }
     while (status_len && (status_start[status_len - 1] == ' ' || status_start[status_len - 1] == '\t')) status_len--;
     while (data_len_local && (*data_start == ' ' || *data_start == '\t')) { data_start++; data_len_local--; }
@@ -885,18 +879,17 @@ static csm_status_notification_t *csm_make_status_notif(csm_packet_type_t pt,
     return n;
 }
 
-/* --- Receive thread --- */
+/* --- 接收线程 --- */
 
 static void csm_dispatch_packet(csm_client_t *c, csm_packet_t *pkt) {
-    /* On RESP / CMD_RESP / ERROR we transfer ownership of the packet
-     * (or err sentinel) into a queue. On STATUS / ASYNC_RESP / INTERRUPT
-     * we build a higher-level object and dispose of the raw packet. */
+    /* 收到 RESP / CMD_RESP / ERROR 时，将数据包（或错误哨兵）的所有权转入队列。
+     * 收到 STATUS / ASYNC_RESP / INTERRUPT 时，构造高层对象并释放原始数据包。 */
     switch (pkt->type) {
         case CSM_PT_RESP: {
             csm_packet_t *heap = (csm_packet_t *)malloc(sizeof(*heap));
             if (!heap) { csm_packet_free_void(pkt); return; }
             *heap = *pkt;
-            /* Push to resp queue; queue-node owns it. */
+            /* 压入 resp 队列；队列节点持有所有权。 */
             if (csm_queue_push(&c->resp_queue, heap, 0, 0, NULL) != 0) {
                 csm_packet_free_void(heap);
             }
@@ -925,7 +918,7 @@ static void csm_dispatch_packet(csm_client_t *c, csm_packet_t *pkt) {
         case CSM_PT_ASYNC_RESP: {
             csm_async_response_t *r = csm_make_async_response(pkt->data, pkt->data_len);
             if (r) {
-                /* Look up callback under sub_lock. */
+                /* 在 sub_lock 下查找回调。 */
                 csm_mutex_lock(&c->sub_lock);
                 csm_async_callback_fn cb = NULL; void *ud = NULL;
                 csm_async_sub_t *s = c->async_subs;
@@ -937,8 +930,7 @@ static void csm_dispatch_packet(csm_client_t *c, csm_packet_t *pkt) {
                 }
                 csm_mutex_unlock(&c->sub_lock);
                 if (cb) cb(r, ud);
-                /* Push a copy onto polling queue so callback users and
-                 * polling users are independent. */
+                /* 将副本压入轮询队列，使回调用户与轮询用户相互独立。 */
                 csm_async_response_t *queued = (csm_async_response_t *)calloc(1, sizeof(*queued));
                 if (queued) {
                     queued->raw = csm_strdup_n(r->raw, r->raw_len);
@@ -972,7 +964,7 @@ static void csm_dispatch_packet(csm_client_t *c, csm_packet_t *pkt) {
                 }
                 csm_mutex_unlock(&c->sub_lock);
                 if (cb) cb(n, ud);
-                /* Push a copy onto polling queue. */
+                /* 将副本压入轮询队列。 */
                 csm_status_notification_t *q = (csm_status_notification_t *)calloc(1, sizeof(*q));
                 if (q) {
                     q->packet_type = n->packet_type;
@@ -996,7 +988,7 @@ static void csm_dispatch_packet(csm_client_t *c, csm_packet_t *pkt) {
         case CSM_PT_INFO:
         case CSM_PT_CMD:
         default:
-            /* INFO is silently discarded; CMD never sent by server. */
+            /* INFO 静默丢弃；CMD 不由服务器发送。 */
             csm_packet_free_void(pkt);
             return;
     }
@@ -1011,9 +1003,9 @@ static void *csm_recv_thread_main(void *arg)
     csm_client_t *c = (csm_client_t *)arg;
     uint8_t header[CSM_HEADER_SIZE];
     for (;;) {
-        /* Snapshot stop_flag and sock under state_lock. csm_client_disconnect()
-         * mutates both fields under the same lock, so a torn read or a stale
-         * sock value cannot occur and TSAN/UBSan stay quiet. */
+        /* 在 state_lock 下快照 stop_flag 和 sock。csm_client_disconnect()
+         * 在同一锁下修改这两个字段，因此不会出现撕裂读或过时的 sock 值，
+         * TSAN/UBSan 也不会产生警告。 */
         csm_mutex_lock(&c->state_lock);
         int stop_flag    = c->stop_flag;
         csm_socket_t sock = c->sock;
@@ -1036,10 +1028,10 @@ static void *csm_recv_thread_main(void *arg)
         csm_result_t r = csm_parse_packet(header, CSM_HEADER_SIZE, body, data_len, &parsed);
         free(body);
         if (r != CSM_OK) {
-            /* Skip corrupt frame; keep loop alive. */
+            /* 跳过损坏帧；保持循环运行。 */
             continue;
         }
-        /* Allocate heap copy to pass ownership to dispatch. */
+        /* 分配堆副本以将所有权传递给派发函数。 */
         csm_packet_t *heap_pkt = (csm_packet_t *)malloc(sizeof(*heap_pkt));
         if (!heap_pkt) {
             csm_packet_dispose(&parsed);
@@ -1049,7 +1041,7 @@ static void *csm_recv_thread_main(void *arg)
         csm_dispatch_packet(c, heap_pkt);
     }
 
-    /* Notify any blocked waiters that the connection is gone. */
+    /* 通知所有阻塞的等待者连接已断开。 */
     csm_queue_push(&c->resp_queue, NULL, 1, 0, NULL);
     csm_queue_push(&c->cmd_resp_queue, NULL, 1, 0, NULL);
     csm_queue_push(&c->status_queue, NULL, 1, 0, NULL);
@@ -1065,7 +1057,7 @@ static void *csm_recv_thread_main(void *arg)
 #endif
 }
 
-/* --- Lifecycle --- */
+/* --- 生命周期 --- */
 
 csm_client_t *csm_client_create(void) {
     if (csm_wsa_startup() != 0) return NULL;
@@ -1103,8 +1095,8 @@ void csm_client_destroy(csm_client_t *client) {
     csm_wsa_cleanup();
 }
 
-/* Resolve host and connect with a timeout. Returns CSM_OK or
- * CSM_ERR_CONNECTION / CSM_ERR_TIMEOUT. */
+/* 解析主机名并在超时限制内建立连接。返回 CSM_OK 或
+ * CSM_ERR_CONNECTION / CSM_ERR_TIMEOUT。 */
 static csm_result_t csm_do_connect(const char *host, uint16_t port,
                                    unsigned int timeout_ms,
                                    csm_socket_t *out_sock) {
@@ -1126,7 +1118,7 @@ static csm_result_t csm_do_connect(const char *host, uint16_t port,
         sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
         if (sock == CSM_INVALID_SOCKET) continue;
 
-        /* Switch to non-blocking for connect-with-timeout. */
+        /* 切换为非阻塞模式以实现带超时的 connect。 */
 #if defined(_WIN32)
         u_long mode = 1;
         ioctlsocket(sock, FIONBIO, &mode);
@@ -1172,7 +1164,7 @@ static csm_result_t csm_do_connect(const char *host, uint16_t port,
         }
 
         if (result == CSM_OK) {
-            /* Switch back to blocking for the recv loop. */
+            /* 切换回阻塞模式供接收循环使用。 */
 #if defined(_WIN32)
             u_long mode2 = 0;
             ioctlsocket(sock, FIONBIO, &mode2);
@@ -1253,7 +1245,7 @@ csm_result_t csm_client_disconnect(csm_client_t *client) {
     client->sock = CSM_INVALID_SOCKET;
     csm_mutex_unlock(&client->state_lock);
 
-    /* Wake any blocked waiters before tearing down the socket. */
+    /* 在关闭套接字前唤醒所有阻塞的等待者。 */
     csm_queue_push(&client->resp_queue, NULL, 1, 0, NULL);
     csm_queue_push(&client->cmd_resp_queue, NULL, 1, 0, NULL);
     csm_queue_push(&client->status_queue, NULL, 1, 0, NULL);
@@ -1282,7 +1274,7 @@ csm_result_t csm_client_disconnect(csm_client_t *client) {
 
 int csm_client_is_connected(const csm_client_t *client) {
     if (!client) return 0;
-    /* Casting away const to take the lock; logically this is a read. */
+    /* 去除 const 以获取锁；逻辑上这是一次读操作。 */
     csm_client_t *mc = (csm_client_t *)client;
     csm_mutex_lock(&mc->state_lock);
     int v = mc->connected;
@@ -1312,7 +1304,7 @@ csm_result_t csm_client_wait_for_server(const char *host,
     return result;
 }
 
-/* --- Send helpers --- */
+/* --- 发送辅助函数 --- */
 
 static csm_result_t csm_send_raw(csm_client_t *client,
                                  const uint8_t *data, size_t len) {
@@ -1351,7 +1343,7 @@ static csm_result_t csm_send_raw(csm_client_t *client,
     return CSM_OK;
 }
 
-/* Pack and send a CMD packet. */
+/* 打包并发送 CMD 数据包。 */
 static csm_result_t csm_send_cmd(csm_client_t *client, const char *command) {
     size_t len = strlen(command);
     uint8_t *buf = (uint8_t *)malloc(CSM_HEADER_SIZE + len);
@@ -1364,7 +1356,7 @@ static csm_result_t csm_send_cmd(csm_client_t *client, const char *command) {
     return r;
 }
 
-/* --- Wait helpers --- */
+/* --- 等待辅助函数 --- */
 
 static csm_result_t csm_wait_for_resp(csm_client_t           *client,
                                       unsigned int            timeout_ms,
@@ -1399,13 +1391,13 @@ static csm_result_t csm_wait_for_cmd_resp(csm_client_t *client,
         return CSM_ERR_SERVER;
     }
     if (r != CSM_OK) return r;
-    /* Discard handshake payload. */
+    /* 丢弃握手载荷。 */
     csm_packet_t *pkt = (csm_packet_t *)item;
     csm_packet_free_void(pkt);
     return CSM_OK;
 }
 
-/* --- Public command API --- */
+/* --- 公共命令 API --- */
 
 csm_result_t csm_client_send_and_wait(csm_client_t           *client,
                                       const char             *command,
@@ -1449,7 +1441,7 @@ csm_result_t csm_client_ping(csm_client_t *client, unsigned int timeout_ms,
     return CSM_OK;
 }
 
-/* Shared helper: send a fixed-text command and return the response text. */
+/* 共享辅助函数：发送固定文本命令并返回响应文本。 */
 static csm_result_t csm_send_text_query(csm_client_t *client,
                                         const char   *command,
                                         char        **out_text,
@@ -1459,7 +1451,7 @@ static csm_result_t csm_send_text_query(csm_client_t *client,
     csm_command_response_t resp = {0};
     csm_result_t r = csm_client_send_and_wait(client, command, timeout_ms, &resp);
     if (r == CSM_OK) {
-        *out_text = (char *)resp.raw; /* transfer ownership; was NUL-terminated */
+        *out_text = (char *)resp.raw; /* 转移所有权；已以 NUL 结尾 */
         resp.raw = NULL;
     } else {
         csm_command_response_dispose(&resp);
@@ -1472,7 +1464,7 @@ csm_result_t csm_client_list_modules(csm_client_t *client, char **out_text,
     return csm_send_text_query(client, "List", out_text, timeout_ms);
 }
 
-/* Build a "<prefix> <module>" command and send. */
+/* 构造 "<prefix> <module>" 命令并发送。 */
 static csm_result_t csm_send_text_query_2(csm_client_t *client,
                                           const char   *prefix,
                                           const char   *module,
@@ -1507,7 +1499,7 @@ csm_result_t csm_client_help(csm_client_t *client, const char *module,
     return csm_send_text_query_2(client, "Help", module, out_text, timeout_ms);
 }
 
-/* --- Subscriptions --- */
+/* --- 订阅 --- */
 
 csm_result_t csm_client_subscribe_status(csm_client_t          *client,
                                          const char            *status_name,
@@ -1517,13 +1509,12 @@ csm_result_t csm_client_subscribe_status(csm_client_t          *client,
                                          unsigned int           timeout_ms) {
     if (!client || !status_name || !module_name) return CSM_ERR_INVALID;
 
-    /* Register first to eliminate the race where a STATUS arrives before
-     * the callback is stored. */
+    /* 先注册，以消除 STATUS 在回调存储前到达的竞态条件。 */
     csm_result_t r = csm_register_status_sub(client, status_name, module_name,
                                              callback, user_data);
     if (r != CSM_OK) return r;
 
-    /* Build "<status>@<module> -><register>". */
+    /* 构造 "<status>@<module> -><register>"。 */
     size_t s_len = strlen(status_name);
     size_t m_len = strlen(module_name);
     const char *suffix = " -><register>";
@@ -1588,7 +1579,7 @@ csm_result_t csm_client_unregister_async_callback(csm_client_t *client,
     return CSM_OK;
 }
 
-/* --- Polling queues --- */
+/* --- 轮询队列 --- */
 
 csm_result_t csm_client_poll_status(csm_client_t              *client,
                                     csm_status_notification_t *out_notif,
@@ -1599,7 +1590,7 @@ csm_result_t csm_client_poll_status(csm_client_t              *client,
     csm_result_t r = csm_queue_pop(&client->status_queue, timeout_ms, &item, NULL);
     if (r != CSM_OK) return r;
     csm_status_notification_t *src = (csm_status_notification_t *)item;
-    /* Move ownership of fields from src to out_notif. */
+    /* 将字段所有权从 src 移至 out_notif。 */
     *out_notif = *src;
     free(src);
     return CSM_OK;
