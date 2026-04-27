@@ -497,16 +497,14 @@ _QueueItem = object
 
 
 class TcpRouterClient:
-    """Python client for a CSM-TCP-Router server.
+    """CSM-TCP-Router 服务器的同步客户端。
 
-    This class mirrors the LabVIEW ClientAPI VIs and speaks the
-    CSM-TCP-Router protocol v0.  It is thread-safe in that its internal
-    state is protected by locks; however, the protocol allows at most one
-    in-flight *synchronous* command at a time and at most one in-flight
-    *async* command / subscription at a time.  Concurrent callers are
-    serialised by ``_resp_lock`` and ``_cmd_resp_lock`` respectively.
+    本类镜像了 LabVIEW ClientAPI VI，并实现了 CSM-TCP-Router 协议 v0。
+    其内部状态通过锁保护，因此是线程安全的；但协议同时只允许一个在途
+    *同步* 命令和一个在途 *异步* 命令/订阅。并发调用者分别由
+    ``_resp_lock`` 和 ``_cmd_resp_lock`` 串行化。
 
-    **Quickstart**::
+    **快速入门**::
 
         from csm_tcp_router_client import TcpRouterClient
 
@@ -514,33 +512,29 @@ class TcpRouterClient:
             client.connect("localhost", 30007)
             print(client.list_modules())
 
-    **Protocol flows**:
+    **协议流程**：
 
-    - *Synchronous* command (``-@``): :meth:`send_and_wait` – sends a ``CMD``
-      packet and blocks until a ``RESP`` (or ``ERROR``) is received.
-    - *Asynchronous* command (``->``): :meth:`post` – sends a ``CMD`` packet
-      and blocks until the ``CMD_RESP`` handshake is received; the eventual
-      ``ASYNC_RESP`` is delivered asynchronously.
-    - *No-reply async* command (``->|``): :meth:`post_no_reply` – same as
-      :meth:`post` but no ``ASYNC_RESP`` will ever arrive.
-    - *Subscribe / unsubscribe*: :meth:`subscribe_status` /
-      :meth:`unsubscribe_status` – sends a ``<register>`` / ``<unregister>``
-      command and waits for the ``CMD_RESP`` handshake.
+    - *同步* 命令 (``-@``)：:meth:`send_and_wait` – 发送 ``CMD`` 包并阻塞
+      直到收到 ``RESP``（或 ``ERROR``）。
+    - *异步* 命令 (``->``)：:meth:`post` – 发送 ``CMD`` 包并阻塞直到收到
+      ``CMD_RESP`` 握手；最终的 ``ASYNC_RESP`` 会异步投递。
+    - *无回复异步* 命令 (``->|``)：:meth:`post_no_reply` – 与
+      :meth:`post` 相同，但不会有 ``ASYNC_RESP`` 到来。
+    - *订阅 / 取消订阅*：:meth:`subscribe_status` /
+      :meth:`unsubscribe_status` – 发送 ``<register>`` / ``<unregister>``
+      命令并等待 ``CMD_RESP`` 握手。
 
-    **Received-packet routing** (on the background receive thread):
+    **接收包路由**（在后台接收线程上）：
 
-    - ``RESP`` (0x04) – unblocks the caller of :meth:`send_and_wait`.
-    - ``CMD_RESP`` (0x03) – unblocks callers of :meth:`post`,
-      :meth:`post_no_reply`, :meth:`subscribe_status`, and
-      :meth:`unsubscribe_status`.
-    - ``ASYNC_RESP`` (0x05) – added to :attr:`async_response_queue` and
-      dispatched to any matching :meth:`register_async_callback`.
-    - ``STATUS`` / ``INTERRUPT`` (0x06 / 0x07) – added to
-      :attr:`status_queue` and dispatched to any matching
-      :meth:`subscribe_status` callback.
-    - ``ERROR`` (0x01) – unblocks any pending synchronous waiter with a
-      :exc:`ServerError`.
-    - ``INFO`` (0x00) – silently discarded (welcome / goodbye messages).
+    - ``RESP`` (0x04) – 解除 :meth:`send_and_wait` 调用者的阻塞。
+    - ``CMD_RESP`` (0x03) – 解除 :meth:`post`、:meth:`post_no_reply`、
+      :meth:`subscribe_status` 和 :meth:`unsubscribe_status` 调用者的阻塞。
+    - ``ASYNC_RESP`` (0x05) – 加入 :attr:`async_response_queue` 并
+      分发给匹配的 :meth:`register_async_callback`。
+    - ``STATUS`` / ``INTERRUPT`` (0x06 / 0x07) – 加入 :attr:`status_queue`
+      并分发给匹配的 :meth:`subscribe_status` 回调。
+    - ``ERROR`` (0x01) – 以 :exc:`ServerError` 解除任何待处理的同步等待者。
+    - ``INFO`` (0x00) – 静默丢弃（欢迎 / 再见消息）。
     """
 
     def __init__(self) -> None:
@@ -549,26 +543,24 @@ class TcpRouterClient:
             on_disconnect=self._on_disconnect,
         )
 
-        # One-item-deep queues for synchronised waits.
-        # Items are either Packet or Exception instances.
+        # 用于同步等待的单项队列。
+        # 队列元素为 Packet 或 Exception 实例。
         self._resp_queue: queue.Queue[_QueueItem] = queue.Queue()
         self._cmd_resp_queue: queue.Queue[_QueueItem] = queue.Queue()
 
-        #: Polling queue for :class:`AsyncResponse` objects received from the server.
+        #: 用于轮询从服务器收到的 :class:`AsyncResponse` 对象的队列。
         self.async_response_queue: queue.Queue[AsyncResponse] = queue.Queue()
 
-        #: Polling queue for :class:`StatusNotification` objects received
-        #: from the server.
+        #: 用于轮询从服务器收到的 :class:`StatusNotification` 对象的队列。
         self.status_queue: queue.Queue[StatusNotification] = queue.Queue()
 
-        # Callback registries (protected by _lock)
+        # 回调注册表（由 _lock 保护）
         self._status_callbacks: Dict[_SubKey, Optional[StatusCallback]] = {}
         self._async_callbacks: Dict[str, AsyncCallback] = {}
         self._lock = threading.Lock()
 
-        # Serialisation locks – at most one in-flight RESP / CMD_RESP waiter
-        # at a time.  This prevents concurrent callers from consuming each
-        # other's response packets.
+        # 串行化锁 – 同时最多只有一个在途的 RESP / CMD_RESP 等待者，
+        # 防止并发调用者消费彼此的响应包。
         self._resp_lock = threading.Lock()
         self._cmd_resp_lock = threading.Lock()
 
