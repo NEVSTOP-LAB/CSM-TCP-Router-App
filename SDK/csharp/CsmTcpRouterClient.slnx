@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/examples/">
+    <Project Path="examples/BasicUsage/BasicUsage.csproj" />
+    <Project Path="examples/SubscribeStatus/SubscribeStatus.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CsmTcpRouterClient.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CsmTcpRouterClient.Tests/CsmTcpRouterClient.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,20 @@
+# Build outputs
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# Test results
+TestResults/
+*.trx
+coverage.*.xml

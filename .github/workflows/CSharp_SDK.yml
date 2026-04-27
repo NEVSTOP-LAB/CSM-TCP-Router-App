@@ -1,0 +1,120 @@
+name: C# SDK
+
+on:
+  push:
+    paths:
+      - 'SDK/csharp/**'
+      - '.github/workflows/CSharp_SDK.yml'
+    tags:
+      - 'csharp-sdk-v*'
+  pull_request:
+    paths:
+      - 'SDK/csharp/**'
+      - '.github/workflows/CSharp_SDK.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: SDK/csharp
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Build + test on Linux, macOS and Windows
+  # -------------------------------------------------------------------------
+  build-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore CsmTcpRouterClient.slnx
+
+      - name: Build
+        run: dotnet build CsmTcpRouterClient.slnx -c Release --no-restore
+
+      - name: Test
+        run: dotnet test CsmTcpRouterClient.slnx -c Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}
+          path: SDK/csharp/tests/**/TestResults/*.trx
+          if-no-files-found: ignore
+
+  # -------------------------------------------------------------------------
+  # Pack NuGet package
+  # -------------------------------------------------------------------------
+  pack:
+    name: Pack NuGet
+    runs-on: ubuntu-latest
+    needs: build-test
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Pack
+        run: dotnet pack src/CsmTcpRouterClient.csproj -c Release -o ./nupkg
+
+      - name: Verify package contents
+        run: |
+          ls -la ./nupkg
+          unzip -l ./nupkg/*.nupkg | head -40
+
+      - name: Upload NuGet artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: csharp-sdk-nupkg
+          path: SDK/csharp/nupkg/*.nupkg
+
+  # -------------------------------------------------------------------------
+  # Publish to NuGet.org (on tag push only)
+  # -------------------------------------------------------------------------
+  publish:
+    name: Publish to NuGet.org
+    runs-on: ubuntu-latest
+    needs: pack
+    if: startsWith(github.ref, 'refs/tags/csharp-sdk-v')
+    environment:
+      name: nuget
+      url: https://www.nuget.org/packages/CsmTcpRouterClient
+    permissions:
+      contents: read
+
+    steps:
+      - name: Download NuGet artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: csharp-sdk-nupkg
+          path: nupkg
+
+      - name: Publish to NuGet.org
+        if: env.NUGET_API_KEY != ''
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push "nupkg/*.nupkg" \
+            --api-key "$NUGET_API_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

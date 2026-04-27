@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <!-- NuGet package metadata -->
+    <IsPackable>true</IsPackable>
+    <PackageId>CsmTcpRouterClient</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>NEVSTOP-LAB</Authors>
+    <Company>NEVSTOP-LAB</Company>
+    <Description>C# client SDK for the CSM-TCP-Router LabVIEW server. Single-file implementation that speaks CSM-TCP-Router protocol v0 over TCP and exposes both synchronous and asynchronous APIs.</Description>
+    <PackageTags>csm;labview;tcp;router;client;sdk;daq;communicable-state-machine;async</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) NEVSTOP-LAB</Copyright>
+
+    <!-- Assembly metadata -->
+    <AssemblyName>CsmTcpRouterClient</AssemblyName>
+    <RootNamespace>CsmTcpRouter</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- Expose internal types to the test project -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="CsmTcpRouterClient.Tests" />
+  </ItemGroup>
+
+</Project>
