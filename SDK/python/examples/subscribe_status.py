@@ -19,8 +19,7 @@ import signal
 import threading
 import time
 
-from csm_tcp_router import StatusNotification, TcpRouterClient
-from csm_tcp_router.exceptions import ConnectionError, ServerError
+from csm_tcp_router_client import ConnectionError, ServerError, StatusNotification, TcpRouterClient
 
 HOST = "localhost"
 PORT = 30007

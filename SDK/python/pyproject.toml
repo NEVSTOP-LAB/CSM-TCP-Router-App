@@ -47,7 +47,8 @@ Documentation = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK
 Changelog     = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python-package/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/csm_tcp_router"]
+only-include = ["src/csm_tcp_router_client.py"]
+sources = ["src"]
 
 # ---------------------------------------------------------------------------
 # Testing

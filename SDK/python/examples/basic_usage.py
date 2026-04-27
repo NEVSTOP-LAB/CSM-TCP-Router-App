@@ -15,8 +15,7 @@ Run this example::
 """
 
 
-from csm_tcp_router import TcpRouterClient
-from csm_tcp_router.exceptions import ConnectionError
+from csm_tcp_router_client import ConnectionError, TcpRouterClient
 
 HOST = "localhost"
 PORT = 30007

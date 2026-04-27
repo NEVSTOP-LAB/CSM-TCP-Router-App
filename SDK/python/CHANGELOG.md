@@ -9,6 +9,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- Consolidated the entire client SDK into a single importable module
+  `csm_tcp_router_client` (file: `src/csm_tcp_router_client.py`). The old
+  `csm_tcp_router` package directory and its sub-modules (`client`,
+  `async_client`, `models`, `exceptions`, `_protocol`, `_transport`,
+  `_errors`) have been removed. All public symbols (`TcpRouterClient`,
+  `AsyncTcpRouterClient`, exceptions, models, protocol helpers) are now
+  re-exported directly from the top-level `csm_tcp_router_client` module.
+- **Breaking**: replace `from csm_tcp_router import …` with
+  `from csm_tcp_router_client import …`. Sub-module imports such as
+  `from csm_tcp_router.exceptions import …` or
+  `from csm_tcp_router.models import …` should also be replaced with
+  `from csm_tcp_router_client import …`.
+
 ---
 
 ## [0.2.0] – 2026-04-22

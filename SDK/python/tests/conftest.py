@@ -10,8 +10,7 @@ from typing import Dict, Optional, Tuple
 
 import pytest
 
-from csm_tcp_router._protocol import HEADER_SIZE, encode_packet
-from csm_tcp_router.models import PacketType
+from csm_tcp_router_client import HEADER_SIZE, PacketType, encode_packet
 
 # ---------------------------------------------------------------------------
 # Internal helpers

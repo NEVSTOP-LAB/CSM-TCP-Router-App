@@ -8,18 +8,17 @@ from typing import List
 
 import pytest
 
-from csm_tcp_router import AsyncTcpRouterClient
-from csm_tcp_router.async_client import _parse_server_error
-from csm_tcp_router.exceptions import (
-    ConnectionError as RouterConnectionError,
-)
-from csm_tcp_router.exceptions import (
+from csm_tcp_router_client import (
+    AsyncResponse,
+    AsyncTcpRouterClient,
+    Packet,
+    PacketType,
     ServerError,
+    StatusNotification,
+    _parse_server_error,
 )
-from csm_tcp_router.exceptions import (
-    TimeoutError as RouterTimeoutError,
-)
-from csm_tcp_router.models import AsyncResponse, Packet, PacketType, StatusNotification
+from csm_tcp_router_client import ConnectionError as RouterConnectionError
+from csm_tcp_router_client import TimeoutError as RouterTimeoutError
 
 # ---------------------------------------------------------------------------
 # Helpers

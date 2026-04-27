@@ -7,10 +7,8 @@ from typing import List
 
 import pytest
 
-from csm_tcp_router import TcpRouterClient
-from csm_tcp_router.exceptions import ServerError
-from csm_tcp_router.exceptions import TimeoutError as RouterTimeoutError
-from csm_tcp_router.models import StatusNotification
+from csm_tcp_router_client import ServerError, StatusNotification, TcpRouterClient
+from csm_tcp_router_client import TimeoutError as RouterTimeoutError
 
 # All tests in this module use the `mock_server` fixture from conftest.py.
 
@@ -35,7 +33,7 @@ class TestConnection:
 
     def test_connect_bad_port_raises(self):
         client = TcpRouterClient()
-        from csm_tcp_router.exceptions import ConnectionError as RouterConnectionError
+        from csm_tcp_router_client import ConnectionError as RouterConnectionError
         with pytest.raises(RouterConnectionError):
             client.connect("127.0.0.1", 1, timeout=0.5)
 

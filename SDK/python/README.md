@@ -28,7 +28,7 @@ Requires Python 3.8 or later.  No third-party dependencies—only the Python sta
 ### Synchronous client
 
 ```python
-from csm_tcp_router import TcpRouterClient
+from csm_tcp_router_client import TcpRouterClient
 
 with TcpRouterClient() as client:
     client.connect("localhost", 30007)
@@ -49,7 +49,7 @@ with TcpRouterClient() as client:
 
 ```python
 import asyncio
-from csm_tcp_router import AsyncTcpRouterClient
+from csm_tcp_router_client import AsyncTcpRouterClient
 
 async def main():
     async with AsyncTcpRouterClient() as client:
