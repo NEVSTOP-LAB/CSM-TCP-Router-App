@@ -1,5 +1,5 @@
-/* subscribe_status.c - Demonstrates real-time status subscription with a
- * callback, mirroring examples/subscribe_status.py. */
+/* subscribe_status.c - 演示使用回调进行实时状态订阅，
+ * 对应 examples/subscribe_status.py。 */
 
 #if !defined(_WIN32)
 #  ifndef _POSIX_C_SOURCE

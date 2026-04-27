@@ -1,10 +1,8 @@
-/* test_harness.h - Minimal in-process unit-test harness used by the
- * csm-tcp-router-client C SDK tests.
+/* test_harness.h - csm-tcp-router-client C SDK 测试使用的极简进程内单元测试框架。
  *
- * Tests register themselves via the CSM_TEST() macro; the runner in
- * test_main.c picks them up via the link-time TESTS array, executes them,
- * and prints a summary. Failures abort the current test only; assertions
- * use longjmp to unwind back to the runner.
+ * 测试通过 CSM_TEST() 宏注册自身；test_main.c 中的运行器
+ * 通过链接时的 TESTS 数组收集测试，依次执行并打印汇总结果。
+ * 失败仅中止当前测试；断言使用 longjmp 回退到运行器。
  */
 #ifndef CSM_TEST_HARNESS_H
 #define CSM_TEST_HARNESS_H
@@ -20,7 +18,7 @@ typedef struct {
     csm_test_fn fn;
 } csm_test_t;
 
-/* Provided by test_main.c. */
+/* 由 test_main.c 提供。 */
 extern jmp_buf csm_test_jmp;
 extern int     csm_test_failed;
 extern int     csm_test_assertions;
@@ -54,8 +52,8 @@ extern int     csm_test_assertions;
                       _b ? _b : "(null)", _a ? _a : "(null)");      \
 } while (0)
 
-/* Define a test function. The runner declares each test as extern via the
- * CSM_TEST_EXTERN macro and registers it in its tests table. */
+/* 定义一个测试函数。运行器通过 CSM_TEST_EXTERN 宏将每个测试声明为 extern，
+ * 并在测试表中注册。 */
 #define CSM_TEST(name) void name(void)
 #define CSM_TEST_EXTERN(name) extern void name(void)
 

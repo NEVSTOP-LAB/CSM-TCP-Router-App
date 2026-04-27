@@ -1,4 +1,4 @@
-/* test_integration.c - End-to-end tests against the in-process MockServer. */
+/* test_integration.c - 针对进程内 MockServer 的端到端测试。 */
 
 #if !defined(_WIN32)
 #  ifndef _POSIX_C_SOURCE
@@ -25,7 +25,7 @@ static void it_sleep_ms(unsigned int ms) {
 }
 #endif
 
-/* Helper: spin up server + connect a client. */
+/* 辅助函数：启动服务器 + 连接客户端。 */
 static void it_setup(csm_mock_server_t **out_s, csm_client_t **out_c) {
     csm_mock_server_t *s = csm_mock_server_create();
     CSM_ASSERT(s != NULL);
@@ -118,7 +118,7 @@ CSM_TEST(it_post_async_handshake) {
 static void it_status_cb(const csm_status_notification_t *n, void *ud) {
     int *count = (int *)ud;
     (*count)++;
-    /* Sanity-check parsed fields. */
+    /* 完整性检查已解析的字段。 */
     (void)n;
 }
 
@@ -129,16 +129,16 @@ CSM_TEST(it_subscribe_status_invokes_callback) {
     csm_result_t r = csm_client_subscribe_status(c, "Status", "DAQmx",
                                                  it_status_cb, &count, 1000);
     CSM_ASSERT_EQ_INT(r, CSM_OK);
-    /* Drain handshake from received queue. */
+    /* 从已接收队列中消耗握手数据。 */
     char *cmd = csm_mock_server_get_received(s, 500);
     csm_string_free(cmd);
-    /* Push a STATUS notification matching the subscription. */
+    /* 推送一条匹配订阅的 STATUS 通知。 */
     csm_mock_server_push_status(s, "Status >> 1.23 <- DAQmx");
-    /* Wait for callback (poll up to 1s). */
+    /* 等待回调（最多轮询 1 秒）。 */
     for (int i = 0; i < 100 && count == 0; ++i) it_sleep_ms(10);
     CSM_ASSERT(count >= 1);
 
-    /* Same notification should also be available via polling. */
+    /* 同一通知也应可通过轮询获取。 */
     csm_status_notification_t n = {0};
     r = csm_client_poll_status(c, &n, 500);
     CSM_ASSERT_EQ_INT(r, CSM_OK);
@@ -154,8 +154,8 @@ CSM_TEST(it_subscribe_status_invokes_callback) {
 CSM_TEST(it_disconnect_unblocks_waiters) {
     csm_mock_server_t *s = NULL; csm_client_t *c = NULL;
     it_setup(&s, &c);
-    /* Send a command that has no canned response; mock returns CMD_RESP. */
-    /* For this test simply disconnect immediately and verify subsequent send fails. */
+    /* 发送一个没有预置响应的命令；模拟服务器返回 CMD_RESP。 */
+    /* 本测试中直接立即断开连接并验证后续发送失败。 */
     csm_client_disconnect(c);
     csm_command_response_t resp = {0};
     csm_result_t r = csm_client_send_and_wait(c, "Ping", 200, &resp);

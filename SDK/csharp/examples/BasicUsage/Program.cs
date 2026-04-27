@@ -4,11 +4,11 @@ using CsmTcpRouter;
 namespace CsmTcpRouter.Examples.BasicUsage
 {
     /// <summary>
-    /// Basic usage example for csm-tcp-router-client (C#).
-    /// Mirrors SDK/python/examples/basic_usage.py.
+    /// csm-tcp-router-client（C#）的基本用法示例。
+    /// 镜像 SDK/python/examples/basic_usage.py。
     ///
-    /// Prerequisites: a running CSM-TCP-Router server (LabVIEW app).
-    /// The reference app defaults to port 30007.
+    /// 前提条件：正在运行的 CSM-TCP-Router 服务器（LabVIEW 应用程序）。
+    /// 参考应用程序默认使用端口 30007。
     /// </summary>
     public static class Program
     {
@@ -17,7 +17,7 @@ namespace CsmTcpRouter.Examples.BasicUsage
 
         public static int Main(string[] args)
         {
-            // 1. Wait until the server is ready.
+            // 1. 等待服务器就绪。
             Console.Write("Waiting for server ... ");
             using (var probe = new TcpRouterClient())
             {
@@ -30,7 +30,7 @@ namespace CsmTcpRouter.Examples.BasicUsage
             }
             Console.WriteLine("ready.");
 
-            // 2. Connect (use as IDisposable so Disconnect is always called).
+            // 2. 连接（使用 IDisposable，确保始终调用 Disconnect）。
             using (var client = new TcpRouterClient())
             {
                 try
@@ -45,17 +45,17 @@ namespace CsmTcpRouter.Examples.BasicUsage
 
                 Console.WriteLine($"Connected to {Host}:{Port}");
 
-                // 3. Ping
+                // 3. Ping 测试
                 var (ok, elapsed) = client.Ping(TimeSpan.FromSeconds(2));
                 Console.WriteLine(ok
                     ? $"Ping OK  latency={elapsed.TotalMilliseconds:F1} ms"
                     : "Ping failed.");
 
-                // 4. List CSM modules
+                // 4. 列出 CSM 模块
                 string modules = client.ListModules();
                 Console.WriteLine($"\nLoaded modules:\n{modules}");
 
-                // 5. List API for the first module (if any)
+                // 5. 列出第一个模块的 API（如有）
                 string firstModule = null;
                 foreach (var line in modules.Split('\n'))
                 {
@@ -72,14 +72,14 @@ namespace CsmTcpRouter.Examples.BasicUsage
                     Console.WriteLine($"\nAPI for '{firstModule}':\n{api}");
                 }
 
-                // 6. Send a synchronous command (uncomment & adapt for your CSM):
+                // 6. 发送同步命令（取消注释并适配您的 CSM）：
                 // var resp = client.SendAndWait("API: Read -@ DAQmx");
                 // Console.WriteLine($"\nSync response: {resp.Text}");
 
-                // 7. Send an async command + wait for cmd-resp handshake:
+                // 7. 发送异步命令并等待 cmd-resp 握手：
                 // client.Post("API: Start Sampling -> DAQmx");
 
-                // 8. Send a no-reply command:
+                // 8. 发送无回复命令：
                 // client.PostNoReply("API: Reset ->| DAQmx");
 
                 Console.WriteLine("\nDone.");

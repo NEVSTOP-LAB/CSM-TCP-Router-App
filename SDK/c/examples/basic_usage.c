@@ -1,5 +1,5 @@
-/* basic_usage.c - Demonstrates connecting, pinging, listing modules, and
- * sending a synchronous command. Mirrors examples/basic_usage.py. */
+/* basic_usage.c - 演示连接、Ping、列出模块以及
+ * 发送同步命令。对应 examples/basic_usage.py。 */
 #include "csm_tcp_router_client.h"
 
 #include <stdio.h>
@@ -9,7 +9,7 @@
 #define PORT 30007
 
 int main(void) {
-    /* 1. Wait until the server is ready (optional). */
+    /* 1. 等待服务器就绪（可选）。 */
     printf("Waiting for server ... ");
     fflush(stdout);
     csm_result_t r = csm_client_wait_for_server(HOST, PORT, 30000, 500);
@@ -19,7 +19,7 @@ int main(void) {
     }
     printf("ready.\n");
 
-    /* 2. Create + connect. */
+    /* 2. 创建 + 连接。 */
     csm_client_t *c = csm_client_create();
     if (!c) { fprintf(stderr, "Out of memory\n"); return 1; }
 
@@ -31,20 +31,20 @@ int main(void) {
     }
     printf("Connected to %s:%d\n", HOST, PORT);
 
-    /* 3. Ping. */
+    /* 3. Ping。 */
     double ms = 0;
     r = csm_client_ping(c, 2000, &ms);
     if (r == CSM_OK) printf("Ping OK  latency=%.1f ms\n", ms);
     else             printf("Ping failed: %s\n", csm_result_str(r));
 
-    /* 4. List CSM modules. */
+    /* 4. 列出 CSM 模块。 */
     char *modules = NULL;
     if (csm_client_list_modules(c, &modules, 5000) == CSM_OK) {
         printf("\nLoaded modules:\n%s\n", modules);
         csm_string_free(modules);
     }
 
-    /* 5. Send a synchronous command (uncomment when wired to a real module).
+    /* 5. 发送同步命令（连接到真实模块后取消注释）。
      *
      *  csm_command_response_t resp = {0};
      *  if (csm_client_send_and_wait(c, "API: Read -@ DAQmx", 5000, &resp) == CSM_OK) {
@@ -53,7 +53,7 @@ int main(void) {
      *  csm_command_response_dispose(&resp);
      */
 
-    /* 6. Disconnect & clean up. */
+    /* 6. 断开连接并清理资源。 */
     csm_client_disconnect(c);
     csm_client_destroy(c);
     printf("Disconnected.\n");

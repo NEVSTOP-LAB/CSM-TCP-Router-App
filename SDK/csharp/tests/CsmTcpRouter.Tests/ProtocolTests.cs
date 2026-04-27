@@ -5,7 +5,7 @@ using Xunit;
 
 namespace CsmTcpRouter.Tests
 {
-    // Mirrors SDK/python/tests/test_protocol.py.
+    // 镜像 SDK/python/tests/test_protocol.py。
     public class ProtocolTests
     {
         private const int HeaderSize = 8;
@@ -173,7 +173,7 @@ namespace CsmTcpRouter.Tests
         [Fact]
         public void Parse_UnknownTypeMappedToInfo()
         {
-            // Manually craft a packet with an unknown type byte (0xFF).
+            // 手动构造一个具有未知类型字节 (0xFF) 的数据包。
             var header = new byte[] { 0, 0, 0, 4, ProtocolVersion, 0xFF, 0, 0 };
             var body = Encoding.UTF8.GetBytes("data");
             var pkt = ProtocolCodec.ParsePacket(header, body);
@@ -262,7 +262,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // -------------------------------------------------------------------
-        // Model parsing helpers
+        // 模型解析辅助方法
         // -------------------------------------------------------------------
 
         [Fact]

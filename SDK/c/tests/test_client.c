@@ -1,5 +1,5 @@
-/* test_client.c - Unit-level tests for the client object lifecycle that do
- * not require a running mock server. */
+/* test_client.c - 客户端对象生命周期的单元测试，
+ * 无需运行中的模拟服务器。 */
 #include "csm_tcp_router_client.h"
 #include "test_harness.h"
 
@@ -37,7 +37,7 @@ CSM_TEST(test_invalid_args_rejected) {
 }
 
 CSM_TEST(test_wait_for_server_unreachable_times_out) {
-    /* Pick an arbitrary high port that should not be in use. */
+    /* 选择一个不太可能被使用的任意高端口。 */
     csm_result_t r = csm_client_wait_for_server("127.0.0.1", 1, 200, 50);
     CSM_ASSERT_EQ_INT(r, CSM_ERR_TIMEOUT);
 }
@@ -45,7 +45,7 @@ CSM_TEST(test_wait_for_server_unreachable_times_out) {
 CSM_TEST(test_connect_unreachable_returns_connection_error) {
     csm_client_t *c = csm_client_create();
     csm_result_t r = csm_client_connect(c, "127.0.0.1", 1, 300);
-    /* Either CSM_ERR_CONNECTION (refused) or CSM_ERR_TIMEOUT depending on OS. */
+    /* 根据操作系统，返回 CSM_ERR_CONNECTION（拒绝连接）或 CSM_ERR_TIMEOUT。 */
     CSM_ASSERT(r == CSM_ERR_CONNECTION || r == CSM_ERR_TIMEOUT);
     csm_client_destroy(c);
 }

@@ -1,6 +1,6 @@
-/* mock_server.h - In-process TCP server emulating a CSM-TCP-Router for tests.
+/* mock_server.h - 用于测试的进程内 TCP 服务器，模拟 CSM-TCP-Router。
  *
- * Mirrors the Python `tests/conftest.py` MockServer fixture.
+ * 对应 Python `tests/conftest.py` 中的 MockServer 夹具。
  */
 #ifndef CSM_MOCK_SERVER_H
 #define CSM_MOCK_SERVER_H
@@ -11,38 +11,38 @@
 
 typedef struct csm_mock_server csm_mock_server_t;
 
-/** Create a stopped mock server bound to 127.0.0.1; the actual port is
- * assigned by the OS in csm_mock_server_start(). */
+/** 创建一个已停止的模拟服务器，绑定到 127.0.0.1；
+ * 实际端口由操作系统在 csm_mock_server_start() 中分配。 */
 csm_mock_server_t *csm_mock_server_create(void);
 
-/** Free a (running or stopped) mock server. */
+/** 释放（运行中或已停止的）模拟服务器。 */
 void csm_mock_server_destroy(csm_mock_server_t *s);
 
-/** Bind to 127.0.0.1, an ephemeral port, and start the accept thread. */
+/** 绑定到 127.0.0.1 的临时端口，并启动接受连接线程。 */
 int csm_mock_server_start(csm_mock_server_t *s);
 
-/** Stop the accept thread and close all client connections. */
+/** 停止接受连接线程并关闭所有客户端连接。 */
 void csm_mock_server_stop(csm_mock_server_t *s);
 
-/** Return the port the server is listening on (valid after start()). */
+/** 返回服务器正在监听的端口（start() 之后有效）。 */
 uint16_t csm_mock_server_port(const csm_mock_server_t *s);
 
-/** Register a custom RESP reply for an exact command string. */
+/** 为精确匹配的命令字符串注册自定义 RESP 回复。 */
 void csm_mock_server_set_response(csm_mock_server_t *s,
                                   const char *cmd_text,
                                   const char *resp_text);
 
-/** Register an ERROR reply for an exact command string. */
+/** 为精确匹配的命令字符串注册 ERROR 回复。 */
 void csm_mock_server_set_error_response(csm_mock_server_t *s,
                                         const char *cmd_text,
                                         const char *error_text);
 
-/** Push a STATUS packet to all currently connected clients. */
+/** 向所有当前连接的客户端推送 STATUS 数据包。 */
 void csm_mock_server_push_status(csm_mock_server_t *s, const char *payload);
 
-/** Pop the next received command, blocking up to *timeout_ms*. The returned
- * string is owned by the caller and must be freed with csm_string_free.
- * Returns NULL on timeout. */
+/** 弹出下一条已接收的命令，最多阻塞 *timeout_ms* 毫秒。返回的
+ * 字符串由调用者拥有，必须使用 csm_string_free 释放。
+ * 超时时返回 NULL。 */
 char *csm_mock_server_get_received(csm_mock_server_t *s, unsigned int timeout_ms);
 
 #endif /* CSM_MOCK_SERVER_H */
