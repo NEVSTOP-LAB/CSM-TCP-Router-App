@@ -79,6 +79,10 @@ static void ms_sleep_ms(unsigned int ms){
 #endif
 #endif
 
+#ifndef INADDR_LOOPBACK
+#  define INADDR_LOOPBACK 0x7F000001UL
+#endif
+
 #define MS_MAX_CLIENTS 16
 #define MS_HEADER 8
 #define MS_VER 0x01
