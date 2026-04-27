@@ -3,17 +3,17 @@ name: Python SDK
 on:
   push:
     paths:
-      - 'SDK/python-package/**'
+      - 'SDK/python/**'
     tags:
       - 'python-sdk-v*'
   pull_request:
     paths:
-      - 'SDK/python-package/**'
+      - 'SDK/python/**'
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: SDK/python-package
+    working-directory: SDK/python
 
 jobs:
   # -------------------------------------------------------------------------
@@ -102,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-sdk-dist
-          path: SDK/python-package/dist/
+          path: SDK/python/dist/
 
   # -------------------------------------------------------------------------
   # Publish to TestPyPI (on tag push only – gates production publish)
