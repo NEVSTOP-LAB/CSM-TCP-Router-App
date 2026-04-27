@@ -3,17 +3,17 @@ name: Python SDK
 on:
   push:
     paths:
-      - 'SDK/python-package/**'
+      - 'SDK/python/**'
     tags:
       - 'python-sdk-v*'
   pull_request:
     paths:
-      - 'SDK/python-package/**'
+      - 'SDK/python/**'
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: SDK/python-package
+    working-directory: SDK/python
 
 jobs:
   # -------------------------------------------------------------------------
@@ -67,7 +67,7 @@ jobs:
           pip install pytest pytest-cov pytest-asyncio
 
       - name: Run tests
-        run: pytest --cov=csm_tcp_router --cov-report=term-missing
+        run: pytest --cov=csm_tcp_router_client --cov-report=term-missing
 
   # -------------------------------------------------------------------------
   # Build (wheel + sdist)
@@ -96,13 +96,13 @@ jobs:
       - name: Verify wheel is importable
         run: |
           pip install dist/*.whl
-          python -c "import csm_tcp_router; print('Version:', csm_tcp_router.__version__)"
+          python -c "import csm_tcp_router_client; print('Version:', csm_tcp_router_client.__version__)"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: python-sdk-dist
-          path: SDK/python-package/dist/
+          path: SDK/python/dist/
 
   # -------------------------------------------------------------------------
   # Publish to TestPyPI (on tag push only – gates production publish)

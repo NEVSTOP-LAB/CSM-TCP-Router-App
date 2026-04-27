@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "csm-tcp-router-client"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python client SDK for the CSM-TCP-Router LabVIEW server"
 readme = "README.md"
 license = { text = "MIT" }
@@ -43,11 +43,12 @@ classifiers = [
 Homepage      = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App"
 Repository    = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App"
 Issues        = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/issues"
-Documentation = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python-package/README.md"
-Changelog     = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python-package/CHANGELOG.md"
+Documentation = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python/README.md"
+Changelog     = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/csm_tcp_router"]
+only-include = ["src/csm_tcp_router_client.py"]
+sources = ["src"]
 
 # ---------------------------------------------------------------------------
 # Testing

@@ -9,17 +9,17 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from csm_tcp_router.client import TcpRouterClient, _parse_server_error
-from csm_tcp_router.exceptions import (
-    ConnectionError as RouterConnectionError,
-)
-from csm_tcp_router.exceptions import (
+from csm_tcp_router_client import (
+    AsyncResponse,
+    Packet,
+    PacketType,
     ServerError,
+    StatusNotification,
+    TcpRouterClient,
+    _parse_server_error,
 )
-from csm_tcp_router.exceptions import (
-    TimeoutError as RouterTimeoutError,
-)
-from csm_tcp_router.models import AsyncResponse, Packet, PacketType, StatusNotification
+from csm_tcp_router_client import ConnectionError as RouterConnectionError
+from csm_tcp_router_client import TimeoutError as RouterTimeoutError
 
 # ---------------------------------------------------------------------------
 # Helpers: inject packets directly into the client's dispatch method

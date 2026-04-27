@@ -8,8 +8,7 @@ Run against a live CSM-TCP-Router server::
 
 import asyncio
 
-from csm_tcp_router import AsyncTcpRouterClient
-from csm_tcp_router.models import StatusNotification
+from csm_tcp_router_client import AsyncTcpRouterClient, StatusNotification
 
 
 async def on_status(notif: StatusNotification) -> None:

@@ -11,6 +11,31 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.3.0] – 2026-04-27
+
+### Changed
+
+- Consolidated the entire client SDK into a single importable module
+  `csm_tcp_router_client` (file: `src/csm_tcp_router_client.py`). The old
+  `csm_tcp_router` package directory and its sub-modules (`client`,
+  `async_client`, `models`, `exceptions`, `_protocol`, `_transport`,
+  `_errors`) have been removed. All public symbols (`TcpRouterClient`,
+  `AsyncTcpRouterClient`, exceptions, models, protocol helpers) are now
+  re-exported directly from the top-level `csm_tcp_router_client` module.
+- **Breaking**: replace `from csm_tcp_router import …` with
+  `from csm_tcp_router_client import …`. Sub-module imports such as
+  `from csm_tcp_router.exceptions import …` or
+  `from csm_tcp_router.models import …` should also be replaced with
+  `from csm_tcp_router_client import …`.
+- CI workflow `Python_SDK.yml` now triggers on changes under `SDK/python/**`
+  (previously the stale `SDK/python-package/**` path filter prevented the
+  publish jobs from firing); `working-directory` and the artifact upload
+  path were updated to match.
+- `pyproject.toml` `Documentation` and `Changelog` URLs updated to point at
+  `SDK/python/` instead of the old `SDK/python-package/` path.
+
+---
+
 ## [0.2.0] – 2026-04-22
 
 ### Added
@@ -79,6 +104,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - GitHub Actions workflow `Python_SDK.yml`: lint (ruff), test (pytest) on
   Python 3.8–3.12, build, and optional publish to PyPI on tag.
 
-[Unreleased]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.2.0...HEAD
+[Unreleased]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.3.0...HEAD
+[0.3.0]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.2.0...python-sdk-v0.3.0
 [0.2.0]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/compare/python-sdk-v0.1.0...python-sdk-v0.2.0
 [0.1.0]: https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/releases/tag/python-sdk-v0.1.0

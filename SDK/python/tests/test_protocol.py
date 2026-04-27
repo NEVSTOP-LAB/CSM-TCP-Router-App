@@ -6,15 +6,15 @@ import struct
 
 import pytest
 
-from csm_tcp_router._protocol import (
+from csm_tcp_router_client import (
     HEADER_SIZE,
     PROTOCOL_VERSION,
+    PacketType,
+    ProtocolError,
     decode_header,
     encode_packet,
     parse_packet,
 )
-from csm_tcp_router.exceptions import ProtocolError
-from csm_tcp_router.models import PacketType
 
 # ---------------------------------------------------------------------------
 # encode_packet
