@@ -1,0 +1,67 @@
+name: C SDK
+
+on:
+  push:
+    paths:
+      - 'SDK/c/**'
+      - '.github/workflows/C_SDK.yml'
+    tags:
+      - 'c-sdk-v*'
+  pull_request:
+    paths:
+      - 'SDK/c/**'
+      - '.github/workflows/C_SDK.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: SDK/c
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Build & test on Linux, macOS, and Windows.
+  # -------------------------------------------------------------------------
+  build-test:
+    name: Build & test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (CMake)
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release -j
+
+      - name: Run tests (ctest)
+        run: ctest --test-dir build --output-on-failure -C Release
+
+  # -------------------------------------------------------------------------
+  # Sanitizer build on Linux to catch undefined behaviour, leaks, and races.
+  # -------------------------------------------------------------------------
+  sanitizers:
+    name: Sanitizers (Linux)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure with ASan + UBSan
+        run: |
+          cmake -S . -B build-san \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_C_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer -O1 -g" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+
+      - name: Build (sanitizers)
+        run: cmake --build build-san -j
+
+      - name: Run tests (sanitizers)
+        run: ctest --test-dir build-san --output-on-failure
