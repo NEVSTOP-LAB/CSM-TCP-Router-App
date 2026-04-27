@@ -10,18 +10,17 @@ using Xunit;
 namespace CsmTcpRouter.Tests
 {
     /// <summary>
-    /// End-to-end client tests against a real loopback <see cref="MockServer"/>.
-    /// Mirrors SDK/python/tests/test_integration.py + portions of test_client.py.
+    /// 针对真实回环 <see cref="MockServer"/> 的端到端客户端测试。
+    /// 镜像 SDK/python/tests/test_integration.py 以及 test_client.py 的部分内容。
     /// </summary>
     public class ClientIntegrationTests
     {
         private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(2);
 
         /// <summary>
-        /// Bind a TcpListener to port 0 (OS-assigned), grab the port, then stop
-        /// the listener.  The port is then almost certainly closed for the
-        /// duration of the test, so we can rely on connect attempts to fail
-        /// without depending on system state (e.g. port 1 may be open).
+        /// 将 TcpListener 绑定到端口 0（由操作系统分配），获取端口号，然后停止
+        /// 监听器。在测试期间该端口几乎可以确定是关闭的，因此我们可以依赖连接
+        /// 尝试失败，而无需依赖系统状态（例如，端口 1 可能是开放的）。
         /// </summary>
         private static int GetClosedPort()
         {
@@ -33,7 +32,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // ---------------------------------------------------------------
-        // Connect / Disconnect
+        // 连接 / 断开连接
         // ---------------------------------------------------------------
 
         [Fact]
@@ -80,7 +79,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // ---------------------------------------------------------------
-        // SendAndWait / built-ins
+        // SendAndWait / 内置方法
         // ---------------------------------------------------------------
 
         [Fact]
@@ -150,8 +149,8 @@ namespace CsmTcpRouter.Tests
             server.Start();
             using var client = new TcpRouterClient();
             client.Connect(server.Host, server.Port, DefaultTimeout);
-            // Server replies with CmdResp by default for unknown commands, not Resp,
-            // so a SendAndWait will time out waiting for a Resp.
+            // 服务器默认对未知命令回复 CmdResp，而不是 Resp，
+            // 因此 SendAndWait 在等待 Resp 时会超时。
             Assert.Throws<RouterTimeoutException>(
                 () => client.SendAndWait("Unknown XYZ", TimeSpan.FromMilliseconds(200)));
         }
@@ -165,7 +164,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // ---------------------------------------------------------------
-        // Post (async cmd-resp handshake)
+        // Post（异步 cmd-resp 握手）
         // ---------------------------------------------------------------
 
         [Fact]
@@ -176,7 +175,7 @@ namespace CsmTcpRouter.Tests
             using var client = new TcpRouterClient();
             client.Connect(server.Host, server.Port, DefaultTimeout);
             client.Post("API: Start -> DAQmx", DefaultTimeout);
-            // Make sure the server actually saw the command.
+            // 确保服务器实际收到了命令。
             string cmd = server.GetReceived(DefaultTimeout);
             Assert.Equal("API: Start -> DAQmx", cmd);
         }
@@ -194,7 +193,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // ---------------------------------------------------------------
-        // Subscribe / status broadcast
+        // 订阅 / 状态广播
         // ---------------------------------------------------------------
 
         [Fact]
@@ -261,7 +260,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // ---------------------------------------------------------------
-        // Disconnect-while-waiting unblocks waiters
+        // 等待期间断开连接会解除等待者的阻塞
         // ---------------------------------------------------------------
 
         [Fact]
@@ -272,7 +271,7 @@ namespace CsmTcpRouter.Tests
             using var client = new TcpRouterClient();
             client.Connect(server.Host, server.Port, DefaultTimeout);
 
-            // Issue a SendAndWait whose response never comes; disconnect while waiting.
+            // 发起一个永远不会收到响应的 SendAndWait；在等待期间断开连接。
             var task = Task.Run(() => client.SendAndWait("Unknown XYZ", TimeSpan.FromSeconds(10)));
             Thread.Sleep(100);
             client.Disconnect();
@@ -304,7 +303,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // ---------------------------------------------------------------
-        // Async API
+        // 异步 API
         // ---------------------------------------------------------------
 
         [Fact]

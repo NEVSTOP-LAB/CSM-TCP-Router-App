@@ -11,8 +11,8 @@ using CsmTcpRouter;
 
 namespace CsmTcpRouter.Tests
 {
-    /// <summary>Minimal TCP server that emulates a CSM-TCP-Router for tests.</summary>
-    /// <remarks>Mirrors the Python <c>tests/conftest.py</c> MockServer.</remarks>
+    /// <summary>用于测试的最小化 TCP 服务器，模拟 CSM-TCP-Router。</summary>
+    /// <remarks>镜像 Python <c>tests/conftest.py</c> MockServer。</remarks>
     internal sealed class MockServer : IDisposable
     {
         private TcpListener _listener;
@@ -75,7 +75,7 @@ namespace CsmTcpRouter.Tests
             foreach (var c in snapshot)
             {
                 try { c.GetStream().Write(wire, 0, wire.Length); }
-                catch { /* ignore */ }
+                catch { /* 忽略 */ }
             }
         }
 
@@ -87,7 +87,7 @@ namespace CsmTcpRouter.Tests
             foreach (var c in snapshot)
             {
                 try { c.GetStream().Write(wire, 0, wire.Length); }
-                catch { /* ignore */ }
+                catch { /* 忽略 */ }
             }
         }
 
@@ -99,7 +99,7 @@ namespace CsmTcpRouter.Tests
         }
 
         // -----------------------------------------------------------------
-        // Internal
+        // 内部方法
         // -----------------------------------------------------------------
 
         private async Task AcceptLoopAsync(CancellationToken ct)
@@ -116,7 +116,7 @@ namespace CsmTcpRouter.Tests
                     _ = Task.Run(() => HandleClientAsync(client, ct));
                 }
             }
-            catch { /* ignore */ }
+            catch { /* 忽略 */ }
         }
 
         private async Task HandleClientAsync(TcpClient client, CancellationToken ct)
@@ -124,7 +124,7 @@ namespace CsmTcpRouter.Tests
             try
             {
                 var stream = client.GetStream();
-                // Welcome info packet
+                // 欢迎信息数据包
                 var welcome = ProtocolCodec.EncodePacket(Encoding.UTF8.GetBytes("Welcome to mock server"), PacketType.Info);
                 await stream.WriteAsync(welcome, 0, welcome.Length, ct).ConfigureAwait(false);
 
@@ -193,7 +193,7 @@ namespace CsmTcpRouter.Tests
             }
             else
             {
-                // Generic async handshake for any other command.
+                // 对其他任何命令进行通用异步握手。
                 reply = ProtocolCodec.EncodePacket(Array.Empty<byte>(), PacketType.CmdResp);
             }
 

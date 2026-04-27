@@ -1,27 +1,27 @@
 // CsmTcpRouter.cs
 // ---------------------------------------------------------------------------
-// csm-tcp-router-client - C# client SDK for the CSM-TCP-Router LabVIEW server.
+// csm-tcp-router-client - CSM-TCP-Router LabVIEW 服务器的 C# 客户端 SDK。
 //
-// Single-file SDK implementing CSM-TCP-Router protocol v0.  Mirrors the
-// Python `csm_tcp_router` package layout and feature set:
+// 单文件 SDK，实现 CSM-TCP-Router 协议 v0。镜像了
+// Python `csm_tcp_router` 包的布局和功能：
 //
-//     * Protocol codec (8-byte header, big-endian, 8 packet types).
-//     * Background-receiver TCP transport.
-//     * High-level TcpRouterClient with sync and async APIs:
-//         - SendAndWait / SendAndWaitAsync     (synchronous CMD/RESP)
-//         - Post / PostAsync                   (async CMD with cmd-resp handshake)
-//         - PostNoReply / PostNoReplyAsync     (no-reply async CMD)
-//         - Ping / PingAsync                   (round-trip latency)
+//     * 协议编解码器（8 字节头，大端序，8 种数据包类型）。
+//     * 后台接收 TCP 传输层。
+//     * 高层 TcpRouterClient，提供同步和异步 API：
+//         - SendAndWait / SendAndWaitAsync     （同步 CMD/RESP）
+//         - Post / PostAsync                   （带 cmd-resp 握手的异步 CMD）
+//         - PostNoReply / PostNoReplyAsync     （无回复异步 CMD）
+//         - Ping / PingAsync                   （往返延迟）
 //         - ListModules / ListApi / ListStates / Help
 //         - SubscribeStatus / UnsubscribeStatus
 //         - RegisterAsyncCallback / UnregisterAsyncCallback
 //
-// Wire format (8-byte header, big-endian)::
+// 线路格式（8 字节头，大端序）：
 //
 //     | Data Length (4B) | Version (1B=0x01) | Type (1B) | FLAG1 (1B) | FLAG2 (1B) |
 //     +------------------------ Header (8B) -----------------------+
 //
-// followed by exactly `Data Length` bytes of payload.
+// 后跟恰好 `Data Length` 字节的有效载荷。
 //
 // Copyright (c) 2026 NEVSTOP-LAB.  Released under the MIT License.
 // ---------------------------------------------------------------------------
@@ -42,37 +42,37 @@ using System.Threading.Tasks;
 namespace CsmTcpRouter
 {
     // -----------------------------------------------------------------------
-    // Public enumerations
+    // 公共枚举
     // -----------------------------------------------------------------------
 
     /// <summary>
-    /// Packet type constants as defined in the CSM-TCP-Router protocol v0.
+    /// CSM-TCP-Router 协议 v0 中定义的数据包类型常量。
     /// </summary>
     public enum PacketType : byte
     {
-        /// <summary>Informational message (welcome / goodbye).</summary>
+        /// <summary>信息消息（欢迎/再见）。</summary>
         Info = 0x00,
-        /// <summary>Error packet from the server.</summary>
+        /// <summary>来自服务器的错误数据包。</summary>
         Error = 0x01,
-        /// <summary>Command sent by the client.</summary>
+        /// <summary>客户端发送的命令。</summary>
         Cmd = 0x02,
-        /// <summary>Server handshake for async / no-reply / subscribe.</summary>
+        /// <summary>服务器对异步/无回复/订阅命令的握手确认。</summary>
         CmdResp = 0x03,
-        /// <summary>Synchronous response payload.</summary>
+        /// <summary>同步响应有效载荷。</summary>
         Resp = 0x04,
-        /// <summary>Asynchronous response payload.</summary>
+        /// <summary>异步响应有效载荷。</summary>
         AsyncResp = 0x05,
-        /// <summary>Status broadcast from a subscribed CSM module.</summary>
+        /// <summary>来自已订阅 CSM 模块的状态广播。</summary>
         Status = 0x06,
-        /// <summary>Interrupt broadcast from a subscribed CSM module.</summary>
+        /// <summary>来自已订阅 CSM 模块的中断广播。</summary>
         Interrupt = 0x07,
     }
 
     // -----------------------------------------------------------------------
-    // Public data models
+    // 公共数据模型
     // -----------------------------------------------------------------------
 
-    /// <summary>A decoded packet received from the server.</summary>
+    /// <summary>从服务器接收到的已解码数据包。</summary>
     public sealed class Packet
     {
         public PacketType Type { get; }
@@ -91,7 +91,7 @@ namespace CsmTcpRouter
         }
     }
 
-    /// <summary>The result of a synchronous command (<see cref="TcpRouterClient.SendAndWait"/>).</summary>
+    /// <summary>同步命令（<see cref="TcpRouterClient.SendAndWait"/>）的结果。</summary>
     public sealed class CommandResponse
     {
         public byte[] Raw { get; }
@@ -105,7 +105,7 @@ namespace CsmTcpRouter
         public override string ToString() => $"CommandResponse(\"{Text}\")";
     }
 
-    /// <summary>An asynchronous response payload delivered via an async-resp packet.</summary>
+    /// <summary>通过异步响应数据包传递的异步响应有效载荷。</summary>
     public sealed class AsyncResponse
     {
         public byte[] Raw { get; }
@@ -119,8 +119,8 @@ namespace CsmTcpRouter
         }
 
         /// <summary>
-        /// Parse an ASYNC_RESP packet.  Server format:
-        /// <c>"&lt;response-data&gt; &lt;- &lt;original-command&gt;"</c>.
+        /// 解析 ASYNC_RESP 数据包。服务器格式：
+        /// <c>"&lt;response-data&gt; &lt;- &lt;original-command&gt;"</c>。
         /// </summary>
         public static AsyncResponse FromPacket(Packet packet)
         {
@@ -139,7 +139,7 @@ namespace CsmTcpRouter
         public override string ToString() => $"AsyncResponse(\"{Text}\", cmd=\"{OriginalCommand}\")";
     }
 
-    /// <summary>A status broadcast delivered via a STATUS or INTERRUPT packet.</summary>
+    /// <summary>通过 STATUS 或 INTERRUPT 数据包传递的状态广播。</summary>
     public sealed class StatusNotification
     {
         public byte[] Raw { get; }
@@ -163,8 +163,8 @@ namespace CsmTcpRouter
         }
 
         /// <summary>
-        /// Parse a STATUS or INTERRUPT packet.  Server format:
-        /// <c>"&lt;status-name&gt; &gt;&gt; &lt;data&gt; &lt;- &lt;module&gt;"</c>.
+        /// 解析 STATUS 或 INTERRUPT 数据包。服务器格式：
+        /// <c>"&lt;status-name&gt; &gt;&gt; &lt;data&gt; &lt;- &lt;module&gt;"</c>。
         /// </summary>
         public static StatusNotification FromPacket(Packet packet)
         {
@@ -194,10 +194,10 @@ namespace CsmTcpRouter
     }
 
     // -----------------------------------------------------------------------
-    // Exception hierarchy
+    // 异常层次结构
     // -----------------------------------------------------------------------
 
-    /// <summary>Base exception for all CSM-TCP-Router client errors.</summary>
+    /// <summary>所有 CSM-TCP-Router 客户端错误的基础异常。</summary>
     public class CsmTcpRouterException : Exception
     {
         public CsmTcpRouterException() { }
@@ -205,28 +205,28 @@ namespace CsmTcpRouter
         public CsmTcpRouterException(string message, Exception innerException) : base(message, innerException) { }
     }
 
-    /// <summary>Raised when a connection cannot be established or is lost.</summary>
+    /// <summary>当连接无法建立或连接丢失时引发。</summary>
     public class RouterConnectionException : CsmTcpRouterException
     {
         public RouterConnectionException(string message) : base(message) { }
         public RouterConnectionException(string message, Exception innerException) : base(message, innerException) { }
     }
 
-    /// <summary>Raised when a synchronous operation exceeds its timeout.</summary>
+    /// <summary>当同步操作超过其超时时间时引发。</summary>
     public class RouterTimeoutException : CsmTcpRouterException
     {
         public RouterTimeoutException(string message) : base(message) { }
     }
 
-    /// <summary>Raised when an invalid or unexpected protocol frame is received.</summary>
+    /// <summary>当收到无效或意外的协议帧时引发。</summary>
     public class ProtocolException : CsmTcpRouterException
     {
         public ProtocolException(string message) : base(message) { }
     }
 
     /// <summary>
-    /// Raised when the server returns an error packet.  CSM Error format:
-    /// <c>[Error: &lt;code&gt;] &lt;message&gt;</c>.
+    /// 当服务器返回错误数据包时引发。CSM 错误格式：
+    /// <c>[Error: &lt;code&gt;] &lt;message&gt;</c>。
     /// </summary>
     public class ServerException : CsmTcpRouterException
     {
@@ -249,7 +249,7 @@ namespace CsmTcpRouter
     }
 
     // -----------------------------------------------------------------------
-    // Internal protocol codec
+    // 内部协议编解码器
     // -----------------------------------------------------------------------
 
     internal static class ProtocolCodec
@@ -257,7 +257,7 @@ namespace CsmTcpRouter
         public const int HeaderSize = 8;
         public const byte ProtocolVersion = 0x01;
 
-        /// <summary>Encode <paramref name="data"/> into a complete wire-format packet (header + body).</summary>
+        /// <summary>将 <paramref name="data"/> 编码为完整的线路格式数据包（头 + 体）。</summary>
         public static byte[] EncodePacket(byte[] data, PacketType packetType, byte flag1 = 0, byte flag2 = 0)
         {
             data = data ?? Array.Empty<byte>();
@@ -275,7 +275,7 @@ namespace CsmTcpRouter
             return wire;
         }
 
-        /// <summary>Decode an 8-byte header into its constituent fields.</summary>
+        /// <summary>将 8 字节头解码为其组成字段。</summary>
         public static (uint DataLen, byte Version, byte TypeByte, byte Flag1, byte Flag2) DecodeHeader(byte[] header)
         {
             if (header == null || header.Length != HeaderSize)
@@ -285,7 +285,7 @@ namespace CsmTcpRouter
             return (dataLen, header[4], header[5], header[6], header[7]);
         }
 
-        /// <summary>Build a <see cref="Packet"/> from raw header + body.</summary>
+        /// <summary>从原始头 + 体构建 <see cref="Packet"/>。</summary>
         public static Packet ParsePacket(byte[] header, byte[] body)
         {
             var (dataLen, version, typeByte, flag1, flag2) = DecodeHeader(header);
@@ -293,14 +293,14 @@ namespace CsmTcpRouter
             if ((uint)body.Length != dataLen)
                 throw new ProtocolException(
                     $"Payload length mismatch: header says {dataLen} bytes, got {body.Length} bytes.");
-            // Forward-compatible: unknown type bytes are mapped to Info.
+            // 向前兼容：未知类型字节映射为 Info。
             PacketType ptype = Enum.IsDefined(typeof(PacketType), typeByte)
                 ? (PacketType)typeByte
                 : PacketType.Info;
             return new Packet(ptype, body, version, flag1, flag2);
         }
 
-        /// <summary>Extract code and message from a CSM Error format <c>[Error: code] msg</c>.</summary>
+        /// <summary>从 CSM 错误格式 <c>[Error: code] msg</c> 中提取代码和消息。</summary>
         public static ServerException ParseServerError(Packet packet)
         {
             string text = Encoding.UTF8.GetString(packet.Data).Trim();
@@ -320,7 +320,7 @@ namespace CsmTcpRouter
     }
 
     // -----------------------------------------------------------------------
-    // Internal TCP transport (background receive task)
+    // 内部 TCP 传输层（后台接收任务）
     // -----------------------------------------------------------------------
 
     internal sealed class Transport : IDisposable
@@ -367,11 +367,11 @@ namespace CsmTcpRouter
                 var winner = await Task.WhenAny(connectTask, Task.Delay(to)).ConfigureAwait(false);
                 if (winner != connectTask)
                 {
-                    try { client.Close(); } catch { /* ignore */ }
+                    try { client.Close(); } catch { /* 忽略 */ }
                     throw new RouterConnectionException(
                         $"Cannot connect to {host}:{port}: timed out after {to.TotalSeconds:F1}s.");
                 }
-                await connectTask.ConfigureAwait(false); // surface any connect exception
+                await connectTask.ConfigureAwait(false); // 让任何连接异常浮现
             }
             catch (RouterConnectionException)
             {
@@ -379,7 +379,7 @@ namespace CsmTcpRouter
             }
             catch (Exception exc)
             {
-                try { client.Close(); } catch { /* ignore */ }
+                try { client.Close(); } catch { /* 忽略 */ }
                 throw new RouterConnectionException($"Cannot connect to {host}:{port}: {exc.Message}", exc);
             }
 
@@ -393,15 +393,15 @@ namespace CsmTcpRouter
         public void Disconnect(TimeSpan? joinTimeout = null)
         {
             _stopped = true;
-            try { _cts?.Cancel(); } catch { /* ignore */ }
-            try { _stream?.Close(); } catch { /* ignore */ }
-            try { _client?.Close(); } catch { /* ignore */ }
+            try { _cts?.Cancel(); } catch { /* 忽略 */ }
+            try { _stream?.Close(); } catch { /* 忽略 */ }
+            try { _client?.Close(); } catch { /* 忽略 */ }
             _stream = null;
             _client = null;
             var jt = joinTimeout ?? TimeSpan.FromSeconds(2);
-            try { _recvTask?.Wait(jt); } catch { /* ignore */ }
+            try { _recvTask?.Wait(jt); } catch { /* 忽略 */ }
             _recvTask = null;
-            try { _cts?.Dispose(); } catch { /* ignore */ }
+            try { _cts?.Dispose(); } catch { /* 忽略 */ }
             _cts = null;
         }
 
@@ -427,7 +427,7 @@ namespace CsmTcpRouter
         public void Dispose() => Disconnect();
 
         // ---------------------------------------------------------------
-        // Internal: background receive loop
+        // 内部：后台接收循环
         // ---------------------------------------------------------------
 
         private async Task RecvLoopAsync(CancellationToken ct)
@@ -453,22 +453,22 @@ namespace CsmTcpRouter
                     }
                     catch (ProtocolException)
                     {
-                        // Corrupted frame -- skip it and keep the loop alive.
+                        // 损坏的帧——跳过并保持循环运行。
                         continue;
                     }
 
                     try { _onPacket(packet); } catch { /* swallow callback errors */ }
                 }
             }
-            catch (IOException) { /* connection dropped */ }
-            catch (ObjectDisposedException) { /* socket closed during read */ }
-            catch (OperationCanceledException) { /* shutdown */ }
+            catch (IOException) { /* 连接已断开 */ }
+            catch (ObjectDisposedException) { /* 读取期间套接字已关闭 */ }
+            catch (OperationCanceledException) { /* 正在关闭 */ }
             finally
             {
                 if (!_stopped)
                 {
                     _stopped = true;
-                    try { _onDisconnect(); } catch { /* ignore */ }
+                    try { _onDisconnect(); } catch { /* 忽略 */ }
                 }
             }
         }
@@ -493,27 +493,26 @@ namespace CsmTcpRouter
     }
 
     // -----------------------------------------------------------------------
-    // High-level client
+    // 高层客户端
     // -----------------------------------------------------------------------
 
-    /// <summary>Callback delegate for status / interrupt broadcasts.</summary>
+    /// <summary>用于状态/中断广播的回调委托。</summary>
     public delegate void StatusCallback(StatusNotification notification);
 
-    /// <summary>Callback delegate for asynchronous-response packets.</summary>
+    /// <summary>用于异步响应数据包的回调委托。</summary>
     public delegate void AsyncResponseCallback(AsyncResponse response);
 
     /// <summary>
-    /// C# client for a CSM-TCP-Router server.  Mirrors the LabVIEW ClientAPI
-    /// VIs and the Python <c>TcpRouterClient</c>; speaks protocol v0.
+    /// CSM-TCP-Router 服务器的 C# 客户端。镜像了 LabVIEW ClientAPI VI
+    /// 和 Python <c>TcpRouterClient</c>；使用协议 v0。
     ///
-    /// The class is thread-safe.  At most one in-flight synchronous command
-    /// and one in-flight async / subscription command may be outstanding at a
-    /// time; concurrent callers are serialised by internal semaphores.
+    /// 该类是线程安全的。任意时刻最多只能有一个正在执行的同步命令
+    /// 和一个正在执行的异步/订阅命令；并发调用者由内部信号量序列化。
     /// </summary>
     public sealed class TcpRouterClient : IDisposable
     {
-        // One-item-deep "queues" for synchronised waits, implemented via TCS.
-        // Reset to a fresh TCS by each waiter inside the corresponding lock.
+        // 通过 TCS 实现的单元素"队列"，用于同步等待。
+        // 每个等待者在相应的锁内将其重置为新的 TCS。
         private TaskCompletionSource<object> _respTcs;
         private TaskCompletionSource<object> _cmdRespTcs;
 
@@ -528,10 +527,10 @@ namespace CsmTcpRouter
 
         private readonly Transport _transport;
 
-        /// <summary>Polling queue for async-resp packets received from the server.</summary>
+        /// <summary>用于轮询从服务器接收到的异步响应数据包的队列。</summary>
         public ConcurrentQueue<AsyncResponse> AsyncResponseQueue { get; } = new ConcurrentQueue<AsyncResponse>();
 
-        /// <summary>Polling queue for status / interrupt notifications.</summary>
+        /// <summary>用于轮询状态/中断通知的队列。</summary>
         public ConcurrentQueue<StatusNotification> StatusQueue { get; } = new ConcurrentQueue<StatusNotification>();
 
         public TcpRouterClient()
@@ -540,42 +539,41 @@ namespace CsmTcpRouter
         }
 
         // ---------------------------------------------------------------
-        // Connection management
+        // 连接管理
         // ---------------------------------------------------------------
 
-        /// <summary>Connect to a CSM-TCP-Router server.</summary>
+        /// <summary>连接到 CSM-TCP-Router 服务器。</summary>
         public void Connect(string host, int port, TimeSpan? timeout = null)
             => _transport.Connect(host, port, timeout);
 
-        /// <summary>Connect to a CSM-TCP-Router server (async).</summary>
+        /// <summary>连接到 CSM-TCP-Router 服务器（异步）。</summary>
         public Task ConnectAsync(string host, int port, TimeSpan? timeout = null)
             => _transport.ConnectAsync(host, port, timeout);
 
         /// <summary>
-        /// Disconnect from the server and release all resources.  Any threads
-        /// currently blocked in <see cref="SendAndWait"/> / <see cref="Post"/>
-        /// will receive a <see cref="RouterConnectionException"/> immediately
-        /// rather than waiting for their timeout to expire.
+        /// 从服务器断开连接并释放所有资源。当前阻塞在
+        /// <see cref="SendAndWait"/> / <see cref="Post"/> 中的线程将立即
+        /// 收到 <see cref="RouterConnectionException"/>，而不是等待超时。
         /// </summary>
         public void Disconnect()
         {
-            // Unblock any pending waiters before tearing down the transport.
+            // 在拆除传输层之前解除所有挂起等待者的阻塞。
             var sentinel = new RouterConnectionException("Disconnected from server.");
             UnblockWaiters(sentinel);
             _transport.Disconnect();
         }
 
-        /// <summary><c>true</c> when the underlying transport is connected.</summary>
+        /// <summary>当底层传输层已连接时为 <c>true</c>。</summary>
         public bool Connected => _transport.Connected;
 
         /// <summary>
-        /// Poll until <paramref name="host"/>:<paramref name="port"/> accepts
-        /// a connection or <paramref name="timeout"/> elapses.
+        /// 轮询直到 <paramref name="host"/>:<paramref name="port"/> 接受连接
+        /// 或 <paramref name="timeout"/> 超时。
         /// </summary>
         public bool WaitForServer(string host, int port, TimeSpan? timeout = null, TimeSpan? retryInterval = null)
             => WaitForServerAsync(host, port, timeout, retryInterval).GetAwaiter().GetResult();
 
-        /// <summary>Async version of <see cref="WaitForServer"/>.</summary>
+        /// <summary><see cref="WaitForServer"/> 的异步版本。</summary>
         public async Task<bool> WaitForServerAsync(
             string host, int port, TimeSpan? timeout = null, TimeSpan? retryInterval = null)
         {
@@ -591,28 +589,27 @@ namespace CsmTcpRouter
                     {
                         try
                         {
-                            // Observe any connect exception (faulted task);
-                            // success means the server is reachable.
+                            // 观察任何连接异常（已故障任务）；
+                            // 成功表示服务器可访问。
                             await connectTask.ConfigureAwait(false);
-                            try { probe.Close(); } catch { /* ignore */ }
+                            try { probe.Close(); } catch { /* 忽略 */ }
                             return true;
                         }
-                        catch (SocketException) { /* not ready yet */ }
-                        catch (IOException) { /* not ready yet */ }
+                        catch (SocketException) { /* 尚未就绪 */ }
+                        catch (IOException) { /* 尚未就绪 */ }
                     }
                     else
                     {
-                        // Delay won; abort the in-flight connect attempt by
-                        // closing the probe socket, then observe any pending
-                        // exception so it is not unobserved.
-                        try { probe.Close(); } catch { /* ignore */ }
+                        // 延迟获胜；通过关闭探测套接字终止正在进行的连接尝试，
+                        // 然后观察任何挂起的异常，以免其未被观察到。
+                        try { probe.Close(); } catch { /* 忽略 */ }
                         try
                         {
                             await connectTask.ConfigureAwait(false);
                         }
-                        catch (SocketException) { /* not ready yet */ }
-                        catch (IOException) { /* not ready yet */ }
-                        catch (ObjectDisposedException) { /* connect aborted by closing probe */ }
+                        catch (SocketException) { /* 尚未就绪 */ }
+                        catch (IOException) { /* 尚未就绪 */ }
+                        catch (ObjectDisposedException) { /* 关闭探测套接字导致连接中止 */ }
                     }
                 }
                 await Task.Delay(interval).ConfigureAwait(false);
@@ -621,7 +618,7 @@ namespace CsmTcpRouter
         }
 
         // ---------------------------------------------------------------
-        // Core command methods (sync wrappers)
+        // 核心命令方法（同步包装）
         // ---------------------------------------------------------------
 
         public CommandResponse SendAndWait(string command, TimeSpan? timeout = null)
@@ -648,11 +645,11 @@ namespace CsmTcpRouter
             => UnsubscribeStatusAsync(statusName, moduleName, timeout).GetAwaiter().GetResult();
 
         // ---------------------------------------------------------------
-        // Core command methods (async)
+        // 核心命令方法（异步）
         // ---------------------------------------------------------------
 
         /// <summary>
-        /// Send a synchronous command (suffix <c>-@</c>) and wait for the response.
+        /// 发送同步命令（后缀 <c>-@</c>）并等待响应。
         /// </summary>
         public async Task<CommandResponse> SendAndWaitAsync(string command, TimeSpan? timeout = null)
         {
@@ -674,18 +671,18 @@ namespace CsmTcpRouter
         }
 
         /// <summary>
-        /// Send an async command (suffix <c>-&gt;</c>) and wait for the cmd-resp handshake.
+        /// 发送异步命令（后缀 <c>-&gt;</c>）并等待 cmd-resp 握手。
         /// </summary>
         public Task PostAsync(string command, TimeSpan? timeout = null)
             => SendAndAwaitCmdRespAsync(command, timeout);
 
         /// <summary>
-        /// Send an async no-reply command (suffix <c>-&gt;|</c>) and wait for the cmd-resp handshake.
+        /// 发送异步无回复命令（后缀 <c>-&gt;|</c>）并等待 cmd-resp 握手。
         /// </summary>
         public Task PostNoReplyAsync(string command, TimeSpan? timeout = null)
             => SendAndAwaitCmdRespAsync(command, timeout);
 
-        /// <summary>Send a Ping and measure round-trip latency.</summary>
+        /// <summary>发送 Ping 并测量往返延迟。</summary>
         public async Task<(bool Ok, TimeSpan Elapsed)> PingAsync(TimeSpan? timeout = null)
         {
             var to = timeout ?? TimeSpan.FromSeconds(2);
@@ -713,7 +710,7 @@ namespace CsmTcpRouter
         public Task<string> HelpAsync(string module, TimeSpan? timeout = null)
             => SendAndWaitAsync($"Help {module}", timeout).ContinueWithText();
 
-        /// <summary>Subscribe to a CSM module's status broadcast.</summary>
+        /// <summary>订阅 CSM 模块的状态广播。</summary>
         public async Task SubscribeStatusAsync(
             string statusName, string moduleName, StatusCallback callback = null, TimeSpan? timeout = null)
         {
@@ -721,8 +718,8 @@ namespace CsmTcpRouter
             if (moduleName == null) throw new ArgumentNullException(nameof(moduleName));
 
             var key = (statusName, moduleName);
-            // Register the callback *before* sending to eliminate the race
-            // where a STATUS packet could arrive before the callback is stored.
+            // 在发送之前注册回调，以消除状态数据包在回调
+            // 存储之前到达的竞争条件。
             lock (_stateLock) { _statusCallbacks[key] = callback; }
 
             string cmd = $"{statusName}@{moduleName} -><register>";
@@ -737,7 +734,7 @@ namespace CsmTcpRouter
             }
         }
 
-        /// <summary>Cancel a status subscription.</summary>
+        /// <summary>取消状态订阅。</summary>
         public async Task UnsubscribeStatusAsync(string statusName, string moduleName, TimeSpan? timeout = null)
         {
             if (statusName == null) throw new ArgumentNullException(nameof(statusName));
@@ -749,8 +746,8 @@ namespace CsmTcpRouter
         }
 
         /// <summary>
-        /// Register a callback for async-resp packets, matched by the original
-        /// command echoed in the async-resp payload (after the <c> &lt;- </c> separator).
+        /// 为异步响应数据包注册回调，通过异步响应有效载荷中回显的原始命令
+        /// （在 <c> &lt;- </c> 分隔符之后）进行匹配。
         /// </summary>
         public void RegisterAsyncCallback(string originalCommand, AsyncResponseCallback callback)
         {
@@ -759,7 +756,7 @@ namespace CsmTcpRouter
             lock (_stateLock) { _asyncCallbacks[originalCommand] = callback; }
         }
 
-        /// <summary>Remove a previously registered async callback.</summary>
+        /// <summary>移除之前注册的异步回调。</summary>
         public void UnregisterAsyncCallback(string originalCommand)
         {
             if (originalCommand == null) return;
@@ -778,7 +775,7 @@ namespace CsmTcpRouter
         }
 
         // ---------------------------------------------------------------
-        // Internal helpers
+        // 内部辅助方法
         // ---------------------------------------------------------------
 
         private async Task SendAndAwaitCmdRespAsync(string command, TimeSpan? timeout)
@@ -806,11 +803,10 @@ namespace CsmTcpRouter
             var winner = await Task.WhenAny(tcs.Task, Task.Delay(timeout)).ConfigureAwait(false);
             if (winner != tcs.Task)
             {
-                // Protocol v0 has no correlation id, so a late RESP for the
-                // timed-out command could be misattributed to the *next*
-                // SendAndWait call.  Force a disconnect so the connection
-                // is unusable until the caller reconnects.
-                try { _transport.Disconnect(); } catch { /* ignore */ }
+                // 协议 v0 没有关联 ID，因此超时命令的延迟 RESP 可能被
+                // 错误地归属于*下一个* SendAndWait 调用。强制断开连接，
+                // 使连接在调用者重新连接之前不可用。
+                try { _transport.Disconnect(); } catch { /* 忽略 */ }
                 throw new RouterTimeoutException($"No response received within {timeout.TotalSeconds:F1}s.");
             }
             object item = await tcs.Task.ConfigureAwait(false);
@@ -825,15 +821,15 @@ namespace CsmTcpRouter
             var winner = await Task.WhenAny(tcs.Task, Task.Delay(timeout)).ConfigureAwait(false);
             if (winner != tcs.Task)
             {
-                // Same desync risk as WaitForRespAsync: a late CMD_RESP could
-                // complete the next in-flight waiter.  Force a disconnect so
-                // the connection cannot be reused after a handshake timeout.
-                try { _transport.Disconnect(); } catch { /* ignore */ }
+                // 与 WaitForRespAsync 中相同的去同步风险：延迟的 CMD_RESP 可能
+                // 完成下一个正在等待的调用。强制断开连接，使握手超时后
+                // 连接无法被复用。
+                try { _transport.Disconnect(); } catch { /* 忽略 */ }
                 throw new RouterTimeoutException($"No cmd-resp received within {timeout.TotalSeconds:F1}s.");
             }
             object item = await tcs.Task.ConfigureAwait(false);
             if (item is Exception exc) throw exc;
-            // CMD_RESP payload is a handshake acknowledgment; discard it.
+            // CMD_RESP 有效载荷是握手确认；丢弃它。
         }
 
         private void UnblockWaiters(Exception sentinel)
@@ -843,7 +839,7 @@ namespace CsmTcpRouter
         }
 
         // ---------------------------------------------------------------
-        // Internal: packet dispatch (runs on the receive task thread)
+        // 内部：数据包分发（在接收任务线程上运行）
         // ---------------------------------------------------------------
 
         internal void OnPacket(Packet packet)
@@ -866,7 +862,7 @@ namespace CsmTcpRouter
                     lock (_stateLock) { _asyncCallbacks.TryGetValue(resp.OriginalCommand, out cb); }
                     if (cb != null)
                     {
-                        try { cb(resp); } catch { /* swallow callback errors */ }
+                        try { cb(resp); } catch { /* 吞掉回调错误 */ }
                     }
                     break;
                 }
@@ -880,7 +876,7 @@ namespace CsmTcpRouter
                     lock (_stateLock) { _statusCallbacks.TryGetValue((notif.StatusName, notif.ModuleName), out cb); }
                     if (cb != null)
                     {
-                        try { cb(notif); } catch { /* swallow callback errors */ }
+                        try { cb(notif); } catch { /* 吞掉回调错误 */ }
                     }
                     break;
                 }
@@ -894,11 +890,11 @@ namespace CsmTcpRouter
                 }
 
                 case PacketType.Info:
-                    // Silently discarded (welcome / goodbye messages).
+                    // 静默丢弃（欢迎/再见消息）。
                     break;
 
                 case PacketType.Cmd:
-                    // Server should never send CMD; ignore for forward compatibility.
+                    // 服务器永远不应发送 CMD；为向前兼容性忽略。
                     break;
             }
         }
@@ -910,7 +906,7 @@ namespace CsmTcpRouter
     }
 
     // -----------------------------------------------------------------------
-    // Small convenience extensions
+    // 小型便利扩展
     // -----------------------------------------------------------------------
 
     internal static class TaskExtensions
