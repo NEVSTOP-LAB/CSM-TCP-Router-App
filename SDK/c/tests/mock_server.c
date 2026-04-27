@@ -493,10 +493,23 @@ static void ms_set_response_typed(csm_mock_server_t *s, const char *cmd_text,
                                   csm_packet_type_t type, const char *data) {
     ms_resp_t *r = (ms_resp_t *)calloc(1, sizeof(*r));
     if (!r) return;
-    r->cmd = (char *)malloc(strlen(cmd_text) + 1); strcpy(r->cmd, cmd_text);
+    r->cmd = (char *)malloc(strlen(cmd_text) + 1);
+    if (!r->cmd) {
+        free(r);
+        return;
+    }
+    strcpy(r->cmd, cmd_text);
     r->type = type;
     size_t dl = strlen(data);
-    r->data = (uint8_t *)malloc(dl); if (dl) memcpy(r->data, data, dl);
+    if (dl > 0) {
+        r->data = (uint8_t *)malloc(dl);
+        if (!r->data) {
+            free(r->cmd);
+            free(r);
+            return;
+        }
+        memcpy(r->data, data, dl);
+    }
     r->data_len = dl;
     ms_mutex_lock(&s->resp_lock);
     r->next = s->responses;

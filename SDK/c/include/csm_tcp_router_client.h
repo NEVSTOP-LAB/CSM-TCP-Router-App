@@ -382,10 +382,14 @@ CSM_API csm_result_t csm_client_poll_async_response(csm_client_t         *client
 /* Last server error                                                         */
 /* ------------------------------------------------------------------------- */
 
-/** Retrieve information about the last CSM_ERR_SERVER returned by *client*.
+/** Retrieve information about the last CSM_ERR_SERVER observed by *client*.
  *
- * Returns CSM_OK and fills *out_err* if a server error has been observed
- * since the last successful call, otherwise returns CSM_ERR_STATE.
+ * Returns CSM_OK and fills *out_err* with the most recently captured
+ * server-error code/message; otherwise (no server error has ever been
+ * observed for this client) returns CSM_ERR_STATE. The stored error is
+ * kept indefinitely until the next CSM_ERR_SERVER overwrites it, so it
+ * is safe to call this immediately after a failing operation without
+ * worrying about it being cleared by an unrelated success in between.
  */
 CSM_API csm_result_t csm_client_last_server_error(const csm_client_t *client,
                                                   csm_server_error_t *out_err);

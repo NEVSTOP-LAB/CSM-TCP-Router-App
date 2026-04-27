@@ -30,7 +30,11 @@
 #include <string.h>
 #include <time.h>
 
-#define CSM_BUILD_LIBRARY 1
+/* CSM_BUILD_LIBRARY is defined by the build system (CMake / MSBuild) when
+ * compiling the library, so that csm_tcp_router_client.h decorates the
+ * exported symbols with the correct __declspec for shared builds.
+ * Defining it unconditionally here would break consumers that compile this
+ * .c file directly into their own DLL with a different export contract. */
 
 /* ========================================================================= */
 /* Platform abstraction                                                      */
@@ -162,22 +166,25 @@ static double csm_monotonic_ms(void) {
 
 #if defined(_WIN32)
 static csm_mutex_t g_wsa_lock;
+static INIT_ONCE   g_wsa_lock_init_once_state = INIT_ONCE_STATIC_INIT;
 static int         g_wsa_lock_inited = 0;
 static int         g_wsa_refcount    = 0;
 
+static BOOL CALLBACK csm_wsa_lock_init_once_cb(PINIT_ONCE init_once,
+                                               PVOID param,
+                                               PVOID *context) {
+    (void)init_once; (void)param; (void)context;
+    csm_mutex_init(&g_wsa_lock);
+    g_wsa_lock_inited = 1;
+    return TRUE;
+}
+
 static void csm_wsa_lock_init_once(void) {
-    /* Process-wide one-time init. Safe because csm_client_create is
-     * the only caller and the OS guarantees serialisation of the very
-     * first call by virtue of program startup ordering; subsequent
-     * concurrent callers race only on the lock-init itself, but
-     * InitializeCriticalSection is idempotent-safe enough for our use
-     * since we only ever protect refcount.  In practice clients should
-     * create the first instance from a single thread.
-     */
-    if (!g_wsa_lock_inited) {
-        csm_mutex_init(&g_wsa_lock);
-        g_wsa_lock_inited = 1;
-    }
+    /* InitOnceExecuteOnce guarantees the callback runs exactly once
+     * across all threads in the process, so the critical section is
+     * initialised exactly once even under concurrent client creation. */
+    InitOnceExecuteOnce(&g_wsa_lock_init_once_state,
+                        csm_wsa_lock_init_once_cb, NULL, NULL);
 }
 
 static int csm_wsa_startup(void) {
@@ -1006,14 +1013,23 @@ static void *csm_recv_thread_main(void *arg)
     csm_client_t *c = (csm_client_t *)arg;
     uint8_t header[CSM_HEADER_SIZE];
     for (;;) {
-        if (c->stop_flag) break;
-        if (csm_recv_all(c->sock, header, CSM_HEADER_SIZE) != 0) break;
+        /* Snapshot stop_flag and sock under state_lock. csm_client_disconnect()
+         * mutates both fields under the same lock, so a torn read or a stale
+         * sock value cannot occur and TSAN/UBSan stay quiet. */
+        csm_mutex_lock(&c->state_lock);
+        int stop_flag    = c->stop_flag;
+        csm_socket_t sock = c->sock;
+        csm_mutex_unlock(&c->state_lock);
+
+        if (stop_flag) break;
+        if (sock == CSM_INVALID_SOCKET) break;
+        if (csm_recv_all(sock, header, CSM_HEADER_SIZE) != 0) break;
         uint32_t data_len = csm_unpack_be32(header);
         uint8_t  *body = NULL;
         if (data_len > 0) {
             body = (uint8_t *)malloc(data_len);
             if (!body) break;
-            if (csm_recv_all(c->sock, body, data_len) != 0) {
+            if (csm_recv_all(sock, body, data_len) != 0) {
                 free(body);
                 break;
             }
@@ -1118,7 +1134,11 @@ static csm_result_t csm_do_connect(const char *host, uint16_t port,
         ioctlsocket(sock, FIONBIO, &mode);
 #else
         int flags = fcntl(sock, F_GETFL, 0);
-        fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+        if (flags == -1 || fcntl(sock, F_SETFL, flags | O_NONBLOCK) == -1) {
+            csm_close_socket(sock);
+            sock = CSM_INVALID_SOCKET;
+            continue;
+        }
 #endif
 
         int cr = connect(sock, ai->ai_addr, (int)ai->ai_addrlen);
