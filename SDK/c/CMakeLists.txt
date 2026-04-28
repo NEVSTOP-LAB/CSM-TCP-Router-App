@@ -86,8 +86,10 @@ endif()
 if(CSM_BUILD_EXAMPLES)
     add_executable(basic_usage      examples/basic_usage.c)
     add_executable(subscribe_status examples/subscribe_status.c)
+    add_executable(client_console   examples/client_console.c)
     target_link_libraries(basic_usage      PRIVATE csm_tcp_router_client)
     target_link_libraries(subscribe_status PRIVATE csm_tcp_router_client)
+    target_link_libraries(client_console   PRIVATE csm_tcp_router_client)
 endif()
 
 # -------------------------------------------------------------------------
