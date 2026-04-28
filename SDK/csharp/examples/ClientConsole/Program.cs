@@ -33,7 +33,15 @@ namespace CsmTcpRouter.Examples.ClientConsole
         public static int Main(string[] args)
         {
             string host = args.Length > 0 ? args[0] : DefaultHost;
-            int port = args.Length > 1 ? int.Parse(args[1]) : DefaultPort;
+            int port = DefaultPort;
+            if (args.Length > 1)
+            {
+                if (!int.TryParse(args[1], out port) || port < 1 || port > 65535)
+                {
+                    Console.WriteLine($"Error: invalid port '{args[1]}'");
+                    return 1;
+                }
+            }
 
             Console.WriteLine("CSM-TCP-Router Client Console");
             Console.WriteLine($"Connecting to {host}:{port} ...");

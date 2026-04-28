@@ -173,7 +173,17 @@ def _dispatch(client: TcpRouterClient, line: str) -> bool:
 
 def main(argv: list[str]) -> int:
     host = argv[1] if len(argv) > 1 else DEFAULT_HOST
-    port = int(argv[2]) if len(argv) > 2 else DEFAULT_PORT
+    if len(argv) > 2:
+        try:
+            port = int(argv[2])
+        except ValueError:
+            print(f"Error: invalid port '{argv[2]}'")
+            return 1
+        if port < 1 or port > 65535:
+            print(f"Error: invalid port '{argv[2]}'")
+            return 1
+    else:
+        port = DEFAULT_PORT
 
     print("CSM-TCP-Router Client Console")
     print(f"Connecting to {host}:{port} ...")
