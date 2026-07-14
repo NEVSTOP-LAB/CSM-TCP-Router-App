@@ -1,0 +1,86 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "csm-tcp-router-client"
+version = "0.3.0"
+description = "Python client SDK for the CSM-TCP-Router LabVIEW server"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+authors = [{ name = "NEVSTOP-LAB" }]
+keywords = [
+    "csm",
+    "labview",
+    "tcp",
+    "router",
+    "client",
+    "sdk",
+    "daq",
+    "communicable-state-machine",
+    "asyncio",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Interface Engine/Protocol Translator",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Networking",
+]
+
+[project.urls]
+Homepage      = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App"
+Repository    = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App"
+Issues        = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/issues"
+Documentation = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python/README.md"
+Changelog     = "https://github.com/NEVSTOP-LAB/CSM-TCP-Router-App/blob/main/SDK/python/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src/csm_tcp_router_client.py"]
+sources = ["src"]
+
+# ---------------------------------------------------------------------------
+# Testing
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts   = "-v --tb=short"
+asyncio_mode = "auto"
+
+# ---------------------------------------------------------------------------
+# Linting (ruff)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py38"
+line-length    = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "PIE", "SIM", "RUF"]
+ignore = [
+    "E501",   # line length handled by formatter
+    "B008",   # do not perform function calls in argument defaults
+    "UP006",  # use `type` instead of `Type` — Python 3.8 compat
+    "UP007",  # use `X | Y` — Python 3.9 compat
+    "UP035",  # deprecated typing imports — Python 3.8 compat
+    "UP045",  # use `X | None` — Python 3.10 compat
+    "SIM105", # contextlib.suppress — prefer explicit try/except for clarity
+    "RUF001", # ambiguous unicode in strings — intentional em-dash usage
+    "RUF002", # ambiguous unicode in docstrings — intentional em-dash usage
+    "RUF003", # ambiguous unicode in comments — intentional em-dash usage
+    "RUF022", # __all__ not sorted — grouped by category intentionally
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*"    = ["S101"]  # allow assert in tests
+"examples/*" = ["T201"]  # allow print in examples

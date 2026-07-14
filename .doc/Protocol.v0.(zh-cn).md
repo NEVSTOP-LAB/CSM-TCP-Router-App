@@ -200,6 +200,7 @@ sequenceDiagram
 
 > [!NOTE]
 > `status` 和 `interrupt` 两种订阅广播类型均受支持：
+>
 > - `status`（`0x06`）：普通广播，订阅模块的常规状态变化
 > - `interrupt`（`0x07`）：中断广播，订阅模块触发的中断事件
 >

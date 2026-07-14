@@ -1,0 +1,34 @@
+# CMake / build artefacts
+build/
+build-*/
+out/
+cmake-build-*/
+
+# Visual Studio
+vs2026/build/
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.aps
+*.ipch
+.vs/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Ww]in32/
+*.obj
+*.lib
+*.dll
+*.exe
+*.pdb
+*.idb
+*.ilk
+*.exp
+
+# Compiled objects
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
